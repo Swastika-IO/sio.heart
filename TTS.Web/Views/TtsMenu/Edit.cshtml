@@ -1,0 +1,130 @@
+@model TTS.Lib.Models.TtsMenu
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Edit</h2>
+
+<form asp-action="Edit">
+    <div class="form-horizontal">
+        <h4>TtsMenu</h4>
+        <hr />
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <input type="hidden" asp-for="MenuId" />
+    <input type="hidden" asp-for="Specificulture" />
+        <div class="form-group">
+            <label asp-for="Icon" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="Icon" class="form-control" />
+                <span asp-validation-for="Icon" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="Title" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="Title" class="form-control" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="Description" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="Description" class="form-control" />
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="Views" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="Views" class="form-control" />
+                <span asp-validation-for="Views" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="Position" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="Position" class="form-control" />
+                <span asp-validation-for="Position" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <div class="checkbox">
+                    <input asp-for="IsDeleted" />
+                    <label asp-for="IsDeleted"></label>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="Sename" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="Sename" class="form-control" />
+                <span asp-validation-for="Sename" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="Seotitle" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="Seotitle" class="form-control" />
+                <span asp-validation-for="Seotitle" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="Seodescription" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="Seodescription" class="form-control" />
+                <span asp-validation-for="Seodescription" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="Seokeywords" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="Seokeywords" class="form-control" />
+                <span asp-validation-for="Seokeywords" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="CreatedDate" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="CreatedDate" class="form-control" />
+                <span asp-validation-for="CreatedDate" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="CreatedBy" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="CreatedBy" class="form-control" />
+                <span asp-validation-for="CreatedBy" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="Level" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="Level" class="form-control" />
+                <span asp-validation-for="Level" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="ParentMenuId" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="ParentMenuId" class="form-control" />
+                <span asp-validation-for="ParentMenuId" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+</form>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -1,0 +1,69 @@
+@model TTS.Lib.ViewModels.Admin.BannerViewModel
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+
+    string img = Model != null ? @Model.ImageURL : "http://placehold.it/200x200";
+}
+
+<h2>Create</h2>
+
+<form asp-action="Create" enctype="multipart/form-data">
+    <div class="form-horizontal">
+        <h4>TTSBanner</h4>
+        <p>
+            @ViewBag.ex
+        </p>
+        <hr />
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input type="hidden" asp-for="Id" />
+        <input type="hidden" asp-for="Specificulture" />
+        <div class="form-check">
+            @for (int i = 0; i < Model.ListSupportedCulture.Count; i++)
+            {
+                <label class="form-check-label">
+                    <input type="checkbox" asp-for="@Model.ListSupportedCulture[i].IsSupported" />
+                    <input type="hidden" asp-for="@Model.ListSupportedCulture[i].Specificulture" />
+                    <i class="flag-icon @Model.ListSupportedCulture[i].Icon"></i> @Model.ListSupportedCulture[i].Specificulture
+                </label>
+            }
+        </div>
+        <div class="form-group">
+            <label asp-for="Url" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="Url" class="form-control" />
+                <span asp-validation-for="Url" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="Alias" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="Alias" class="form-control" />
+                <span asp-validation-for="Alias" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="Image" class="col-md-2 control-label"></label>
+            <span asp-validation-for="Image" class="text-danger"></span>
+            <div class="col-md-10">
+                
+                <label class="custom-file">
+                    <img src="@img" name="pic" class="custom-file-img form-control" accept="image/*" />
+                    <input type="file" id="file" name="pic" class="custom-file-input">                    
+                    <span class="custom-file-control">Browse</span>
+                </label>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-success" />
+                <a asp-action="Index" class="btn btn-warning">Back to List</a>
+            </div>
+        </div>
+    </div>
+</form>
+
+<div>
+
+</div>
+
