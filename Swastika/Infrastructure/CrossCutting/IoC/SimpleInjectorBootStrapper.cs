@@ -7,9 +7,9 @@ using Swastika.Domain.Core.Events;
 using Swastika.Domain.Core.Notifications;
 using Swastika.Domain.Core.Interfaces;
 using Swastika.Infrastructure.CrossCutting.Bus;
-using TTS.Identity.Authorization;
-using TTS.Identity.Models;
-using TTS.Identity.Services;
+using Swastika.Identity.Authorization;
+using Swastika.Identity.Models;
+using Swastika.Identity.Services;
 using Swastika.Infrastructure.Data.Context;
 using Swastika.Infrastructure.Data.EventSourcing;
 using Swastika.Infrastructure.Data.Repository.EventSourcing;
@@ -47,7 +47,7 @@ namespace Swastika.Infrastructure.CrossCutting.IoC
             serviceCollection.AddTransient<ISmsSender, AuthSMSMessageSender>();
 
             // Infra - Identity
-            serviceCollection.AddScoped<TTS.Identity.Interfaces.IUser, AspNetUser>();
+            serviceCollection.AddScoped<Swastika.Identity.Interfaces.IUser, AspNetUser>();
 
             // Infra - Bus
             serviceCollection.AddScoped<IBus, InMemoryBus>();
