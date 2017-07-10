@@ -963,7 +963,7 @@ namespace Swastika.Infrastructure.Data.Repository
         /// <param name="predicate">The predicate.</param>
         /// <param name="isGetSubModels">if set to <c>true</c> [is get sub models].</param>
         /// <returns></returns>
-        public virtual List<TView> GetModelListBy(Expression<Func<TModel, bool>> predicate, bool isGetSubModels)
+        public virtual List<TView> GetModelListBy(Expression<Func<TModel, bool>> predicate, bool isGetSubModels = false)
         {
             using (TContext context = InitContext())
             {
