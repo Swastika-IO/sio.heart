@@ -1,4 +1,6 @@
-﻿using Swastika.Common.Helper;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
+using Swastika.Common.Helper;
 using Swastika.Domain.Core.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -12,7 +14,10 @@ namespace Swastika.Domain.Core.Interfaces {
     /// </summary>
     /// <typeparam name="TModel">The type of the model.</typeparam>
     /// <typeparam name="TView">The type of the view.</typeparam>
-    public interface IRepository<TModel, TView> where TModel : class where TView : ViewModelBase<TModel, TView> {
+    public interface IRepository<TModel, TView, TContext> where TModel : class where TView : ViewModelBase<TModel, TView>
+        where TContext: DbContext
+
+    {
 
         /// <summary>
         /// Determines whether the specified entity is exists.
@@ -21,91 +26,91 @@ namespace Swastika.Domain.Core.Interfaces {
         /// <returns>
         ///   <c>true</c> if the specified entity is exists; otherwise, <c>false</c>.
         /// </returns>
-        bool CheckIsExists(TModel entity);
+        bool CheckIsExists(TView entity);
 
         /// <summary>
         /// Creates the model.
         /// </summary>
         /// <param name="model">The model.</param>
         /// <returns></returns>
-        RepositoryResponse<TView> CreateModel(TModel model);
+        RepositoryResponse<TView> CreateModel(TView view, bool isSaveSubModels = false, TContext _context = null, IDbContextTransaction _transaction = null);
 
         /// <summary>
         /// Creates the model asynchronous.
         /// </summary>
         /// <param name="model">The model.</param>
         /// <returns></returns>
-        Task<RepositoryResponse<TView>> CreateModelAsync(TModel model);
+        Task<RepositoryResponse<TView>> CreateModelAsync(TView view, bool isSaveSubModels = false, TContext _context = null, IDbContextTransaction _transaction = null);
 
         /// <summary>
         /// Edits the model.
         /// </summary>
         /// <param name="model">The model.</param>
         /// <returns></returns>
-        RepositoryResponse<TView> EditModel(TModel model);
+        RepositoryResponse<TView> EditModel(TView view, bool isSaveSubModels, TContext _context = null, IDbContextTransaction _transaction = null);
 
         /// <summary>
         /// Edits the model asynchronous.
         /// </summary>
         /// <param name="model">The model.</param>
         /// <returns></returns>
-        Task<RepositoryResponse<TView>> EditModelAsync(TModel model);
+        Task<RepositoryResponse<TView>> EditModelAsync(TView view, bool isSaveSubModels, TContext _context = null, IDbContextTransaction _transaction = null);
 
         /// <summary>
         /// Saves the model.
         /// </summary>
         /// <param name="model">The model.</param>
         /// <returns></returns>
-        RepositoryResponse<TView> SaveModel(TModel model);
+        RepositoryResponse<TView> SaveModel(TView view, bool isSaveSubModels, TContext _context = null, IDbContextTransaction _transaction = null);
 
         /// <summary>
         /// Saves the model asynchronous.
         /// </summary>
         /// <param name="model">The model.</param>
         /// <returns></returns>
-        Task<RepositoryResponse<TView>> SaveModelAsync(TModel model);
+        Task<RepositoryResponse<TView>> SaveModelAsync(TView view, bool isSaveSubModels, TContext _context = null, IDbContextTransaction _transaction = null);
 
         /// <summary>
         /// Removes the model.
         /// </summary>
         /// <param name="model">The model.</param>
         /// <returns></returns>
-        bool RemoveModel(TModel model);
+        RepositoryResponse<bool> RemoveModel(TModel model, TContext _context = null, IDbContextTransaction _transaction = null);
 
         /// <summary>
         /// Removes the model.
         /// </summary>
         /// <param name="predicate">The predicate.</param>
         /// <returns></returns>
-        bool RemoveModel(Expression<Func<TModel, bool>> predicate);
+        RepositoryResponse<bool> RemoveModel(Expression<Func<TModel, bool>> predicate, TContext _context = null, IDbContextTransaction _transaction = null);
 
         /// <summary>
         /// Removes the list model.
         /// </summary>
         /// <param name="predicate">The predicate.</param>
         /// <returns></returns>
-        bool RemoveListModel(Expression<Func<TModel, bool>> predicate);
+        RepositoryResponse<bool> RemoveListModel(Expression<Func<TModel, bool>> predicate, TContext _context = null, IDbContextTransaction _transaction = null);
 
         /// <summary>
         /// Removes the model asynchronous.
         /// </summary>
         /// <param name="model">The model.</param>
         /// <returns></returns>
-        Task<bool> RemoveModelAsync(TModel model);
+        Task<RepositoryResponse<bool>> RemoveModelAsync(TModel model, TContext _context = null, IDbContextTransaction _transaction = null);
 
         /// <summary>
         /// Removes the model asynchronous.
         /// </summary>
         /// <param name="predicate">The predicate.</param>
         /// <returns></returns>
-        Task<bool> RemoveModelAsync(Expression<Func<TModel, bool>> predicate);
+        Task<RepositoryResponse<bool>> RemoveModelAsync(Expression<Func<TModel, bool>> predicate, TContext _context = null, IDbContextTransaction _transaction = null);
 
         /// <summary>
         /// Removes the list model asynchronous.
         /// </summary>
         /// <param name="predicate">The predicate.</param>
         /// <returns></returns>
-        Task<bool> RemoveListModelAsync(Expression<Func<TModel, bool>> predicate);
+        Task<RepositoryResponse<bool>> RemoveListModelAsync(Expression<Func<TModel, bool>> predicate, TContext _context = null, IDbContextTransaction _transaction = null);
 
         /// <summary>
         /// Gets the single model.
