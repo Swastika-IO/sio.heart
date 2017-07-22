@@ -97,7 +97,7 @@ namespace Swastika.Common.Helper
             {
                 str = str.Replace(m.Value[0], replaceChar);
             }
-            return str;
+            return str.ToLower();
         }
     }
 }
