@@ -6,7 +6,7 @@ namespace Swastika.Common.Helper
 {
     public class PaginationModel<T>
     {
-        public List<T> Items { get; set; }
+        public IEnumerable<T> Items { get; set; }
         public int PageIndex { get; set; }
         public int PageSize { get; set; }
         public int TotalPage { get; set; }
