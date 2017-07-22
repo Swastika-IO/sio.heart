@@ -1458,7 +1458,8 @@ namespace Swastika.Infrastructure.Data.Repository
         /// <param name="isGetSubModels">if set to <c>true</c> [is get sub models].</param>
         /// <returns></returns>
         public virtual async Task<PaginationModel<TView>> GetModelListByAsync(
-            Expression<Func<TModel, bool>> predicate, Expression<Func<TModel, int>> orderBy, string direction, int? pageIndex, int? pageSize, bool isGetSubModels)
+            Expression<Func<TModel, bool>> predicate, Expression<Func<TModel, int>> orderBy, string direction, 
+            int? pageIndex, int? pageSize, bool isGetSubModels)
         {
             using (TContext context = InitContext())
             {

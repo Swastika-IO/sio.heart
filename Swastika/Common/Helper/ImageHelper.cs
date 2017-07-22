@@ -77,7 +77,7 @@ namespace Swastika.Common.Helper
         {
             const int size = 150;
             const int quality = 75;
-            string[] supports = new string[] { ".jpg", ".png", ".jpeg" };
+            string[] supports = new string[] { "", ".jpg", ".png", ".jpeg" };
             //int limit_size = 5 * 1024 * 1024;  //limit size 5MB
             string file_name = string.Empty;
             string file_dir = string.Empty;

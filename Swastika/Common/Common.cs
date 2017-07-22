@@ -85,14 +85,15 @@ namespace Swastika.Common
 
                 if (file != null)
                 {
-                    var fileName = ContentDispositionHeaderValue.Parse
-                        (file.ContentDisposition).FileName.Trim('"');
-
-                    System.Console.WriteLine(fileName);
-                    using (var fileStream = new FileStream(Path.Combine(fullPath, file.FileName), FileMode.Create, FileAccess.ReadWrite))
+                    //var fileName = ContentDispositionHeaderValue.Parse
+                    //    (file.ContentDisposition).FileName.Trim('"');
+                    string fileName = string.Format("{0}.{1}", 
+                        Guid.NewGuid().ToString("N"), 
+                        file.FileName.Split('.').Last());
+                    using (var fileStream = new FileStream(Path.Combine(fullPath, fileName), FileMode.Create, FileAccess.ReadWrite))
                     {
                         await file.CopyToAsync(fileStream);
-                        return file.FileName;
+                        return fileName;
                     }
                 }
                 else
