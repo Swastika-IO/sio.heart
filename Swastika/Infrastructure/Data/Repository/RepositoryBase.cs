@@ -95,9 +95,11 @@ namespace Swastika.Infrastructure.Data.Repository
         /// <returns>
         ///   <c>true</c> if the specified entity is exists; otherwise, <c>false</c>.
         /// </returns>
-        public virtual bool CheckIsExists(TView entity)
+        public virtual bool CheckIsExists(TView entity, TContext _context = null, IDbContextTransaction _transaction = null)
         {
-            using (TContext context = InitContext())
+            TContext context = _context ?? InitContext();
+            var transaction = _transaction ?? context.Database.BeginTransaction();
+            try
             {
                 var model = entity.ParseModel();
                 //For the former case use:
@@ -105,6 +107,24 @@ namespace Swastika.Infrastructure.Data.Repository
 
                 //For the latter case use(it will check loaded entities as well):
                 //return (_context.Set<T>().Find(keys) != null);
+            }
+            catch (Exception ex)
+            {
+                LogErrorMessage(ex);
+                if (_transaction == null)
+                {
+                    transaction.Rollback();
+                }
+                return false;
+            }
+            finally
+            {
+                if (_context == null)
+                {
+                    //if current Context is Root
+                    transaction.Dispose();
+                    context.Dispose();
+                }
             }
         }
 
@@ -115,15 +135,36 @@ namespace Swastika.Infrastructure.Data.Repository
         /// <returns>
         ///   <c>true</c> if the specified predicate is exists; otherwise, <c>false</c>.
         /// </returns>
-        public bool CheckIsExists(System.Func<TModel, bool> predicate)
+        public bool CheckIsExists(System.Func<TModel, bool> predicate, TContext _context = null, IDbContextTransaction _transaction = null)
         {
-            using (TContext context = InitContext())
+            TContext context = _context ?? InitContext();
+            var transaction = _transaction ?? context.Database.BeginTransaction();
+            try
             {
                 //For the former case use:
-                return context.Set<TModel>().Local.Any(predicate);
+                return context.Set<TModel>().Any(predicate);
 
                 //For the latter case use(it will check loaded entities as well):
                 //return (_context.Set<T>().Find(keys) != null);
+            }
+            // TODO: Add more specific exeption types instead of Exception only
+            catch (Exception ex)
+            {
+                LogErrorMessage(ex);
+                if (_transaction == null)
+                {
+                    transaction.Rollback();
+                }
+                return false;
+            }
+            finally
+            {
+                if (_context == null)
+                {
+                    //if current Context is Root
+                    transaction.Dispose();
+                    context.Dispose();
+                }
             }
         }
 
@@ -1335,7 +1376,7 @@ namespace Swastika.Infrastructure.Data.Repository
         /// <param name="isGetSubModels">if set to <c>true</c> [is get sub models].</param>
         /// <returns></returns>
         public virtual PaginationModel<TView> GetModelListBy(
-            Expression<Func<TModel, bool>> predicate, Expression<Func<TModel, DateTime>> orderBy, string direction, int? pageIndex, int? pageSize, bool isGetSubModels)
+            Expression<Func<TModel, bool>> predicate, Expression<Func<TModel, DateTime>> orderBy, string direction, int? pageIndex, int? pageSize, bool isGetSubModels = false)
         {
             using (TContext context = InitContext())
             {
@@ -1459,7 +1500,7 @@ namespace Swastika.Infrastructure.Data.Repository
         /// <returns></returns>
         public virtual async Task<PaginationModel<TView>> GetModelListByAsync(
             Expression<Func<TModel, bool>> predicate, Expression<Func<TModel, int>> orderBy, string direction, 
-            int? pageIndex, int? pageSize, bool isGetSubModels)
+            int? pageIndex, int? pageSize, bool isGetSubModels = false)
         {
             using (TContext context = InitContext())
             {
@@ -1550,7 +1591,7 @@ namespace Swastika.Infrastructure.Data.Repository
         /// <param name="isGetSubModels">if set to <c>true</c> [is get sub models].</param>
         /// <returns></returns>
         public virtual async Task<PaginationModel<TView>> GetModelListByAsync(
-            Expression<Func<TModel, bool>> predicate, Expression<Func<TModel, string>> orderBy, string direction, int? pageIndex, int? pageSize, bool isGetSubModels)
+            Expression<Func<TModel, bool>> predicate, Expression<Func<TModel, string>> orderBy, string direction, int? pageIndex, int? pageSize, bool isGetSubModels = false)
         {
             using (TContext context = InitContext())
             {
@@ -1640,7 +1681,7 @@ namespace Swastika.Infrastructure.Data.Repository
         /// <param name="isGetSubModels">if set to <c>true</c> [is get sub models].</param>
         /// <returns></returns>
         public virtual async Task<PaginationModel<TView>> GetModelListByAsync(
-            Expression<Func<TModel, bool>> predicate, Expression<Func<TModel, DateTime>> orderBy, string direction, int? pageIndex, int? pageSize, bool isGetSubModels)
+            Expression<Func<TModel, bool>> predicate, Expression<Func<TModel, DateTime>> orderBy, string direction, int? pageIndex, int? pageSize, bool isGetSubModels = false)
         {
             using (TContext context = InitContext())
             {
@@ -2272,7 +2313,7 @@ namespace Swastika.Infrastructure.Data.Repository
         public virtual RepositoryResponse<TView> SaveModel(TView view, bool isSaveSubModels = false
             , TContext _context = null, IDbContextTransaction _transaction = null)
         {
-            if (CheckIsExists(view))
+            if (CheckIsExists(view, _context, _transaction))
             {
                 return EditModel(view, isSaveSubModels, _context, _transaction);
             }
@@ -2290,7 +2331,7 @@ namespace Swastika.Infrastructure.Data.Repository
         public virtual Task<RepositoryResponse<TView>> SaveModelAsync(TView view, bool isSaveSubModels = false
             , TContext _context = null, IDbContextTransaction _transaction = null)
         {
-            if (CheckIsExists(view))
+            if (CheckIsExists(view, _context, _transaction))
             {
                 return EditModelAsync(view, isSaveSubModels, _context, _transaction);
             }
