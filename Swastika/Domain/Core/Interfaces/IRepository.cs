@@ -26,7 +26,7 @@ namespace Swastika.Domain.Core.Interfaces {
         /// <returns>
         ///   <c>true</c> if the specified entity is exists; otherwise, <c>false</c>.
         /// </returns>
-        bool CheckIsExists(TView entity);
+        bool CheckIsExists(TView entity, TContext _context = null, IDbContextTransaction _transaction = null);
 
         /// <summary>
         /// Creates the model.
