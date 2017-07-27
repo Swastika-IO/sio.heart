@@ -15,6 +15,7 @@ namespace Swastika.Common
     public class Common
     {
         private static string defaultImagePath = "http://placehold.it/200x200";
+
         public static Stream LoadImage(string strImage64)
         {
             //data:image/gif;base64,
@@ -48,14 +49,14 @@ namespace Swastika.Common
 
         public static string UploadPhoto(string fullPath, Image img)
         {
-            
+
             try
             {
                 if (!Directory.Exists(fullPath))
                 {
                     Directory.CreateDirectory(fullPath);
                 }
-                
+
                 if (img != null)
                 {
                     //string fileExt = GetFilenameExtension(img.RawFormat);
@@ -66,7 +67,7 @@ namespace Swastika.Common
                     return ImageHelper.ResizeImage(img, fullPath);
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return string.Empty;
             }
@@ -87,8 +88,8 @@ namespace Swastika.Common
                 {
                     //var fileName = ContentDispositionHeaderValue.Parse
                     //    (file.ContentDisposition).FileName.Trim('"');
-                    string fileName = string.Format("{0}.{1}", 
-                        Guid.NewGuid().ToString("N"), 
+                    string fileName = string.Format("{0}.{1}",
+                        Guid.NewGuid().ToString("N"),
                         file.FileName.Split('.').Last());
                     using (var fileStream = new FileStream(Path.Combine(fullPath, fileName), FileMode.Create, FileAccess.ReadWrite))
                     {
@@ -105,7 +106,7 @@ namespace Swastika.Common
             {
                 return string.Empty;
             }
-           
+
         }
 
 
@@ -139,7 +140,7 @@ namespace Swastika.Common
             }
             return s;
         }
-       
+
 
         public static bool RemoveFile(string filePath)
         {
@@ -158,7 +159,45 @@ namespace Swastika.Common
             }
             return result;
         }
-        
-        
+
+        public static List<FileViewModel> GetPartialViews()
+        {
+            DirectoryInfo d = new DirectoryInfo(@"Views\Shared\Modules");//Assuming Test is your Folder
+            FileInfo[] Files = d.GetFiles("*.cshtml"); //Getting Text files
+            List<FileViewModel> result = new List<FileViewModel>();
+            foreach (var file in Files)
+            {
+                using (StreamReader s = file.OpenText())
+                {
+                    result.Add(new FileViewModel()
+                    {
+                        Filename = string.Format(@"Modules\{0}", file.Name.Split('.').First()),
+                        Content = s.ReadToEnd()
+                    });
+
+                }
+            }
+            return result;
+        }
+
+        public static bool SavePartialView(FileViewModel file)
+        {
+            try
+            {
+                string fileName = string.Format(@"Views\Shared\{0}.cshtml", file.Filename);
+                //var logPath = System.IO.Path.GetTempFileName();
+                using (var writer = File.CreateText(fileName))
+                {
+                    writer.WriteLine(file.Content); //or .Write(), if you wish
+                    return true;
+                }
+            }
+            catch(Exception ex)
+            {
+                return false;
+            }
+
+        }
+
     }
 }
