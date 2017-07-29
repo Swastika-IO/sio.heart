@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Newtonsoft.Json;
+using Swastika.Common;
 using Swastika.Domain.Core.Models;
 using System;
 using System.Collections.Generic;
@@ -16,6 +17,8 @@ namespace Swastika.Domain.Core.ViewModels
     /// <seealso cref="AutoMapper.Profile" />
     public abstract class ViewModelBase<TModel, TView> where TModel : class where TView : ViewModelBase<TModel, TView>
     {
+        [JsonIgnore]
+        public Constants.ViewModelType ViewType { get; set; }
         [JsonIgnore]
         public List<SupportedCulture> ListSupportedCulture { get; set; }
         [JsonIgnore]

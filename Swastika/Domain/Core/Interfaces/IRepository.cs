@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
+using Swastika.Common;
 using Swastika.Common.Helper;
 using Swastika.Domain.Core.ViewModels;
 using System;
@@ -116,35 +117,24 @@ namespace Swastika.Domain.Core.Interfaces {
         /// Gets the single model.
         /// </summary>
         /// <param name="predicate">The predicate.</param>
-        /// <param name="isGetSubModels">if set to <c>true</c> [is get sub models].</param>
+        /// <param name="viewType">if set to <c>true</c> [is get sub models].</param>
         /// <returns></returns>
-        TView GetSingleModel(Expression<Func<TModel, bool>> predicate, bool isGetSubModels);
+        TView GetSingleModel(Expression<Func<TModel, bool>> predicate, Constants.ViewModelType viewType);
 
         /// <summary>
         /// Gets the single model asynchronous.
         /// </summary>
         /// <param name="predicate">The predicate.</param>
-        /// <param name="isGetSubModels">if set to <c>true</c> [is get sub models].</param>
+        /// <param name="viewType">if set to <c>true</c> [is get sub models].</param>
         /// <returns></returns>
-        Task<TView> GetSingleModelAsync(Expression<Func<TModel, bool>> predicate, bool isGetSubModels);
+        Task<TView> GetSingleModelAsync(Expression<Func<TModel, bool>> predicate, Constants.ViewModelType viewType);
 
         /// <summary>
         /// Gets the model list.
         /// </summary>
-        /// <param name="isGetSubModels">if set to <c>true</c> [is get sub models].</param>
+        /// <param name="viewType">if set to <c>true</c> [is get sub models].</param>
         /// <returns></returns>
-        List<TView> GetModelList(bool isGetSubModels);
-
-        /// <summary>
-        /// Gets the model list.
-        /// </summary>
-        /// <param name="orderBy">The order by.</param>
-        /// <param name="direction">The direction.</param>
-        /// <param name="pageIndex">Index of the page.</param>
-        /// <param name="pageSize">Size of the page.</param>
-        /// <param name="isGetSubModels">if set to <c>true</c> [is get sub models].</param>
-        /// <returns></returns>
-        PaginationModel<TView> GetModelList(Expression<Func<TModel, int>> orderBy, string direction, int? pageIndex, int? pageSize, bool isGetSubModels);
+        List<TView> GetModelList(Constants.ViewModelType viewType);
 
         /// <summary>
         /// Gets the model list.
@@ -153,9 +143,9 @@ namespace Swastika.Domain.Core.Interfaces {
         /// <param name="direction">The direction.</param>
         /// <param name="pageIndex">Index of the page.</param>
         /// <param name="pageSize">Size of the page.</param>
-        /// <param name="isGetSubModels">if set to <c>true</c> [is get sub models].</param>
+        /// <param name="viewType">if set to <c>true</c> [is get sub models].</param>
         /// <returns></returns>
-        PaginationModel<TView> GetModelList(Expression<Func<TModel, string>> orderBy, string direction, int? pageIndex, int? pageSize, bool isGetSubModels);
+        PaginationModel<TView> GetModelList(Expression<Func<TModel, int>> orderBy, string direction, int? pageIndex, int? pageSize, Constants.ViewModelType viewType);
 
         /// <summary>
         /// Gets the model list.
@@ -164,9 +154,20 @@ namespace Swastika.Domain.Core.Interfaces {
         /// <param name="direction">The direction.</param>
         /// <param name="pageIndex">Index of the page.</param>
         /// <param name="pageSize">Size of the page.</param>
-        /// <param name="isGetSubModels">if set to <c>true</c> [is get sub models].</param>
+        /// <param name="viewType">if set to <c>true</c> [is get sub models].</param>
         /// <returns></returns>
-        PaginationModel<TView> GetModelList(Expression<Func<TModel, DateTime>> orderBy, string direction, int? pageIndex, int? pageSize, bool isGetSubModels);
+        PaginationModel<TView> GetModelList(Expression<Func<TModel, string>> orderBy, string direction, int? pageIndex, int? pageSize, Constants.ViewModelType viewType);
+
+        /// <summary>
+        /// Gets the model list.
+        /// </summary>
+        /// <param name="orderBy">The order by.</param>
+        /// <param name="direction">The direction.</param>
+        /// <param name="pageIndex">Index of the page.</param>
+        /// <param name="pageSize">Size of the page.</param>
+        /// <param name="viewType">if set to <c>true</c> [is get sub models].</param>
+        /// <returns></returns>
+        PaginationModel<TView> GetModelList(Expression<Func<TModel, DateTime>> orderBy, string direction, int? pageIndex, int? pageSize, Constants.ViewModelType viewType);
 
         /// <summary>
         /// Gets the model list asynchronous.
@@ -175,9 +176,9 @@ namespace Swastika.Domain.Core.Interfaces {
         /// <param name="direction">The direction.</param>
         /// <param name="pageIndex">Index of the page.</param>
         /// <param name="pageSize">Size of the page.</param>
-        /// <param name="isGetSubModels">if set to <c>true</c> [is get sub models].</param>
+        /// <param name="viewType">if set to <c>true</c> [is get sub models].</param>
         /// <returns></returns>
-        Task<PaginationModel<TView>> GetModelListAsync(Expression<Func<TModel, int>> orderBy, string direction, int? pageIndex, int? pageSize, bool isGetSubModels);
+        Task<PaginationModel<TView>> GetModelListAsync(Expression<Func<TModel, int>> orderBy, string direction, int? pageIndex, int? pageSize, Constants.ViewModelType viewType);
 
         /// <summary>
         /// Gets the model list asynchronous.
@@ -186,9 +187,9 @@ namespace Swastika.Domain.Core.Interfaces {
         /// <param name="direction">The direction.</param>
         /// <param name="pageIndex">Index of the page.</param>
         /// <param name="pageSize">Size of the page.</param>
-        /// <param name="isGetSubModels">if set to <c>true</c> [is get sub models].</param>
+        /// <param name="viewType">if set to <c>true</c> [is get sub models].</param>
         /// <returns></returns>
-        Task<PaginationModel<TView>> GetModelListAsync(Expression<Func<TModel, string>> orderBy, string direction, int? pageIndex, int? pageSize, bool isGetSubModels);
+        Task<PaginationModel<TView>> GetModelListAsync(Expression<Func<TModel, string>> orderBy, string direction, int? pageIndex, int? pageSize, Constants.ViewModelType viewType);
 
         /// <summary>
         /// Gets the model list asynchronous.
@@ -197,9 +198,9 @@ namespace Swastika.Domain.Core.Interfaces {
         /// <param name="direction">The direction.</param>
         /// <param name="pageIndex">Index of the page.</param>
         /// <param name="pageSize">Size of the page.</param>
-        /// <param name="isGetSubModels">if set to <c>true</c> [is get sub models].</param>
+        /// <param name="viewTypeviewType">if set to <c>true</c> [is get sub models].</param>
         /// <returns></returns>
-        Task<PaginationModel<TView>> GetModelListAsync(Expression<Func<TModel, DateTime>> orderBy, string direction, int? pageIndex, int? pageSize, bool isGetSubModels);
+        Task<PaginationModel<TView>> GetModelListAsync(Expression<Func<TModel, DateTime>> orderBy, string direction, int? pageIndex, int? pageSize, Constants.ViewModelType viewType);
 
         /// <summary>
         /// Gets the model list by.
@@ -209,9 +210,9 @@ namespace Swastika.Domain.Core.Interfaces {
         /// <param name="direction">The direction.</param>
         /// <param name="pageIndex">Index of the page.</param>
         /// <param name="pageSize">Size of the page.</param>
-        /// <param name="isGetSubModels">if set to <c>true</c> [is get sub models].</param>
+        /// <param name="viewType">if set to <c>true</c> [is get sub models].</param>
         /// <returns></returns>
-        PaginationModel<TView> GetModelListBy(Expression<Func<TModel, bool>> predicate, Expression<Func<TModel, int>> orderBy, string direction, int? pageIndex, int? pageSize, bool isGetSubModels);
+        PaginationModel<TView> GetModelListBy(Expression<Func<TModel, bool>> predicate, Expression<Func<TModel, int>> orderBy, string direction, int? pageIndex, int? pageSize, Constants.ViewModelType viewType);
 
         /// <summary>
         /// Gets the model list by.
@@ -221,9 +222,9 @@ namespace Swastika.Domain.Core.Interfaces {
         /// <param name="direction">The direction.</param>
         /// <param name="pageIndex">Index of the page.</param>
         /// <param name="pageSize">Size of the page.</param>
-        /// <param name="isGetSubModels">if set to <c>true</c> [is get sub models].</param>
+        /// <param name="viewType">if set to <c>true</c> [is get sub models].</param>
         /// <returns></returns>
-        PaginationModel<TView> GetModelListBy(Expression<Func<TModel, bool>> predicate, Expression<Func<TModel, string>> orderBy, string direction, int? pageIndex, int? pageSize, bool isGetSubModels);
+        PaginationModel<TView> GetModelListBy(Expression<Func<TModel, bool>> predicate, Expression<Func<TModel, string>> orderBy, string direction, int? pageIndex, int? pageSize, Constants.ViewModelType viewType);
 
         /// <summary>
         /// Gets the model list by.
@@ -233,17 +234,17 @@ namespace Swastika.Domain.Core.Interfaces {
         /// <param name="direction">The direction.</param>
         /// <param name="pageIndex">Index of the page.</param>
         /// <param name="pageSize">Size of the page.</param>
-        /// <param name="isGetSubModels">if set to <c>true</c> [is get sub models].</param>
+        /// <param name="viewType">if set to <c>true</c> [is get sub models].</param>
         /// <returns></returns>
-        PaginationModel<TView> GetModelListBy(Expression<Func<TModel, bool>> predicate, Expression<Func<TModel, DateTime>> orderBy, string direction, int? pageIndex, int? pageSize, bool isGetSubModels);
+        PaginationModel<TView> GetModelListBy(Expression<Func<TModel, bool>> predicate, Expression<Func<TModel, DateTime>> orderBy, string direction, int? pageIndex, int? pageSize, Constants.ViewModelType viewType);
 
         /// <summary>
         /// Gets the model list by.
         /// </summary>
         /// <param name="predicate">The predicate.</param>
-        /// <param name="isGetSubModels">if set to <c>true</c> [is get sub models].</param>
+        /// <param name="viewType">if set to <c>true</c> [is get sub models].</param>
         /// <returns></returns>
-        List<TView> GetModelListBy(Expression<Func<TModel, bool>> predicate, bool isGetSubModels);
+        List<TView> GetModelListBy(Expression<Func<TModel, bool>> predicate, Constants.ViewModelType viewType);
 
         /// <summary>
         /// Gets the model list by asynchronous.
@@ -253,9 +254,9 @@ namespace Swastika.Domain.Core.Interfaces {
         /// <param name="direction">The direction.</param>
         /// <param name="pageIndex">Index of the page.</param>
         /// <param name="pageSize">Size of the page.</param>
-        /// <param name="isGetSubModels">if set to <c>true</c> [is get sub models].</param>
+        /// <param name="viewType">if set to <c>true</c> [is get sub models].</param>
         /// <returns></returns>
-        Task<PaginationModel<TView>> GetModelListByAsync(Expression<Func<TModel, bool>> predicate, Expression<Func<TModel, int>> orderBy, string direction, int? pageIndex, int? pageSize, bool isGetSubModels);
+        Task<PaginationModel<TView>> GetModelListByAsync(Expression<Func<TModel, bool>> predicate, Expression<Func<TModel, int>> orderBy, string direction, int? pageIndex, int? pageSize, Constants.ViewModelType viewType);
 
         /// <summary>
         /// Gets the model list by asynchronous.
@@ -265,9 +266,9 @@ namespace Swastika.Domain.Core.Interfaces {
         /// <param name="direction">The direction.</param>
         /// <param name="pageIndex">Index of the page.</param>
         /// <param name="pageSize">Size of the page.</param>
-        /// <param name="isGetSubModels">if set to <c>true</c> [is get sub models].</param>
+        /// <param name="viewType">if set to <c>true</c> [is get sub models].</param>
         /// <returns></returns>
-        Task<PaginationModel<TView>> GetModelListByAsync(Expression<Func<TModel, bool>> predicate, Expression<Func<TModel, string>> orderBy, string direction, int? pageIndex, int? pageSize, bool isGetSubModels);
+        Task<PaginationModel<TView>> GetModelListByAsync(Expression<Func<TModel, bool>> predicate, Expression<Func<TModel, string>> orderBy, string direction, int? pageIndex, int? pageSize, Constants.ViewModelType viewType);
 
         /// <summary>
         /// Gets the model list by asynchronous.
@@ -277,17 +278,17 @@ namespace Swastika.Domain.Core.Interfaces {
         /// <param name="direction">The direction.</param>
         /// <param name="pageIndex">Index of the page.</param>
         /// <param name="pageSize">Size of the page.</param>
-        /// <param name="isGetSubModels">if set to <c>true</c> [is get sub models].</param>
+        /// <param name="viewType">if set to <c>true</c> [is get sub models].</param>
         /// <returns></returns>
-        Task<PaginationModel<TView>> GetModelListByAsync(Expression<Func<TModel, bool>> predicate, Expression<Func<TModel, DateTime>> orderBy, string direction, int? pageIndex, int? pageSize, bool isGetSubModels);
+        Task<PaginationModel<TView>> GetModelListByAsync(Expression<Func<TModel, bool>> predicate, Expression<Func<TModel, DateTime>> orderBy, string direction, int? pageIndex, int? pageSize, Constants.ViewModelType viewType);
 
         /// <summary>
         /// Gets the model list by asynchronous.
         /// </summary>
         /// <param name="predicate">The predicate.</param>
-        /// <param name="isGetSubModels">if set to <c>true</c> [is get sub models].</param>
+        /// <param name="viewType">if set to <c>true</c> [is get sub models].</param>
         /// <returns></returns>
-        Task<List<TView>> GetModelListByAsync(Expression<Func<TModel, bool>> predicate, bool isGetSubModels);
+        Task<List<TView>> GetModelListByAsync(Expression<Func<TModel, bool>> predicate, Constants.ViewModelType viewType);
     }
 
     public interface IRepository<TEntity> : IDisposable where TEntity : class {

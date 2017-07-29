@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
+using Swastika.Common;
 using Swastika.Common.Helper;
 using Swastika.Domain.Core.Interfaces;
 using Swastika.Domain.Core.ViewModels;
@@ -63,12 +64,12 @@ namespace Swastika.Infrastructure.Data.Repository
         /// </summary>
         /// <param name="lstModels">The LST models.</param>
         /// <returns></returns>
-        public virtual List<TView> ParseView(List<TModel> lstModels)
+        public virtual List<TView> ParseView(List<TModel> lstModels, Constants.ViewModelType viewType)
         {
             List<TView> lstView = new List<TView>();
             foreach (var model in lstModels)
             {
-                lstView.Add(ParseView(model));
+                lstView.Add(ParseView(model, viewType));
             }
 
             return lstView;
@@ -79,12 +80,20 @@ namespace Swastika.Infrastructure.Data.Repository
         /// </summary>
         /// <param name="model">The model.</param>
         /// <returns></returns>
-        public virtual TView ParseView(TModel model)
+        public virtual TView ParseView(TModel model, Constants.ViewModelType viewType)
         {
             Type classType = typeof(TView);
-            ConstructorInfo classConstructor = classType.GetConstructor(new Type[] { model.GetType() });
-            TView vm = (TView)classConstructor.Invoke(new object[] { model });
-
+            ConstructorInfo classConstructor = classType.GetConstructor(new Type[] { model.GetType(), viewType.GetType() });
+            TView vm = null;
+            if (classConstructor != null)
+            {
+                vm = (TView)classConstructor.Invoke(new object[] { model, viewType });
+            }
+            else
+            {
+                classConstructor = classType.GetConstructor(new Type[] { model.GetType() });
+                vm = (TView)classConstructor.Invoke(new object[] { model });
+            }
             return vm;
         }
 
@@ -201,7 +210,7 @@ namespace Swastika.Infrastructure.Data.Repository
                     return new RepositoryResponse<TView>()
                     {
                         IsSucceed = true,
-                        Data = ParseView(model)
+                        Data = ParseView(model, Constants.ViewModelType.BackEnd)
                     };
                 }
                 else
@@ -278,7 +287,7 @@ namespace Swastika.Infrastructure.Data.Repository
                     return new RepositoryResponse<TView>()
                     {
                         IsSucceed = true,
-                        Data = ParseView(model)
+                        Data = ParseView(model, Constants.ViewModelType.BackEnd)
                     };
                 }
                 else
@@ -357,7 +366,7 @@ namespace Swastika.Infrastructure.Data.Repository
                     return new RepositoryResponse<TView>()
                     {
                         IsSucceed = true,
-                        Data = ParseView(model)
+                        Data = ParseView(model, Constants.ViewModelType.BackEnd)
                     };
                 }
                 else
@@ -434,7 +443,7 @@ namespace Swastika.Infrastructure.Data.Repository
                     return new RepositoryResponse<TView>()
                     {
                         IsSucceed = true,
-                        Data = ParseView(model)
+                        Data = ParseView(model, Constants.ViewModelType.BackEnd)
                     };
                 }
                 else
@@ -485,7 +494,7 @@ namespace Swastika.Infrastructure.Data.Repository
         /// </summary>
         /// <param name="isGetSubModels">if set to <c>true</c> [is get sub models].</param>
         /// <returns></returns>
-        public virtual async Task<List<TView>> GetViewModelListAsync(bool isGetSubModels)
+        public virtual async Task<List<TView>> GetViewModelListAsync(Constants.ViewModelType viewType = Constants.ViewModelType.FrontEnd)
         {
             using (TContext context = InitContext())
             {
@@ -493,26 +502,9 @@ namespace Swastika.Infrastructure.Data.Repository
                 {
                     List<TView> lstViewResult = new List<TView>();
                     var lstModel = await context.Set<TModel>().ToListAsync();
-
                     lstModel.ForEach(model => context.Entry(model).State = EntityState.Detached);
-
-                    if (lstModel.Count > 0)
-                    {
-                        lstViewResult = ParseView(lstModel);
-
-                        if (lstViewResult.Count > 0 && isGetSubModels)
-                        {
-                            foreach (var view in lstViewResult)
-                            {
-                                GetSubModels(view);
-                            }
-                        }
-                        return lstViewResult;
-                    }
-                    else
-                    {
-                        return lstViewResult;
-                    }
+                    lstViewResult = ParseView(lstModel, viewType);
+                    return lstViewResult;
                 }
                 // TODO: Add more specific exeption types instead of Exception only
                 catch (Exception ex)
@@ -528,7 +520,7 @@ namespace Swastika.Infrastructure.Data.Repository
         /// </summary>
         /// <param name="isGetSubModels">if set to <c>true</c> [is get sub models].</param>
         /// <returns></returns>
-        public virtual List<TView> GetModelList(bool isGetSubModels = false)
+        public virtual List<TView> GetModelList(Constants.ViewModelType viewType = Constants.ViewModelType.FrontEnd)
         {
             using (TContext context = InitContext())
             {
@@ -538,24 +530,8 @@ namespace Swastika.Infrastructure.Data.Repository
                     var lstModel = context.Set<TModel>().ToList();
 
                     lstModel.ForEach(model => context.Entry(model).State = EntityState.Detached);
-
-                    if (lstModel.Count > 0)
-                    {
-                        lstViewResult = ParseView(lstModel);
-
-                        if (lstViewResult.Count > 0 && isGetSubModels)
-                        {
-                            foreach (var view in lstViewResult)
-                            {
-                                GetSubModels(view);
-                            }
-                        }
-                        return lstViewResult;
-                    }
-                    else
-                    {
-                        return lstViewResult;
-                    }
+                    lstViewResult = ParseView(lstModel, viewType);
+                    return lstViewResult;
                 }
                 // TODO: Add more specific exeption types instead of Exception only
                 catch (Exception ex)
@@ -576,7 +552,7 @@ namespace Swastika.Infrastructure.Data.Repository
         /// <param name="isGetSubModels">if set to <c>true</c> [is get sub models].</param>
         /// <returns></returns>
         public virtual PaginationModel<TView> GetModelList(
-            Expression<Func<TModel, int>> orderBy, string direction, int? pageIndex, int? pageSize, bool isGetSubModels)
+            Expression<Func<TModel, int>> orderBy, string direction, int? pageIndex, int? pageSize, Constants.ViewModelType viewType = Constants.ViewModelType.FrontEnd)
         {
             using (TContext context = InitContext())
             {
@@ -636,15 +612,7 @@ namespace Swastika.Infrastructure.Data.Repository
                     }
 
                     lstModel.ForEach(model => context.Entry(model).State = EntityState.Detached);
-                    var lstViewResult = ParseView(lstModel);
-
-                    if (lstViewResult.Count > 0 && isGetSubModels)
-                    {
-                        foreach (var view in lstViewResult)
-                        {
-                            GetSubModels(view);
-                        }
-                    }
+                    var lstViewResult = ParseView(lstModel, viewType);
 
                     result.Items = lstViewResult;
                     return result;
@@ -668,7 +636,7 @@ namespace Swastika.Infrastructure.Data.Repository
         /// <param name="isGetSubModels">if set to <c>true</c> [is get sub models].</param>
         /// <returns></returns>
         public virtual PaginationModel<TView> GetModelList(
-            Expression<Func<TModel, string>> orderBy, string direction, int? pageIndex, int? pageSize, bool isGetSubModels)
+            Expression<Func<TModel, string>> orderBy, string direction, int? pageIndex, int? pageSize, Constants.ViewModelType viewType = Constants.ViewModelType.FrontEnd)
         {
             using (TContext context = InitContext())
             {
@@ -729,16 +697,7 @@ namespace Swastika.Infrastructure.Data.Repository
 
                     lstModel.ForEach(model => context.Entry(model).State = EntityState.Detached);
 
-                    var lstViewResult = ParseView(lstModel);
-
-                    if (lstViewResult.Count > 0 && isGetSubModels)
-                    {
-                        foreach (var view in lstViewResult)
-                        {
-                            GetSubModels(view);
-                        }
-                    }
-
+                    var lstViewResult = ParseView(lstModel, viewType);
                     result.Items = lstViewResult;
 
                     return result;
@@ -762,7 +721,7 @@ namespace Swastika.Infrastructure.Data.Repository
         /// <param name="isGetSubModels">if set to <c>true</c> [is get sub models].</param>
         /// <returns></returns>
         public virtual PaginationModel<TView> GetModelList(
-            Expression<Func<TModel, DateTime>> orderBy, string direction, int? pageIndex, int? pageSize, bool isGetSubModels)
+            Expression<Func<TModel, DateTime>> orderBy, string direction, int? pageIndex, int? pageSize, Constants.ViewModelType viewType = Constants.ViewModelType.FrontEnd)
         {
             using (TContext context = InitContext())
             {
@@ -821,15 +780,7 @@ namespace Swastika.Infrastructure.Data.Repository
 
                     lstModel.ForEach(model => context.Entry(model).State = EntityState.Detached);
 
-                    var lstViewResult = ParseView(lstModel);
-
-                    if (lstViewResult.Count > 0 && isGetSubModels)
-                    {
-                        foreach (var view in lstViewResult)
-                        {
-                            GetSubModels(view);
-                        }
-                    }
+                    var lstViewResult = ParseView(lstModel, viewType);
 
                     result.Items = lstViewResult;
                     return result;
@@ -852,7 +803,7 @@ namespace Swastika.Infrastructure.Data.Repository
         /// <param name="isGetSubModels">if set to <c>true</c> [is get sub models].</param>
         /// <returns></returns>
         public virtual async Task<PaginationModel<TView>> GetModelListAsync(
-            Expression<Func<TModel, string>> orderBy, string direction, int? pageIndex, int? pageSize, bool isGetSubModels)
+            Expression<Func<TModel, string>> orderBy, string direction, int? pageIndex, int? pageSize, Constants.ViewModelType viewType = Constants.ViewModelType.FrontEnd)
         {
             using (TContext context = InitContext())
             {
@@ -909,15 +860,7 @@ namespace Swastika.Infrastructure.Data.Repository
 
                     lstModel.ForEach(model => context.Entry(model).State = EntityState.Detached);
 
-                    var lstViewResult = ParseView(lstModel);
-
-                    if (lstViewResult.Count > 0 && isGetSubModels)
-                    {
-                        foreach (var view in lstViewResult)
-                        {
-                            GetSubModels(view);
-                        }
-                    }
+                    var lstViewResult = ParseView(lstModel, viewType);
 
                     result.Items = lstViewResult;
 
@@ -936,7 +879,7 @@ namespace Swastika.Infrastructure.Data.Repository
         /// </summary>
         /// <param name="isGetSubModels">if set to <c>true</c> [is get sub models].</param>
         /// <returns></returns>
-        public virtual async Task<List<TView>> GetModelListAsync(bool isGetSubModels = false)
+        public virtual async Task<List<TView>> GetModelListAsync(Constants.ViewModelType viewType = Constants.ViewModelType.FrontEnd)
         {
             using (TContext context = InitContext())
             {
@@ -944,15 +887,7 @@ namespace Swastika.Infrastructure.Data.Repository
                 {
                     var lstModel = await context.Set<TModel>().ToListAsync();
                     lstModel.ForEach(model => context.Entry(model).State = EntityState.Detached);
-                    var lstViewResult = ParseView(lstModel);
-
-                    if (lstViewResult.Count > 0 && isGetSubModels)
-                    {
-                        foreach (var view in lstViewResult)
-                        {
-                            GetSubModels(view);
-                        }
-                    }
+                    var lstViewResult = ParseView(lstModel, viewType);
 
                     return lstViewResult;
                 }
@@ -974,7 +909,7 @@ namespace Swastika.Infrastructure.Data.Repository
         /// <param name="isGetSubModels">if set to <c>true</c> [is get sub models].</param>
         /// <returns></returns>
         public virtual async Task<PaginationModel<TView>> GetModelListAsync(
-            Expression<Func<TModel, DateTime>> orderBy, string direction, int? pageIndex, int? pageSize, bool isGetSubModels)
+            Expression<Func<TModel, DateTime>> orderBy, string direction, int? pageIndex, int? pageSize, Constants.ViewModelType viewType = Constants.ViewModelType.FrontEnd)
         {
             using (TContext context = InitContext())
             {
@@ -1032,17 +967,7 @@ namespace Swastika.Infrastructure.Data.Repository
                             break;
                     }
                     lstModel.ForEach(model => context.Entry(model).State = EntityState.Detached);
-
-                    var lstViewResult = ParseView(lstModel);
-
-                    if (lstViewResult.Count > 0 && isGetSubModels)
-                    {
-                        foreach (var view in lstViewResult)
-                        {
-                            GetSubModels(view);
-                        }
-                    }
-
+                    var lstViewResult = ParseView(lstModel, viewType);
                     result.Items = lstViewResult;
 
                     return result;
@@ -1065,7 +990,7 @@ namespace Swastika.Infrastructure.Data.Repository
         /// <param name="isGetSubModels">if set to <c>true</c> [is get sub models].</param>
         /// <returns></returns>
         public virtual async Task<PaginationModel<TView>> GetModelListAsync(
-            Expression<Func<TModel, int>> orderBy, string direction, int? pageIndex, int? pageSize, bool isGetSubModels)
+            Expression<Func<TModel, int>> orderBy, string direction, int? pageIndex, int? pageSize, Constants.ViewModelType viewType = Constants.ViewModelType.FrontEnd)
         {
             using (TContext context = InitContext())
             {
@@ -1125,15 +1050,7 @@ namespace Swastika.Infrastructure.Data.Repository
 
                     lstModel.ForEach(model => context.Entry(model).State = EntityState.Detached);
 
-                    var lstViewResult = ParseView(lstModel);
-
-                    if (lstViewResult.Count > 0 && isGetSubModels)
-                    {
-                        foreach (var view in lstViewResult)
-                        {
-                            GetSubModels(view);
-                        }
-                    }
+                    var lstViewResult = ParseView(lstModel, viewType);
 
                     result.Items = lstViewResult;
                     return result;
@@ -1156,7 +1073,7 @@ namespace Swastika.Infrastructure.Data.Repository
         /// <param name="predicate">The predicate.</param>
         /// <param name="isGetSubModels">if set to <c>true</c> [is get sub models].</param>
         /// <returns></returns>
-        public virtual List<TView> GetModelListBy(Expression<Func<TModel, bool>> predicate, bool isGetSubModels = false)
+        public virtual List<TView> GetModelListBy(Expression<Func<TModel, bool>> predicate, Constants.ViewModelType viewType = Constants.ViewModelType.FrontEnd)
         {
             using (TContext context = InitContext())
             {
@@ -1164,16 +1081,8 @@ namespace Swastika.Infrastructure.Data.Repository
                 {
                     var lstModel = context.Set<TModel>().Where(predicate).ToList();
                     lstModel.ForEach(model => context.Entry(model).State = EntityState.Detached);
-                    var lstViewResult = ParseView(lstModel);
-
-                    if (lstViewResult.Count > 0 && isGetSubModels)
-                    {
-                        foreach (var view in lstViewResult)
-                        {
-                            GetSubModels(view);
-                        }
-                    }
-                    return ParseView(lstModel);
+                    var lstViewResult = ParseView(lstModel, viewType);
+                    return lstViewResult;
                 }
                 catch (Exception ex)
                 {
@@ -1194,7 +1103,7 @@ namespace Swastika.Infrastructure.Data.Repository
         /// <param name="isGetSubModels">if set to <c>true</c> [is get sub models].</param>
         /// <returns></returns>
         public virtual PaginationModel<TView> GetModelListBy(
-            Expression<Func<TModel, bool>> predicate, Expression<Func<TModel, string>> orderBy, string direction, int? pageIndex, int? pageSize, bool isGetSubModels)
+            Expression<Func<TModel, bool>> predicate, Expression<Func<TModel, string>> orderBy, string direction, int? pageIndex, int? pageSize, Constants.ViewModelType viewType = Constants.ViewModelType.FrontEnd)
         {
             using (TContext context = InitContext())
             {
@@ -1253,15 +1162,89 @@ namespace Swastika.Infrastructure.Data.Repository
                     }
 
                     lstModel.ForEach(model => context.Entry(model).State = EntityState.Detached);
-                    var lstViewResult = ParseView(lstModel);
+                    var lstViewResult = ParseView(lstModel, viewType);
+                    result.Items = lstViewResult;
+                    return result;
+                }
+                catch (Exception ex)
+                {
+                    LogErrorMessage(ex);
+                    return null;
+                }
+            }
+        }
 
-                    if (lstViewResult.Count > 0 && isGetSubModels)
+        /// <summary>
+        /// Gets the model list by.
+        /// </summary>
+        /// <param name="predicate">The predicate.</param>
+        /// <param name="orderBy">The order by.</param>
+        /// <param name="direction">The direction.</param>
+        /// <param name="pageIndex">Index of the page.</param>
+        /// <param name="pageSize">Size of the page.</param>
+        /// <param name="isGetSubModels">if set to <c>true</c> [is get sub models].</param>
+        /// <returns></returns>
+        public virtual PaginationModel<TView> GetModelListBy(
+            Expression<Func<TModel, bool>> predicate, Expression<Func<TModel, int>> orderBy, string direction, int? pageIndex, int? pageSize, Constants.ViewModelType viewType = Constants.ViewModelType.FrontEnd)
+        {
+            using (TContext context = InitContext())
+            {
+                try
+                {
+                    List<TModel> lstModel = new List<TModel>();
+                    var query = context.Set<TModel>().Where(predicate);
+
+                    PaginationModel<TView> result = new PaginationModel<TView>()
                     {
-                        foreach (var view in lstViewResult)
-                        {
-                            GetSubModels(view);
-                        }
+                        TotalItems = query.Count(),
+                        PageIndex = pageIndex ?? 0
+                    };
+                    result.PageSize = pageSize ?? result.TotalItems;
+
+                    if (pageSize.HasValue)
+                    {
+                        result.TotalPage = result.TotalItems / pageSize.Value + (result.TotalItems % pageSize.Value > 0 ? 1 : 0);
                     }
+                    switch (direction)
+                    {
+                        case "desc":
+                            if (pageSize.HasValue)
+                            {
+                                lstModel = query
+                                    .OrderByDescending(orderBy)
+                                    .Skip(pageIndex.Value * pageSize.Value)
+                                    .Take(pageSize.Value)
+                                    .ToList();
+                            }
+                            else
+                            {
+                                lstModel = query
+                                    .OrderByDescending(orderBy)
+                                    .ToList();
+                            }
+                            break;
+
+                        default:
+                            if (pageSize.HasValue)
+                            {
+                                lstModel = query
+                                    .OrderBy(orderBy)
+                                    .Skip(pageIndex.Value * pageSize.Value)
+                                    .Take(pageSize.Value)
+                                    .ToList();
+                            }
+                            else
+                            {
+                                lstModel = query
+                                    .OrderBy(orderBy)
+                                    .ToList();
+                            }
+                            break;
+                    }
+
+                    lstModel.ForEach(model => context.Entry(model).State = EntityState.Detached);
+
+                    var lstViewResult = ParseView(lstModel, viewType);
 
                     result.Items = lstViewResult;
                     return result;
@@ -1285,7 +1268,7 @@ namespace Swastika.Infrastructure.Data.Repository
         /// <param name="isGetSubModels">if set to <c>true</c> [is get sub models].</param>
         /// <returns></returns>
         public virtual PaginationModel<TView> GetModelListBy(
-            Expression<Func<TModel, bool>> predicate, Expression<Func<TModel, int>> orderBy, string direction, int? pageIndex, int? pageSize, bool isGetSubModels)
+            Expression<Func<TModel, bool>> predicate, Expression<Func<TModel, DateTime>> orderBy, string direction, int? pageIndex, int? pageSize, Constants.ViewModelType viewType = Constants.ViewModelType.FrontEnd)
         {
             using (TContext context = InitContext())
             {
@@ -1343,106 +1326,7 @@ namespace Swastika.Infrastructure.Data.Repository
                     }
 
                     lstModel.ForEach(model => context.Entry(model).State = EntityState.Detached);
-
-                    var lstViewResult = ParseView(lstModel);
-
-                    if (lstViewResult.Count > 0 && isGetSubModels)
-                    {
-                        foreach (var view in lstViewResult)
-                        {
-                            GetSubModels(view);
-                        }
-                    }
-
-                    result.Items = lstViewResult;
-                    return result;
-                }
-                catch (Exception ex)
-                {
-                    LogErrorMessage(ex);
-                    return null;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Gets the model list by.
-        /// </summary>
-        /// <param name="predicate">The predicate.</param>
-        /// <param name="orderBy">The order by.</param>
-        /// <param name="direction">The direction.</param>
-        /// <param name="pageIndex">Index of the page.</param>
-        /// <param name="pageSize">Size of the page.</param>
-        /// <param name="isGetSubModels">if set to <c>true</c> [is get sub models].</param>
-        /// <returns></returns>
-        public virtual PaginationModel<TView> GetModelListBy(
-            Expression<Func<TModel, bool>> predicate, Expression<Func<TModel, DateTime>> orderBy, string direction, int? pageIndex, int? pageSize, bool isGetSubModels = false)
-        {
-            using (TContext context = InitContext())
-            {
-                try
-                {
-                    List<TModel> lstModel = new List<TModel>();
-                    var query = context.Set<TModel>().Where(predicate);
-
-                    PaginationModel<TView> result = new PaginationModel<TView>()
-                    {
-                        TotalItems = query.Count(),
-                        PageIndex = pageIndex ?? 0
-                    };
-                    result.PageSize = pageSize ?? result.TotalItems;
-
-                    if (pageSize.HasValue)
-                    {
-                        result.TotalPage = result.TotalItems / pageSize.Value + (result.TotalItems % pageSize.Value > 0 ? 1 : 0);
-                    }
-                    switch (direction)
-                    {
-                        case "desc":
-                            if (pageSize.HasValue)
-                            {
-                                lstModel = query
-                                    .OrderByDescending(orderBy)
-                                    .Skip(pageIndex.Value * pageSize.Value)
-                                    .Take(pageSize.Value)
-                                    .ToList();
-                            }
-                            else
-                            {
-                                lstModel = query
-                                    .OrderByDescending(orderBy)
-                                    .ToList();
-                            }
-                            break;
-
-                        default:
-                            if (pageSize.HasValue)
-                            {
-                                lstModel = query
-                                    .OrderBy(orderBy)
-                                    .Skip(pageIndex.Value * pageSize.Value)
-                                    .Take(pageSize.Value)
-                                    .ToList();
-                            }
-                            else
-                            {
-                                lstModel = query
-                                    .OrderBy(orderBy)
-                                    .ToList();
-                            }
-                            break;
-                    }
-
-                    lstModel.ForEach(model => context.Entry(model).State = EntityState.Detached);
-                    var lstViewResult = ParseView(lstModel);
-
-                    if (lstViewResult.Count > 0 && isGetSubModels)
-                    {
-                        foreach (var view in lstViewResult)
-                        {
-                            GetSubModels(view);
-                        }
-                    }
+                    var lstViewResult = ParseView(lstModel, viewType);
 
                     result.Items = lstViewResult;
                     return result;
@@ -1461,7 +1345,8 @@ namespace Swastika.Infrastructure.Data.Repository
         /// <param name="predicate">The predicate.</param>
         /// <param name="isGetSubModels">if set to <c>true</c> [is get sub models].</param>
         /// <returns></returns>
-        public virtual async Task<List<TView>> GetModelListByAsync(Expression<Func<TModel, bool>> predicate, bool isGetSubModels = false)
+        public virtual async Task<List<TView>> GetModelListByAsync(Expression<Func<TModel, bool>> predicate,
+            Constants.ViewModelType viewType = Constants.ViewModelType.FrontEnd)
         {
             using (TContext context = InitContext())
             {
@@ -1469,15 +1354,7 @@ namespace Swastika.Infrastructure.Data.Repository
                 {
                     var lstModel = await context.Set<TModel>().Where(predicate).ToListAsync();
                     lstModel.ForEach(model => context.Entry(model).State = EntityState.Detached);
-                    var lstViewResult = ParseView(lstModel);
-
-                    if (lstViewResult.Count > 0 && isGetSubModels)
-                    {
-                        foreach (var view in lstViewResult)
-                        {
-                            GetSubModels(view);
-                        }
-                    }
+                    var lstViewResult = ParseView(lstModel, viewType);
                     return lstViewResult;
                 }
                 catch (Exception ex)
@@ -1499,8 +1376,8 @@ namespace Swastika.Infrastructure.Data.Repository
         /// <param name="isGetSubModels">if set to <c>true</c> [is get sub models].</param>
         /// <returns></returns>
         public virtual async Task<PaginationModel<TView>> GetModelListByAsync(
-            Expression<Func<TModel, bool>> predicate, Expression<Func<TModel, int>> orderBy, string direction, 
-            int? pageIndex, int? pageSize, bool isGetSubModels = false)
+            Expression<Func<TModel, bool>> predicate, Expression<Func<TModel, int>> orderBy, string direction,
+            int? pageIndex, int? pageSize, Constants.ViewModelType viewType = Constants.ViewModelType.FrontEnd)
         {
             using (TContext context = InitContext())
             {
@@ -1558,16 +1435,7 @@ namespace Swastika.Infrastructure.Data.Repository
                     }
 
                     lstModel.ForEach(model => context.Entry(model).State = EntityState.Detached);
-
-                    var lstViewResult = ParseView(lstModel);
-
-                    if (lstViewResult.Count > 0 && isGetSubModels)
-                    {
-                        foreach (var view in lstViewResult)
-                        {
-                            GetSubModels(view);
-                        }
-                    }
+                    var lstViewResult = ParseView(lstModel, viewType);
 
                     result.Items = lstViewResult;
                     return result;
@@ -1591,7 +1459,7 @@ namespace Swastika.Infrastructure.Data.Repository
         /// <param name="isGetSubModels">if set to <c>true</c> [is get sub models].</param>
         /// <returns></returns>
         public virtual async Task<PaginationModel<TView>> GetModelListByAsync(
-            Expression<Func<TModel, bool>> predicate, Expression<Func<TModel, string>> orderBy, string direction, int? pageIndex, int? pageSize, bool isGetSubModels = false)
+            Expression<Func<TModel, bool>> predicate, Expression<Func<TModel, string>> orderBy, string direction, int? pageIndex, int? pageSize, Constants.ViewModelType viewType = Constants.ViewModelType.FrontEnd)
         {
             using (TContext context = InitContext())
             {
@@ -1649,15 +1517,7 @@ namespace Swastika.Infrastructure.Data.Repository
                     }
                     lstModel.ForEach(model => context.Entry(model).State = EntityState.Detached);
 
-                    var lstViewResult = ParseView(lstModel);
-
-                    if (lstViewResult.Count > 0 && isGetSubModels)
-                    {
-                        foreach (var view in lstViewResult)
-                        {
-                            GetSubModels(view);
-                        }
-                    }
+                    var lstViewResult = ParseView(lstModel, viewType);
 
                     result.Items = lstViewResult;
                     return result;
@@ -1681,7 +1541,7 @@ namespace Swastika.Infrastructure.Data.Repository
         /// <param name="isGetSubModels">if set to <c>true</c> [is get sub models].</param>
         /// <returns></returns>
         public virtual async Task<PaginationModel<TView>> GetModelListByAsync(
-            Expression<Func<TModel, bool>> predicate, Expression<Func<TModel, DateTime>> orderBy, string direction, int? pageIndex, int? pageSize, bool isGetSubModels = false)
+            Expression<Func<TModel, bool>> predicate, Expression<Func<TModel, DateTime>> orderBy, string direction, int? pageIndex, int? pageSize, Constants.ViewModelType viewType = Constants.ViewModelType.FrontEnd)
         {
             using (TContext context = InitContext())
             {
@@ -1737,16 +1597,7 @@ namespace Swastika.Infrastructure.Data.Repository
                             break;
                     }
                     lstModel.ForEach(model => context.Entry(model).State = EntityState.Detached);
-
-                    var lstViewResult = ParseView(lstModel);
-
-                    if (lstViewResult.Count > 0 && isGetSubModels)
-                    {
-                        foreach (var view in lstViewResult)
-                        {
-                            GetSubModels(view);
-                        }
-                    }
+                    var lstViewResult = ParseView(lstModel, viewType);
 
                     result.Items = lstViewResult;
                     return result;
@@ -1767,7 +1618,7 @@ namespace Swastika.Infrastructure.Data.Repository
         /// <param name="predicate">The predicate.</param>
         /// <param name="isGetSubModels">if set to <c>true</c> [is get sub models].</param>
         /// <returns></returns>
-        public virtual TView GetSingleModel(Expression<Func<TModel, bool>> predicate, bool isGetSubModels = false)
+        public virtual TView GetSingleModel(Expression<Func<TModel, bool>> predicate, Constants.ViewModelType viewType = Constants.ViewModelType.FrontEnd)
         {
             using (TContext context = InitContext())
             {
@@ -1775,12 +1626,8 @@ namespace Swastika.Infrastructure.Data.Repository
                 if (model != null)
                 {
                     context.Entry(model).State = EntityState.Detached;
-                    var viewResult = ParseView(model);
+                    var viewResult = ParseView(model, viewType);
 
-                    if (isGetSubModels)
-                    {
-                        GetSubModels(viewResult);
-                    }
                     return viewResult;
                 }
                 else
@@ -1796,7 +1643,7 @@ namespace Swastika.Infrastructure.Data.Repository
         /// <param name="predicate">The predicate.</param>
         /// <param name="isGetSubModels">if set to <c>true</c> [is get sub models].</param>
         /// <returns></returns>
-        public virtual async Task<TView> GetSingleModelAsync(Expression<Func<TModel, bool>> predicate, bool isGetSubModels = false)
+        public virtual async Task<TView> GetSingleModelAsync(Expression<Func<TModel, bool>> predicate, Constants.ViewModelType viewType = Constants.ViewModelType.FrontEnd)
         {
             using (TContext context = InitContext())
             {
@@ -1805,11 +1652,7 @@ namespace Swastika.Infrastructure.Data.Repository
                 {
                     context.Entry(model).State = EntityState.Detached;
 
-                    var viewResult = ParseView(model);
-                    if (isGetSubModels)
-                    {
-                        GetSubModels(viewResult);
-                    }
+                    var viewResult = ParseView(model, viewType);
                     return viewResult;
                 }
                 else
@@ -2352,25 +2195,6 @@ namespace Swastika.Infrastructure.Data.Repository
         /// <param name="model">The model.</param>
         /// <returns></returns>
         public virtual Task<bool> SaveSubModelAsync(TView view, TContext context, IDbContextTransaction _transaction)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
-        /// Gets the sub models.
-        /// </summary>
-        /// <param name="model">The model.</param>
-        public virtual void GetSubModels(TView model)
-        {
-        }
-
-        /// <summary>
-        /// Gets the sub models asynchronous.
-        /// </summary>
-        /// <param name="model">The model.</param>
-        /// <returns></returns>
-        /// <exception cref="System.NotImplementedException"></exception>
-        public virtual Task GetSubModelsAsync(TView model)
         {
             throw new NotImplementedException();
         }
