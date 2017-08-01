@@ -34,7 +34,9 @@ namespace Swastika.Common
             Image = 2,
             Icon = 3,
             CodeEditor = 4,
-            Html
+            Html = 5,
+            TextArea = 6,
+            Boolean = 7
         }
     }
 }
