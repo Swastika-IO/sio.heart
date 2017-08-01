@@ -23,6 +23,7 @@ namespace Swastika.Common.Helper
     }
     public class FileViewModel
     {
+        public string FileFolder { get; set; }
         public string Filename { get; set; }
         public string Content { get; set; }
     }

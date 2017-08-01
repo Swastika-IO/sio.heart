@@ -160,9 +160,9 @@ namespace Swastika.Common
             return result;
         }
 
-        public static List<FileViewModel> GetPartialViews()
+        public static List<FileViewModel> GetPartialViews(string folder)
         {
-            DirectoryInfo d = new DirectoryInfo(@"Views\Shared\Modules");//Assuming Test is your Folder
+            DirectoryInfo d = new DirectoryInfo(string.Format(@"Views\Shared\{0}", folder));//Assuming Test is your Folder
             FileInfo[] Files = d.GetFiles("*.cshtml"); //Getting Text files
             List<FileViewModel> result = new List<FileViewModel>();
             foreach (var file in Files)
@@ -171,7 +171,8 @@ namespace Swastika.Common
                 {
                     result.Add(new FileViewModel()
                     {
-                        Filename = string.Format(@"Modules\{0}", file.Name.Split('.').First()),
+                        FileFolder = folder,
+                        Filename = file.Name.Split('.').First(),
                         Content = s.ReadToEnd()
                     });
 
@@ -192,7 +193,7 @@ namespace Swastika.Common
                     return true;
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return false;
             }

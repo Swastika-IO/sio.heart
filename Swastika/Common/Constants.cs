@@ -5,7 +5,13 @@ using System.Text;
 namespace Swastika.Common
 {
     public class Constants
-    {
+    {        
+        public enum PartialFolders
+        {
+            Modules,
+            Articles,
+            Categories
+        }
         public enum ViewModelType
         {
             FrontEnd = 0,
@@ -35,7 +41,8 @@ namespace Swastika.Common
             Icon = 3,
             CodeEditor = 4,
             Html = 5,
-            TextArea = 6
+            TextArea = 6,
+            Boolean = 7
         }
     }
 }
