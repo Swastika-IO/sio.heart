@@ -21,7 +21,7 @@ namespace Swastika.Common.Helper
             Items = new List<T>();
         }
     }
-    public class FileViewModel
+    public class TemplateViewModel
     {
         public string FileFolder { get; set; }
         public string Filename { get; set; }

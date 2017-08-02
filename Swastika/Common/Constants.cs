@@ -6,11 +6,12 @@ namespace Swastika.Common
 {
     public class Constants
     {        
-        public enum PartialFolders
+        public enum TemplateFolder
         {
+            Layouts,
+            Pages,
             Modules,
-            Articles,
-            Categories
+            Articles,            
         }
         public enum ViewModelType
         {

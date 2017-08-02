@@ -160,45 +160,7 @@ namespace Swastika.Common
             return result;
         }
 
-        public static List<FileViewModel> GetPartialViews(string folder)
-        {
-            DirectoryInfo d = new DirectoryInfo(string.Format(@"Views\Shared\{0}", folder));//Assuming Test is your Folder
-            FileInfo[] Files = d.GetFiles("*.cshtml"); //Getting Text files
-            List<FileViewModel> result = new List<FileViewModel>();
-            foreach (var file in Files)
-            {
-                using (StreamReader s = file.OpenText())
-                {
-                    result.Add(new FileViewModel()
-                    {
-                        FileFolder = folder,
-                        Filename = file.Name.Split('.').First(),
-                        Content = s.ReadToEnd()
-                    });
-
-                }
-            }
-            return result;
-        }
-
-        public static bool SavePartialView(FileViewModel file)
-        {
-            try
-            {
-                string fileName = string.Format(@"Views\Shared\{0}.cshtml", file.Filename);
-                //var logPath = System.IO.Path.GetTempFileName();
-                using (var writer = File.CreateText(fileName))
-                {
-                    writer.WriteLine(file.Content); //or .Write(), if you wish
-                    return true;
-                }
-            }
-            catch (Exception ex)
-            {
-                return false;
-            }
-
-        }
+       
 
     }
 }
