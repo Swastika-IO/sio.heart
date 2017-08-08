@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace Swastika.Common.Helper
@@ -24,6 +25,7 @@ namespace Swastika.Common.Helper
     public class TemplateViewModel
     {
         public string FileFolder { get; set; }
+        [Required]
         public string Filename { get; set; }
         public string Content { get; set; }
     }
