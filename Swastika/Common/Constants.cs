@@ -6,6 +6,14 @@ namespace Swastika.Common
 {
     public class Constants
     {        
+        public enum SearchType
+        {
+            All,
+            Article,
+            Module,
+            Page
+        }
+
         public enum TemplateFolder
         {
             Layouts,

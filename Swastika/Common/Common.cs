@@ -1,14 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Net;
-using System.Drawing;
-using System.Drawing.Imaging;
 using System.Linq;
-using Swastika.Common.Helper;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Net.Http.Headers;
 
 namespace Swastika.Common
 {
@@ -47,32 +42,32 @@ namespace Swastika.Common
             }
         }
 
-        public static string UploadPhoto(string fullPath, Image img)
-        {
+        //public static string UploadPhoto(string fullPath, Image img)
+        //{
 
-            try
-            {
-                if (!Directory.Exists(fullPath))
-                {
-                    Directory.CreateDirectory(fullPath);
-                }
+        //    try
+        //    {
+        //        if (!Directory.Exists(fullPath))
+        //        {
+        //            Directory.CreateDirectory(fullPath);
+        //        }
 
-                if (img != null)
-                {
-                    //string fileExt = GetFilenameExtension(img.RawFormat);
-                    //file_name = (guid + fileExt).Trim();
-                    //file_dir = filePath + file_name;
-                    //ImageResizer.ResizeStream(TTXConstants.Params.photoSize, img, file_dir);
+        //        if (img != null)
+        //        {
+        //            //string fileExt = GetFilenameExtension(img.RawFormat);
+        //            //file_name = (guid + fileExt).Trim();
+        //            //file_dir = filePath + file_name;
+        //            //ImageResizer.ResizeStream(TTXConstants.Params.photoSize, img, file_dir);
 
-                    return ImageHelper.ResizeImage(img, fullPath);
-                }
-            }
-            catch (Exception ex)
-            {
-                return string.Empty;
-            }
-            return string.Empty;
-        }
+        //            return ImageHelper.ResizeImage(img, fullPath);
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return string.Empty;
+        //    }
+        //    return string.Empty;
+        //}
 
         public static async System.Threading.Tasks.Task<string> UploadFileAsync(string fullPath, IFormFile file)
         {
