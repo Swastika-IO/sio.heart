@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <Folder Include="Application\" />
+    <Folder Include="Repository\Data\Infrastructure\" />
   </ItemGroup>
 
   <ItemGroup>

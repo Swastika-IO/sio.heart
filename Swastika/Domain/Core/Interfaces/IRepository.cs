@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore.Storage;
 using Swastika.Common;
 using Swastika.Common.Helper;
+using Swastika.Domain.Core.Models;
 using Swastika.Domain.Core.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -34,42 +35,42 @@ namespace Swastika.Domain.Core.Interfaces {
         /// </summary>
         /// <param name="model">The model.</param>
         /// <returns></returns>
-        RepositoryResponse<TView> CreateModel(TView view, bool isSaveSubModels = false, TContext _context = null, IDbContextTransaction _transaction = null);
+        RepositoryResponse<TView> CreateModel(TModel model, bool isSaveSubModels = false, TContext _context = null, IDbContextTransaction _transaction = null);
 
         /// <summary>
         /// Creates the model asynchronous.
         /// </summary>
         /// <param name="model">The model.</param>
         /// <returns></returns>
-        Task<RepositoryResponse<TView>> CreateModelAsync(TView view, bool isSaveSubModels = false, TContext _context = null, IDbContextTransaction _transaction = null);
+        Task<RepositoryResponse<TView>> CreateModelAsync(TModel model, bool isSaveSubModels = false, TContext _context = null, IDbContextTransaction _transaction = null);
 
         /// <summary>
         /// Edits the model.
         /// </summary>
         /// <param name="model">The model.</param>
         /// <returns></returns>
-        RepositoryResponse<TView> EditModel(TView view, bool isSaveSubModels, TContext _context = null, IDbContextTransaction _transaction = null);
+        RepositoryResponse<TView> EditModel(TModel model, bool isSaveSubModels, TContext _context = null, IDbContextTransaction _transaction = null);
 
         /// <summary>
         /// Edits the model asynchronous.
         /// </summary>
         /// <param name="model">The model.</param>
         /// <returns></returns>
-        Task<RepositoryResponse<TView>> EditModelAsync(TView view, bool isSaveSubModels, TContext _context = null, IDbContextTransaction _transaction = null);
+        Task<RepositoryResponse<TView>> EditModelAsync(TModel model, bool isSaveSubModels, TContext _context = null, IDbContextTransaction _transaction = null);
 
         /// <summary>
         /// Saves the model.
         /// </summary>
         /// <param name="model">The model.</param>
         /// <returns></returns>
-        RepositoryResponse<TView> SaveModel(TView view, bool isSaveSubModels, TContext _context = null, IDbContextTransaction _transaction = null);
+        RepositoryResponse<TView> SaveModel(TModel model, bool isSaveSubModels, TContext _context = null, IDbContextTransaction _transaction = null);
 
         /// <summary>
         /// Saves the model asynchronous.
         /// </summary>
         /// <param name="model">The model.</param>
         /// <returns></returns>
-        Task<RepositoryResponse<TView>> SaveModelAsync(TView view, bool isSaveSubModels, TContext _context = null, IDbContextTransaction _transaction = null);
+        Task<RepositoryResponse<TView>> SaveModelAsync(TModel model, bool isSaveSubModels, TContext _context = null, IDbContextTransaction _transaction = null);
 
         /// <summary>
         /// Removes the model.
@@ -330,11 +331,5 @@ namespace Swastika.Domain.Core.Interfaces {
         /// <returns></returns>
         int SaveChanges();
     }
-
-    public class RepositoryResponse<TResult>
-    {
-        public bool IsSucceed { get; set; }
-        public TResult Data { get; set; }
-        public Exception Ex { get; set; }
-    }
+   
 }
