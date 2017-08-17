@@ -1,23 +1,22 @@
 ﻿using AutoMapper;
 using Newtonsoft.Json;
-using Swastika.Common;
-using Swastika.Domain.Core.Models;
+using Swastika.Domain.Core.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Text;
 
 namespace Swastika.Domain.Core.ViewModels
 {
-
     /// <summary>
     /// 
     /// </summary>
     /// <typeparam name="TModel">database model</typeparam>
     /// <typeparam name="TFEView">Output View</typeparam>
     /// <seealso cref="AutoMapper.Profile" />
-    public abstract class ViewModelMultiViewBase<TModel, TFEView>
+    public abstract class SWViewModelBase<TModel, TFEView>
         where TModel : class
-        where TFEView : class
+        where TFEView : IExpandViewModel<TModel>
     {
         private IMapper _mapper;
         [JsonIgnore]
@@ -114,6 +113,28 @@ namespace Swastika.Domain.Core.ViewModels
             //AutoMapper.Mapper.Map<TView, TModel>((TView)this, Model);
             Mapper.Map<TFEView, TModel>(View, Model);
             return this.Model;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ViewModelBase{TModel, TView}"/> class.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        public SWViewModelBase(TModel model)
+        {
+            Model = model;
+            ParseView();
+            View.ExpandView();
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ViewModelBase{TModel, TView}"/> class.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        public SWViewModelBase(TFEView view)
+        {
+            View = view;
+            ParseModel();
+            view.ExpandModel(Model);
         }
     }
 }
