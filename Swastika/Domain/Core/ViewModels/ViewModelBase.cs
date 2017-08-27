@@ -38,6 +38,28 @@ namespace Swastika.Domain.Core.ViewModels
             set => _mapper = value;
         }
 
+        private IMapper _modelMapper;
+        [JsonIgnore]
+        public IMapper ModelMapper
+        {
+            get
+            {
+                if (_modelMapper == null)
+                {
+                    _modelMapper = this.CreateModelMapper();
+                }
+                return _modelMapper;
+            }
+            set => _modelMapper = value;
+        }
+
+        private IMapper CreateModelMapper()
+        {
+            var config = new MapperConfiguration(cfg => cfg.CreateMap<TModel, TModel>().ReverseMap());
+            var mapper = new Mapper(config);
+            return mapper;
+        }
+
         private IMapper CreateMapper()
         {
             var config = new MapperConfiguration(cfg => cfg.CreateMap<TModel, TView>().ReverseMap());
