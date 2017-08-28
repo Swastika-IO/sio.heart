@@ -21,11 +21,11 @@ namespace Swastika.Infrastructure.Data.Repository
     /// <typeparam name="TView">The type of the view.</typeparam>
     /// <typeparam name="TContext">The type of the context.</typeparam>
     /// <seealso cref="Swastika.Extension.Blog.Interfaces.IRepository{TModel, TView}" />
-    public abstract class SWRepositoryBase<TModel, TBaseView, TView, TContext>
+    public abstract class SWRepositoryBase<TModel, TBaseView, TView, TDbContext>
        where TModel : class
-        where TBaseView : SWViewModelBase<TModel, TView>
-        where TView : IExpandViewModel<TModel>
-        where TContext : DbContext
+        where TBaseView : SWViewModelBase<TDbContext, TModel, TView>
+        where TView : ExpandViewModelBase<TDbContext, TModel>
+        where TDbContext : DbContext
     {
 
         /// <summary>
@@ -40,11 +40,11 @@ namespace Swastika.Infrastructure.Data.Repository
         /// Initializes the context.
         /// </summary>
         /// <returns></returns>
-        public virtual TContext InitContext()
+        public virtual TDbContext InitContext()
         {
-            Type classType = typeof(TContext);
+            Type classType = typeof(TDbContext);
             ConstructorInfo classConstructor = classType.GetConstructor(new Type[] { });
-            TContext context = (TContext)classConstructor.Invoke(new object[] { });
+            TDbContext context = (TDbContext)classConstructor.Invoke(new object[] { });
 
             return context;
         }
@@ -97,9 +97,9 @@ namespace Swastika.Infrastructure.Data.Repository
         /// <returns>
         ///   <c>true</c> if the specified entity is exists; otherwise, <c>false</c>.
         /// </returns>
-        public virtual bool CheckIsExists(TModel entity, TContext _context = null, IDbContextTransaction _transaction = null)
+        public virtual bool CheckIsExists(TModel entity, TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
-            TContext context = _context ?? InitContext();
+            TDbContext context = _context ?? InitContext();
             var transaction = _transaction ?? context.Database.BeginTransaction();
             try
             {
@@ -136,9 +136,9 @@ namespace Swastika.Infrastructure.Data.Repository
         /// <returns>
         ///   <c>true</c> if the specified predicate is exists; otherwise, <c>false</c>.
         /// </returns>
-        public bool CheckIsExists(System.Func<TModel, bool> predicate, TContext _context = null, IDbContextTransaction _transaction = null)
+        public bool CheckIsExists(System.Func<TModel, bool> predicate, TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
-            TContext context = _context ?? InitContext();
+            TDbContext context = _context ?? InitContext();
             var transaction = _transaction ?? context.Database.BeginTransaction();
             try
             {
@@ -174,20 +174,16 @@ namespace Swastika.Infrastructure.Data.Repository
         /// </summary>
         /// <param name="model">The model.</param>
         /// <returns></returns>
-        public virtual RepositoryResponse<TView> CreateModel(TModel model, bool isSaveSubModels = false
-            , TContext _context = null, IDbContextTransaction _transaction = null)
+        public virtual RepositoryResponse<TView> CreateModel(TModel model
+            , TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
-            TContext context = _context ?? InitContext();
+            TDbContext context = _context ?? InitContext();
             var transaction = _transaction ?? context.Database.BeginTransaction();
             try
             {
 
                 context.Entry(model).State = EntityState.Added;
                 bool result = context.SaveChanges() > 0;
-                if (result && isSaveSubModels)
-                {
-                    result = SaveSubModel(model, context, transaction);
-                }
 
                 if (result)
                 {
@@ -248,19 +244,15 @@ namespace Swastika.Infrastructure.Data.Repository
         /// </summary>
         /// <param name="model">The model.</param>
         /// <returns></returns>
-        public virtual async Task<RepositoryResponse<TView>> CreateModelAsync(TModel model, bool isSaveSubModels = false
-            , TContext _context = null, IDbContextTransaction _transaction = null)
+        public virtual async Task<RepositoryResponse<TView>> CreateModelAsync(TModel model
+            , TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
-            TContext context = _context ?? InitContext();
+            TDbContext context = _context ?? InitContext();
             var transaction = _transaction ?? context.Database.BeginTransaction();
             try
             {
                 context.Entry(model).State = EntityState.Added;
                 bool result = await context.SaveChangesAsync() > 0;
-                if (result && isSaveSubModels)
-                {
-                    result = await SaveSubModelAsync(model, context, transaction);
-                }
 
                 if (result)
                 {
@@ -324,20 +316,15 @@ namespace Swastika.Infrastructure.Data.Repository
         /// </summary>
         /// <param name="model">The model.</param>
         /// <returns></returns>
-        public virtual RepositoryResponse<TView> EditModel(TModel model, bool isSaveSubModels = false
-            , TContext _context = null, IDbContextTransaction _transaction = null)
+        public virtual RepositoryResponse<TView> EditModel(TModel model
+            , TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
-            TContext context = _context ?? InitContext();
+            TDbContext context = _context ?? InitContext();
             var transaction = _transaction ?? context.Database.BeginTransaction();
             try
             {
                 context.Entry(model).State = EntityState.Modified;
                 bool result = context.SaveChanges() > 0;
-
-                if (result && isSaveSubModels)
-                {
-                    result = SaveSubModel(model, context, transaction);
-                }
 
                 if (result)
                 {
@@ -400,19 +387,15 @@ namespace Swastika.Infrastructure.Data.Repository
         /// </summary>
         /// <param name="model">The model.</param>
         /// <returns></returns>
-        public virtual async Task<RepositoryResponse<TView>> EditModelAsync(TModel model, bool isSaveSubModels = false
-            , TContext _context = null, IDbContextTransaction _transaction = null)
+        public virtual async Task<RepositoryResponse<TView>> EditModelAsync(TModel model
+            , TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
-            TContext context = _context ?? InitContext();
+            var context = _context ?? InitContext();
             var transaction = _transaction ?? context.Database.BeginTransaction();
             try
             {
                 context.Entry(model).State = EntityState.Modified;
                 bool result = await context.SaveChangesAsync() > 0;
-                if (result && isSaveSubModels)
-                {
-                    result = await SaveSubModelAsync(model, context, transaction);
-                }
 
                 if (result)
                 {
@@ -477,7 +460,7 @@ namespace Swastika.Infrastructure.Data.Repository
         /// <returns></returns>
         public virtual async Task<List<TView>> GetViewModelListAsync()
         {
-            using (TContext context = InitContext())
+            using (TDbContext context = InitContext())
             {
                 try
                 {
@@ -503,7 +486,7 @@ namespace Swastika.Infrastructure.Data.Repository
         /// <returns></returns>
         public virtual List<TView> GetModelList()
         {
-            using (TContext context = InitContext())
+            using (TDbContext context = InitContext())
             {
                 try
                 {
@@ -528,14 +511,14 @@ namespace Swastika.Infrastructure.Data.Repository
         /// </summary>
         /// <param name="orderBy">The order by.</param>
         /// <param name="direction">The direction.</param>
-        /// <param name="pageIndex">Index of the page.</param>
+        /// <param name="PageIndex">Index of the page.</param>
         /// <param name="pageSize">Size of the page.</param>
         /// <param name="isGetSubModels">if set to <c>true</c> [is get sub models].</param>
         /// <returns></returns>
         public virtual PaginationModel<TView> GetModelList(
-            Expression<Func<TModel, int>> orderBy, string direction, int? pageIndex, int? pageSize)
+            Expression<Func<TModel, int>> orderBy, string direction, int? PageIndex, int? pageSize)
         {
-            using (TContext context = InitContext())
+            using (TDbContext context = InitContext())
             {
                 try
                 {
@@ -545,7 +528,7 @@ namespace Swastika.Infrastructure.Data.Repository
                     PaginationModel<TView> result = new PaginationModel<TView>()
                     {
                         TotalItems = query.Count(),
-                        PageIndex = pageIndex ?? 0
+                        PageIndex = PageIndex ?? 0
                     };
                     result.PageSize = pageSize ?? result.TotalItems;
 
@@ -562,7 +545,7 @@ namespace Swastika.Infrastructure.Data.Repository
                             {
                                 lstModel = query
                                     .OrderByDescending(orderBy)
-                                    .Skip(pageIndex.Value * pageSize.Value)
+                                    .Skip(PageIndex.Value * pageSize.Value)
                                     .Take(pageSize.Value)
                                     .ToList();
                             }
@@ -579,7 +562,7 @@ namespace Swastika.Infrastructure.Data.Repository
                             {
                                 lstModel = query
                                     .OrderBy(orderBy)
-                                    .Skip(pageIndex.Value * pageSize.Value)
+                                    .Skip(PageIndex.Value * pageSize.Value)
                                     .Take(pageSize.Value)
                                     .ToList();
                             }
@@ -612,14 +595,14 @@ namespace Swastika.Infrastructure.Data.Repository
         /// </summary>
         /// <param name="orderBy">The order by.</param>
         /// <param name="direction">The direction.</param>
-        /// <param name="pageIndex">Index of the page.</param>
+        /// <param name="PageIndex">Index of the page.</param>
         /// <param name="pageSize">Size of the page.</param>
         /// <param name="isGetSubModels">if set to <c>true</c> [is get sub models].</param>
         /// <returns></returns>
         public virtual PaginationModel<TView> GetModelList(
-            Expression<Func<TModel, string>> orderBy, string direction, int? pageIndex, int? pageSize)
+            Expression<Func<TModel, string>> orderBy, string direction, int? PageIndex, int? pageSize)
         {
-            using (TContext context = InitContext())
+            using (TDbContext context = InitContext())
             {
                 try
                 {
@@ -629,13 +612,14 @@ namespace Swastika.Infrastructure.Data.Repository
                     PaginationModel<TView> result = new PaginationModel<TView>()
                     {
                         TotalItems = query.Count(),
-                        PageIndex = pageIndex ?? 0
+                        PageIndex = PageIndex ?? 0
                     };
                     result.PageSize = pageSize ?? result.TotalItems;
 
                     if (pageSize.HasValue)
                     {
-                        result.TotalPage = result.TotalItems / pageSize.Value + (result.TotalItems % pageSize.Value > 0 ? 1 : 0);
+                        result.TotalPage = result.TotalItems / pageSize.Value 
+                            + (result.TotalItems % pageSize.Value > 0 ? 1 : 0);
                     }
 
                     // TODO: should we change "direction" to boolean "isDesc" and use if condition instead?
@@ -646,7 +630,7 @@ namespace Swastika.Infrastructure.Data.Repository
                             {
                                 lstModel = query
                                     .OrderByDescending(orderBy)
-                                    .Skip(pageIndex.Value * pageSize.Value)
+                                    .Skip(PageIndex.Value * pageSize.Value)
                                     .Take(pageSize.Value)
                                     .ToList();
                             }
@@ -663,7 +647,7 @@ namespace Swastika.Infrastructure.Data.Repository
                             {
                                 lstModel = query
                                     .OrderBy(orderBy)
-                                    .Skip(pageIndex.Value * pageSize.Value)
+                                    .Skip(PageIndex.Value * pageSize.Value)
                                     .Take(pageSize.Value)
                                     .ToList();
                             }
@@ -697,14 +681,14 @@ namespace Swastika.Infrastructure.Data.Repository
         /// </summary>
         /// <param name="orderBy">The order by.</param>
         /// <param name="direction">The direction.</param>
-        /// <param name="pageIndex">Index of the page.</param>
+        /// <param name="PageIndex">Index of the page.</param>
         /// <param name="pageSize">Size of the page.</param>
         /// <param name="isGetSubModels">if set to <c>true</c> [is get sub models].</param>
         /// <returns></returns>
         public virtual PaginationModel<TView> GetModelList(
-            Expression<Func<TModel, DateTime>> orderBy, string direction, int? pageIndex, int? pageSize)
+            Expression<Func<TModel, DateTime>> orderBy, string direction, int? PageIndex, int? pageSize)
         {
-            using (TContext context = InitContext())
+            using (TDbContext context = InitContext())
             {
                 try
                 {
@@ -714,7 +698,7 @@ namespace Swastika.Infrastructure.Data.Repository
                     PaginationModel<TView> result = new PaginationModel<TView>()
                     {
                         TotalItems = query.Count(),
-                        PageIndex = pageIndex ?? 0
+                        PageIndex = PageIndex ?? 0
                     };
                     result.PageSize = pageSize ?? result.TotalItems;
 
@@ -730,7 +714,7 @@ namespace Swastika.Infrastructure.Data.Repository
                             {
                                 lstModel = query
                                     .OrderByDescending(orderBy)
-                                    .Skip(pageIndex.Value * pageSize.Value)
+                                    .Skip(PageIndex.Value * pageSize.Value)
                                     .Take(pageSize.Value)
                                     .ToList();
                             }
@@ -747,7 +731,7 @@ namespace Swastika.Infrastructure.Data.Repository
                             {
                                 lstModel = query
                                     .OrderBy(orderBy)
-                                    .Skip(pageIndex.Value * pageSize.Value)
+                                    .Skip(PageIndex.Value * pageSize.Value)
                                     .Take(pageSize.Value).ToList();
                             }
                             else
@@ -779,14 +763,14 @@ namespace Swastika.Infrastructure.Data.Repository
         /// </summary>
         /// <param name="orderBy">The order by.</param>
         /// <param name="direction">The direction.</param>
-        /// <param name="pageIndex">Index of the page.</param>
+        /// <param name="PageIndex">Index of the page.</param>
         /// <param name="pageSize">Size of the page.</param>
         /// <param name="isGetSubModels">if set to <c>true</c> [is get sub models].</param>
         /// <returns></returns>
         public virtual async Task<PaginationModel<TView>> GetModelListAsync(
-            Expression<Func<TModel, string>> orderBy, string direction, int? pageIndex, int? pageSize)
+            Expression<Func<TModel, string>> orderBy, string direction, int? PageIndex, int? pageSize)
         {
-            using (TContext context = InitContext())
+            using (TDbContext context = InitContext())
             {
                 try
                 {
@@ -796,7 +780,7 @@ namespace Swastika.Infrastructure.Data.Repository
                     PaginationModel<TView> result = new PaginationModel<TView>()
                     {
                         TotalItems = query.Count(),
-                        PageIndex = pageIndex ?? 0
+                        PageIndex = PageIndex ?? 0
                     };
                     result.PageSize = pageSize ?? result.TotalItems;
 
@@ -812,7 +796,7 @@ namespace Swastika.Infrastructure.Data.Repository
                             {
                                 lstModel = await query
                                     .OrderByDescending(orderBy)
-                                    .Skip(pageIndex.Value * pageSize.Value)
+                                    .Skip(PageIndex.Value * pageSize.Value)
                                     .Take(pageSize.Value)
                                     .ToListAsync();
                             }
@@ -828,7 +812,7 @@ namespace Swastika.Infrastructure.Data.Repository
                             if (pageSize.HasValue)
                             {
                                 lstModel = await query.OrderBy(orderBy)
-                                    .Skip(pageIndex.Value * pageSize.Value)
+                                    .Skip(PageIndex.Value * pageSize.Value)
                                     .Take(pageSize.Value).ToListAsync();
                             }
                             else
@@ -862,7 +846,7 @@ namespace Swastika.Infrastructure.Data.Repository
         /// <returns></returns>
         public virtual async Task<List<TView>> GetModelListAsync()
         {
-            using (TContext context = InitContext())
+            using (TDbContext context = InitContext())
             {
                 try
                 {
@@ -885,14 +869,14 @@ namespace Swastika.Infrastructure.Data.Repository
         /// </summary>
         /// <param name="orderBy">The order by.</param>
         /// <param name="direction">The direction.</param>
-        /// <param name="pageIndex">Index of the page.</param>
+        /// <param name="PageIndex">Index of the page.</param>
         /// <param name="pageSize">Size of the page.</param>
         /// <param name="isGetSubModels">if set to <c>true</c> [is get sub models].</param>
         /// <returns></returns>
         public virtual async Task<PaginationModel<TView>> GetModelListAsync(
-            Expression<Func<TModel, DateTime>> orderBy, string direction, int? pageIndex, int? pageSize)
+            Expression<Func<TModel, DateTime>> orderBy, string direction, int? PageIndex, int? pageSize)
         {
-            using (TContext context = InitContext())
+            using (TDbContext context = InitContext())
             {
                 try
                 {
@@ -902,7 +886,7 @@ namespace Swastika.Infrastructure.Data.Repository
                     PaginationModel<TView> result = new PaginationModel<TView>()
                     {
                         TotalItems = query.Count(),
-                        PageIndex = pageIndex ?? 0
+                        PageIndex = PageIndex ?? 0
                     };
                     result.PageSize = pageSize ?? result.TotalItems;
 
@@ -918,7 +902,7 @@ namespace Swastika.Infrastructure.Data.Repository
                             {
                                 lstModel = await query
                                     .OrderByDescending(orderBy)
-                                    .Skip(pageIndex.Value * pageSize.Value)
+                                    .Skip(PageIndex.Value * pageSize.Value)
                                     .Take(pageSize.Value)
                                     .ToListAsync();
                             }
@@ -935,7 +919,7 @@ namespace Swastika.Infrastructure.Data.Repository
                             {
                                 lstModel = await query
                                     .OrderBy(orderBy)
-                                    .Skip(pageIndex.Value * pageSize.Value)
+                                    .Skip(PageIndex.Value * pageSize.Value)
                                     .Take(pageSize.Value)
                                     .ToListAsync();
                             }
@@ -966,14 +950,14 @@ namespace Swastika.Infrastructure.Data.Repository
         /// </summary>
         /// <param name="orderBy">The order by.</param>
         /// <param name="direction">The direction.</param>
-        /// <param name="pageIndex">Index of the page.</param>
+        /// <param name="PageIndex">Index of the page.</param>
         /// <param name="pageSize">Size of the page.</param>
         /// <param name="isGetSubModels">if set to <c>true</c> [is get sub models].</param>
         /// <returns></returns>
         public virtual async Task<PaginationModel<TView>> GetModelListAsync(
-            Expression<Func<TModel, int>> orderBy, string direction, int? pageIndex, int? pageSize)
+            Expression<Func<TModel, int>> orderBy, string direction, int? PageIndex, int? pageSize)
         {
-            using (TContext context = InitContext())
+            using (TDbContext context = InitContext())
             {
                 try
                 {
@@ -983,7 +967,7 @@ namespace Swastika.Infrastructure.Data.Repository
                     PaginationModel<TView> result = new PaginationModel<TView>()
                     {
                         TotalItems = query.Count(),
-                        PageIndex = pageIndex ?? 0
+                        PageIndex = PageIndex ?? 0
                     };
                     result.PageSize = pageSize ?? result.TotalItems;
 
@@ -999,7 +983,7 @@ namespace Swastika.Infrastructure.Data.Repository
                             {
                                 lstModel = await query
                                     .OrderByDescending(orderBy)
-                                    .Skip(pageIndex.Value * pageSize.Value)
+                                    .Skip(PageIndex.Value * pageSize.Value)
                                     .Take(pageSize.Value)
                                     .ToListAsync();
                             }
@@ -1016,7 +1000,7 @@ namespace Swastika.Infrastructure.Data.Repository
                             {
                                 lstModel = await query
                                     .OrderBy(orderBy)
-                                    .Skip(pageIndex.Value * pageSize.Value)
+                                    .Skip(PageIndex.Value * pageSize.Value)
                                     .Take(pageSize.Value)
                                     .ToListAsync();
                             }
@@ -1056,7 +1040,7 @@ namespace Swastika.Infrastructure.Data.Repository
         /// <returns></returns>
         public virtual List<TView> GetModelListBy(Expression<Func<TModel, bool>> predicate)
         {
-            using (TContext context = InitContext())
+            using (TDbContext context = InitContext())
             {
                 try
                 {
@@ -1079,14 +1063,14 @@ namespace Swastika.Infrastructure.Data.Repository
         /// <param name="predicate">The predicate.</param>
         /// <param name="orderBy">The order by.</param>
         /// <param name="direction">The direction.</param>
-        /// <param name="pageIndex">Index of the page.</param>
+        /// <param name="PageIndex">Index of the page.</param>
         /// <param name="pageSize">Size of the page.</param>
         /// <param name="isGetSubModels">if set to <c>true</c> [is get sub models].</param>
         /// <returns></returns>
         public virtual PaginationModel<TView> GetModelListBy(
-            Expression<Func<TModel, bool>> predicate, Expression<Func<TModel, string>> orderBy, string direction, int? pageIndex, int? pageSize)
+            Expression<Func<TModel, bool>> predicate, Expression<Func<TModel, string>> orderBy, string direction, int? PageIndex, int? pageSize)
         {
-            using (TContext context = InitContext())
+            using (TDbContext context = InitContext())
             {
                 try
                 {
@@ -1096,7 +1080,7 @@ namespace Swastika.Infrastructure.Data.Repository
                     PaginationModel<TView> result = new PaginationModel<TView>()
                     {
                         TotalItems = query.Count(),
-                        PageIndex = pageIndex ?? 0
+                        PageIndex = PageIndex ?? 0
                     };
                     result.PageSize = pageSize ?? result.TotalItems;
 
@@ -1112,7 +1096,7 @@ namespace Swastika.Infrastructure.Data.Repository
                             {
                                 lstModel = query
                                     .OrderByDescending(orderBy)
-                                    .Skip(pageIndex.Value * pageSize.Value)
+                                    .Skip(PageIndex.Value * pageSize.Value)
                                     .Take(pageSize.Value)
                                     .ToList();
                             }
@@ -1129,7 +1113,7 @@ namespace Swastika.Infrastructure.Data.Repository
                             {
                                 lstModel = query
                                     .OrderBy(orderBy)
-                                    .Skip(pageIndex.Value * pageSize.Value)
+                                    .Skip(PageIndex.Value * pageSize.Value)
                                     .Take(pageSize.Value)
                                     .ToList();
                             }
@@ -1161,14 +1145,14 @@ namespace Swastika.Infrastructure.Data.Repository
         /// <param name="predicate">The predicate.</param>
         /// <param name="orderBy">The order by.</param>
         /// <param name="direction">The direction.</param>
-        /// <param name="pageIndex">Index of the page.</param>
+        /// <param name="PageIndex">Index of the page.</param>
         /// <param name="pageSize">Size of the page.</param>
         /// <param name="isGetSubModels">if set to <c>true</c> [is get sub models].</param>
         /// <returns></returns>
         public virtual PaginationModel<TView> GetModelListBy(
-            Expression<Func<TModel, bool>> predicate, Expression<Func<TModel, int>> orderBy, string direction, int? pageIndex, int? pageSize)
+            Expression<Func<TModel, bool>> predicate, Expression<Func<TModel, double>> orderBy, string direction, int? PageIndex, int? pageSize)
         {
-            using (TContext context = InitContext())
+            using (TDbContext context = InitContext())
             {
                 try
                 {
@@ -1178,7 +1162,7 @@ namespace Swastika.Infrastructure.Data.Repository
                     PaginationModel<TView> result = new PaginationModel<TView>()
                     {
                         TotalItems = query.Count(),
-                        PageIndex = pageIndex ?? 0
+                        PageIndex = PageIndex ?? 0
                     };
                     result.PageSize = pageSize ?? result.TotalItems;
 
@@ -1186,6 +1170,7 @@ namespace Swastika.Infrastructure.Data.Repository
                     {
                         result.TotalPage = result.TotalItems / pageSize.Value + (result.TotalItems % pageSize.Value > 0 ? 1 : 0);
                     }
+
                     switch (direction)
                     {
                         case "desc":
@@ -1193,7 +1178,7 @@ namespace Swastika.Infrastructure.Data.Repository
                             {
                                 lstModel = query
                                     .OrderByDescending(orderBy)
-                                    .Skip(pageIndex.Value * pageSize.Value)
+                                    .Skip(PageIndex.Value * pageSize.Value)
                                     .Take(pageSize.Value)
                                     .ToList();
                             }
@@ -1210,7 +1195,88 @@ namespace Swastika.Infrastructure.Data.Repository
                             {
                                 lstModel = query
                                     .OrderBy(orderBy)
-                                    .Skip(pageIndex.Value * pageSize.Value)
+                                    .Skip(PageIndex.Value * pageSize.Value)
+                                    .Take(pageSize.Value)
+                                    .ToList();
+                            }
+                            else
+                            {
+                                lstModel = query
+                                    .OrderBy(orderBy)
+                                    .ToList();
+                            }
+                            break;
+                    }
+
+                    lstModel.ForEach(model => context.Entry(model).State = EntityState.Detached);
+                    var lstViewResult = ParseView(lstModel);
+                    result.Items = lstViewResult;
+                    return result;
+                }
+                catch (Exception ex)
+                {
+                    LogErrorMessage(ex);
+                    return null;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets the model list by.
+        /// </summary>
+        /// <param name="predicate">The predicate.</param>
+        /// <param name="orderBy">The order by.</param>
+        /// <param name="direction">The direction.</param>
+        /// <param name="PageIndex">Index of the page.</param>
+        /// <param name="pageSize">Size of the page.</param>
+        /// <param name="isGetSubModels">if set to <c>true</c> [is get sub models].</param>
+        /// <returns></returns>
+        public virtual PaginationModel<TView> GetModelListBy(
+            Expression<Func<TModel, bool>> predicate, Expression<Func<TModel, int>> orderBy, string direction, int? PageIndex, int? pageSize)
+        {
+            using (TDbContext context = InitContext())
+            {
+                try
+                {
+                    List<TModel> lstModel = new List<TModel>();
+                    var query = context.Set<TModel>().Where(predicate);
+
+                    PaginationModel<TView> result = new PaginationModel<TView>()
+                    {
+                        TotalItems = query.Count(),
+                        PageIndex = PageIndex ?? 0
+                    };
+                    result.PageSize = pageSize ?? result.TotalItems;
+
+                    if (pageSize.HasValue)
+                    {
+                        result.TotalPage = result.TotalItems / pageSize.Value + (result.TotalItems % pageSize.Value > 0 ? 1 : 0);
+                    }
+                    switch (direction)
+                    {
+                        case "desc":
+                            if (pageSize.HasValue)
+                            {
+                                lstModel = query
+                                    .OrderByDescending(orderBy)
+                                    .Skip(PageIndex.Value * pageSize.Value)
+                                    .Take(pageSize.Value)
+                                    .ToList();
+                            }
+                            else
+                            {
+                                lstModel = query
+                                    .OrderByDescending(orderBy)
+                                    .ToList();
+                            }
+                            break;
+
+                        default:
+                            if (pageSize.HasValue)
+                            {
+                                lstModel = query
+                                    .OrderBy(orderBy)
+                                    .Skip(PageIndex.Value * pageSize.Value)
                                     .Take(pageSize.Value)
                                     .ToList();
                             }
@@ -1244,14 +1310,14 @@ namespace Swastika.Infrastructure.Data.Repository
         /// <param name="predicate">The predicate.</param>
         /// <param name="orderBy">The order by.</param>
         /// <param name="direction">The direction.</param>
-        /// <param name="pageIndex">Index of the page.</param>
+        /// <param name="PageIndex">Index of the page.</param>
         /// <param name="pageSize">Size of the page.</param>
         /// <param name="isGetSubModels">if set to <c>true</c> [is get sub models].</param>
         /// <returns></returns>
         public virtual PaginationModel<TView> GetModelListBy(
-            Expression<Func<TModel, bool>> predicate, Expression<Func<TModel, DateTime>> orderBy, string direction, int? pageIndex, int? pageSize)
+            Expression<Func<TModel, bool>> predicate, Expression<Func<TModel, DateTime>> orderBy, string direction, int? PageIndex, int? pageSize)
         {
-            using (TContext context = InitContext())
+            using (TDbContext context = InitContext())
             {
                 try
                 {
@@ -1261,7 +1327,7 @@ namespace Swastika.Infrastructure.Data.Repository
                     PaginationModel<TView> result = new PaginationModel<TView>()
                     {
                         TotalItems = query.Count(),
-                        PageIndex = pageIndex ?? 0
+                        PageIndex = PageIndex ?? 0
                     };
                     result.PageSize = pageSize ?? result.TotalItems;
 
@@ -1276,7 +1342,7 @@ namespace Swastika.Infrastructure.Data.Repository
                             {
                                 lstModel = query
                                     .OrderByDescending(orderBy)
-                                    .Skip(pageIndex.Value * pageSize.Value)
+                                    .Skip(PageIndex.Value * pageSize.Value)
                                     .Take(pageSize.Value)
                                     .ToList();
                             }
@@ -1293,7 +1359,7 @@ namespace Swastika.Infrastructure.Data.Repository
                             {
                                 lstModel = query
                                     .OrderBy(orderBy)
-                                    .Skip(pageIndex.Value * pageSize.Value)
+                                    .Skip(PageIndex.Value * pageSize.Value)
                                     .Take(pageSize.Value)
                                     .ToList();
                             }
@@ -1328,7 +1394,7 @@ namespace Swastika.Infrastructure.Data.Repository
         /// <returns></returns>
         public virtual async Task<List<TView>> GetModelListByAsync(Expression<Func<TModel, bool>> predicate)
         {
-            using (TContext context = InitContext())
+            using (TDbContext context = InitContext())
             {
                 try
                 {
@@ -1351,15 +1417,15 @@ namespace Swastika.Infrastructure.Data.Repository
         /// <param name="predicate">The predicate.</param>
         /// <param name="orderBy">The order by.</param>
         /// <param name="direction">The direction.</param>
-        /// <param name="pageIndex">Index of the page.</param>
+        /// <param name="PageIndex">Index of the page.</param>
         /// <param name="pageSize">Size of the page.</param>
         /// <param name="isGetSubModels">if set to <c>true</c> [is get sub models].</param>
         /// <returns></returns>
         public virtual async Task<PaginationModel<TView>> GetModelListByAsync(
             Expression<Func<TModel, bool>> predicate, Expression<Func<TModel, int>> orderBy, string direction,
-            int? pageIndex, int? pageSize)
+            int? PageIndex, int? pageSize)
         {
-            using (TContext context = InitContext())
+            using (TDbContext context = InitContext())
             {
                 try
                 {
@@ -1369,7 +1435,7 @@ namespace Swastika.Infrastructure.Data.Repository
                     PaginationModel<TView> result = new PaginationModel<TView>()
                     {
                         TotalItems = query.Count(),
-                        PageIndex = pageIndex ?? 0
+                        PageIndex = PageIndex ?? 0
                     };
                     result.PageSize = pageSize ?? result.TotalItems;
 
@@ -1384,7 +1450,7 @@ namespace Swastika.Infrastructure.Data.Repository
                             {
                                 lstModel = await query
                                     .OrderByDescending(orderBy)
-                                    .Skip(pageIndex.Value * pageSize.Value)
+                                    .Skip(PageIndex.Value * pageSize.Value)
                                     .Take(pageSize.Value)
                                     .ToListAsync();
                             }
@@ -1401,7 +1467,7 @@ namespace Swastika.Infrastructure.Data.Repository
                             {
                                 lstModel = await query
                                     .OrderBy(orderBy)
-                                    .Skip(pageIndex.Value * pageSize.Value)
+                                    .Skip(PageIndex.Value * pageSize.Value)
                                     .Take(pageSize.Value)
                                     .ToListAsync();
                             }
@@ -1434,14 +1500,14 @@ namespace Swastika.Infrastructure.Data.Repository
         /// <param name="predicate">The predicate.</param>
         /// <param name="orderBy">The order by.</param>
         /// <param name="direction">The direction.</param>
-        /// <param name="pageIndex">Index of the page.</param>
+        /// <param name="PageIndex">Index of the page.</param>
         /// <param name="pageSize">Size of the page.</param>
         /// <param name="isGetSubModels">if set to <c>true</c> [is get sub models].</param>
         /// <returns></returns>
         public virtual async Task<PaginationModel<TView>> GetModelListByAsync(
-            Expression<Func<TModel, bool>> predicate, Expression<Func<TModel, string>> orderBy, string direction, int? pageIndex, int? pageSize)
+            Expression<Func<TModel, bool>> predicate, Expression<Func<TModel, string>> orderBy, string direction, int? PageIndex, int? pageSize)
         {
-            using (TContext context = InitContext())
+            using (TDbContext context = InitContext())
             {
                 try
                 {
@@ -1451,7 +1517,7 @@ namespace Swastika.Infrastructure.Data.Repository
                     PaginationModel<TView> result = new PaginationModel<TView>()
                     {
                         TotalItems = query.Count(),
-                        PageIndex = pageIndex ?? 0
+                        PageIndex = PageIndex ?? 0
                     };
                     result.PageSize = pageSize ?? result.TotalItems;
 
@@ -1466,7 +1532,7 @@ namespace Swastika.Infrastructure.Data.Repository
                             {
                                 lstModel = await query
                                     .OrderByDescending(orderBy)
-                                    .Skip(pageIndex.Value * pageSize.Value)
+                                    .Skip(PageIndex.Value * pageSize.Value)
                                     .Take(pageSize.Value)
                                     .ToListAsync();
                             }
@@ -1483,7 +1549,7 @@ namespace Swastika.Infrastructure.Data.Repository
                             {
                                 lstModel = await query
                                     .OrderBy(orderBy)
-                                    .Skip(pageIndex.Value * pageSize.Value)
+                                    .Skip(PageIndex.Value * pageSize.Value)
                                     .Take(pageSize.Value)
                                     .ToListAsync();
                             }
@@ -1516,14 +1582,14 @@ namespace Swastika.Infrastructure.Data.Repository
         /// <param name="predicate">The predicate.</param>
         /// <param name="orderBy">The order by.</param>
         /// <param name="direction">The direction.</param>
-        /// <param name="pageIndex">Index of the page.</param>
+        /// <param name="PageIndex">Index of the page.</param>
         /// <param name="pageSize">Size of the page.</param>
         /// <param name="isGetSubModels">if set to <c>true</c> [is get sub models].</param>
         /// <returns></returns>
         public virtual async Task<PaginationModel<TView>> GetModelListByAsync(
-            Expression<Func<TModel, bool>> predicate, Expression<Func<TModel, DateTime>> orderBy, string direction, int? pageIndex, int? pageSize)
+            Expression<Func<TModel, bool>> predicate, Expression<Func<TModel, DateTime>> orderBy, string direction, int? PageIndex, int? pageSize)
         {
-            using (TContext context = InitContext())
+            using (TDbContext context = InitContext())
             {
                 try
                 {
@@ -1533,7 +1599,7 @@ namespace Swastika.Infrastructure.Data.Repository
                     PaginationModel<TView> result = new PaginationModel<TView>()
                     {
                         TotalItems = query.Count(),
-                        PageIndex = pageIndex ?? 0
+                        PageIndex = PageIndex ?? 0
                     };
                     result.PageSize = pageSize ?? result.TotalItems;
                     if (pageSize.HasValue)
@@ -1547,7 +1613,7 @@ namespace Swastika.Infrastructure.Data.Repository
                             {
                                 lstModel = await query
                                     .OrderByDescending(orderBy)
-                                    .Skip(pageIndex.Value * pageSize.Value)
+                                    .Skip(PageIndex.Value * pageSize.Value)
                                     .Take(pageSize.Value)
                                     .ToListAsync();
                             }
@@ -1564,7 +1630,7 @@ namespace Swastika.Infrastructure.Data.Repository
                             {
                                 lstModel = await query
                                     .OrderBy(orderBy)
-                                    .Skip(pageIndex.Value * pageSize.Value)
+                                    .Skip(PageIndex.Value * pageSize.Value)
                                     .Take(pageSize.Value)
                                     .ToListAsync();
                             }
@@ -1600,7 +1666,7 @@ namespace Swastika.Infrastructure.Data.Repository
         /// <returns></returns>
         public virtual TView GetSingleModel(Expression<Func<TModel, bool>> predicate)
         {
-            using (TContext context = InitContext())
+            using (TDbContext context = InitContext())
             {
                 TModel model = context.Set<TModel>().FirstOrDefault(predicate);
                 if (model != null)
@@ -1625,7 +1691,7 @@ namespace Swastika.Infrastructure.Data.Repository
         /// <returns></returns>
         public virtual async Task<TView> GetSingleModelAsync(Expression<Func<TModel, bool>> predicate)
         {
-            using (TContext context = InitContext())
+            using (TDbContext context = InitContext())
             {
                 TModel model = await context.Set<TModel>().FirstOrDefaultAsync(predicate);
                 if (model != null)
@@ -1649,9 +1715,9 @@ namespace Swastika.Infrastructure.Data.Repository
         /// <param name="predicate">The predicate.</param>
         /// <returns></returns>
         public virtual RepositoryResponse<bool> RemoveListModel(Expression<Func<TModel, bool>> predicate
-            , TContext _context = null, IDbContextTransaction _transaction = null)
+            , TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
-            TContext context = _context ?? InitContext();
+            TDbContext context = _context ?? InitContext();
             var transaction = _transaction ?? context.Database.BeginTransaction();
             try
             {
@@ -1741,9 +1807,9 @@ namespace Swastika.Infrastructure.Data.Repository
         /// <param name="predicate">The predicate.</param>
         /// <returns></returns>
         public virtual async Task<RepositoryResponse<bool>> RemoveListModelAsync(Expression<Func<TModel, bool>> predicate
-            , TContext _context = null, IDbContextTransaction _transaction = null)
+            , TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
-            TContext context = _context ?? InitContext();
+            TDbContext context = _context ?? InitContext();
             var transaction = _transaction ?? context.Database.BeginTransaction();
             try
             {
@@ -1833,10 +1899,10 @@ namespace Swastika.Infrastructure.Data.Repository
         /// <param name="predicate">The predicate.</param>
         /// <returns></returns>
         public virtual RepositoryResponse<bool> RemoveModel(Expression<Func<TModel, bool>> predicate
-            , TContext _context = null, IDbContextTransaction _transaction = null)
+            , TDbContext _context = null, IDbContextTransaction _transaction = null)
 
         {
-            TContext context = _context ?? InitContext();
+            TDbContext context = _context ?? InitContext();
             var transaction = _transaction ?? context.Database.BeginTransaction();
             try
             {
@@ -1909,10 +1975,10 @@ namespace Swastika.Infrastructure.Data.Repository
         /// <param name="model">The model.</param>
         /// <returns></returns>
         public virtual RepositoryResponse<bool> RemoveModel(TModel model
-            , TContext _context = null, IDbContextTransaction _transaction = null)
+            , TDbContext _context = null, IDbContextTransaction _transaction = null)
 
         {
-            TContext context = _context ?? InitContext();
+            TDbContext context = _context ?? InitContext();
             var transaction = _transaction ?? context.Database.BeginTransaction();
             try
             {
@@ -1984,10 +2050,10 @@ namespace Swastika.Infrastructure.Data.Repository
         /// <param name="predicate">The predicate.</param>
         /// <returns></returns>
         public virtual async Task<RepositoryResponse<bool>> RemoveModelAsync(Expression<Func<TModel, bool>> predicate
-            , TContext _context = null, IDbContextTransaction _transaction = null)
+            , TDbContext _context = null, IDbContextTransaction _transaction = null)
 
         {
-            TContext context = _context ?? InitContext();
+            TDbContext context = _context ?? InitContext();
             var transaction = _transaction ?? context.Database.BeginTransaction();
             try
             {
@@ -2060,10 +2126,10 @@ namespace Swastika.Infrastructure.Data.Repository
         /// <param name="model">The model.</param>
         /// <returns></returns>
         public virtual async Task<RepositoryResponse<bool>> RemoveModelAsync(TModel model
-            , TContext _context = null, IDbContextTransaction _transaction = null)
+            , TDbContext _context = null, IDbContextTransaction _transaction = null)
 
         {
-            TContext context = _context ?? InitContext();
+            TDbContext context = _context ?? InitContext();
             var transaction = _transaction ?? context.Database.BeginTransaction();
             try
             {
@@ -2133,16 +2199,16 @@ namespace Swastika.Infrastructure.Data.Repository
         /// </summary>
         /// <param name="model">The model.</param>
         /// <returns></returns>
-        public virtual RepositoryResponse<TView> SaveModel(TModel model, bool isSaveSubModels = false
-            , TContext _context = null, IDbContextTransaction _transaction = null)
+        public virtual RepositoryResponse<TView> SaveModel(TModel model
+            , TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
             if (CheckIsExists(model, _context, _transaction))
             {
-                return EditModel(model, isSaveSubModels, _context, _transaction);
+                return EditModel(model, _context, _transaction);
             }
             else
             {
-                return CreateModel(model, isSaveSubModels, _context, _transaction);
+                return CreateModel(model, _context, _transaction);
             }
         }
 
@@ -2151,20 +2217,20 @@ namespace Swastika.Infrastructure.Data.Repository
         /// </summary>
         /// <param name="model">The model.</param>
         /// <returns></returns>
-        public virtual Task<RepositoryResponse<TView>> SaveModelAsync(TModel model, bool isSaveSubModels = false
-            , TContext _context = null, IDbContextTransaction _transaction = null)
+        public virtual Task<RepositoryResponse<TView>> SaveModelAsync(TModel model
+            , TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
             if (CheckIsExists(model, _context, _transaction))
             {
-                return EditModelAsync(model, isSaveSubModels, _context, _transaction);
+                return EditModelAsync(model, _context, _transaction);
             }
             else
             {
-                return CreateModelAsync(model, isSaveSubModels, _context, _transaction);
+                return CreateModelAsync(model, _context, _transaction);
             }
         }
 
-        public virtual bool SaveSubModel(TModel model, TContext context, IDbContextTransaction _transaction)
+        public virtual bool SaveSubModel(TModel model, TDbContext context, IDbContextTransaction _transaction)
         {
             return false;
         }
@@ -2174,7 +2240,7 @@ namespace Swastika.Infrastructure.Data.Repository
         /// </summary>
         /// <param name="model">The model.</param>
         /// <returns></returns>
-        public virtual Task<bool> SaveSubModelAsync(TModel model, TContext context, IDbContextTransaction _transaction)
+        public virtual Task<bool> SaveSubModelAsync(TModel model, TDbContext context, IDbContextTransaction _transaction)
         {
             throw new NotImplementedException();
         }
