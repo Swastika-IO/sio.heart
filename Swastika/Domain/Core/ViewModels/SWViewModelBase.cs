@@ -8,12 +8,13 @@ using System.Reflection;
 using System.Threading.Tasks;
 
 namespace Swastika.Domain.Core.ViewModels
-{
+{  
+
     /// <summary>
     /// 
     /// </summary>
     /// <typeparam name="TModel">database model</typeparam>
-    /// <typeparam name="TFEView">Output View</typeparam>
+    /// <typeparam name="TView">Output View</typeparam>
     /// <seealso cref="AutoMapper.Profile" />
     public abstract class SWViewModelBase<TDbContext, TModel, TView>
         where TDbContext : DbContext
@@ -35,17 +36,14 @@ namespace Swastika.Domain.Core.ViewModels
             set => _mapper = value;
         }
 
-        private IMapper CreateMapper()
+        public virtual IMapper CreateMapper()
         {
             var config = new MapperConfiguration(cfg => cfg.CreateMap<TModel, TView>().ReverseMap());
+
             var mapper = new Mapper(config);
+
             return mapper;
         }
-
-        /// <summary>
-        /// The model
-        /// </summary>        
-        private TModel _model;
 
         private TView _view;
 
@@ -63,21 +61,6 @@ namespace Swastika.Domain.Core.ViewModels
         /// <value>
         /// The model.
         /// </value>
-        [JsonIgnore]
-        public TModel Model
-        {
-            get
-            {
-                if (_model == null)
-                {
-                    Type classType = typeof(TModel);
-                    ConstructorInfo classConstructor = classType.GetConstructor(new Type[] { });
-                    _model = (TModel)classConstructor.Invoke(new object[] { });
-                }
-                return _model;
-            }
-            set => _model = value;
-        }
 
         [JsonIgnore]
         public TView View
@@ -103,7 +86,7 @@ namespace Swastika.Domain.Core.ViewModels
         public virtual TView ParseView()
         {
             //AutoMapper.Mapper.Map<TModel, TView>(Model, (TView)this);
-            Mapper.Map<TModel, TView>(Model, View);
+            Mapper.Map<TModel, TView>(View.Model, View);
             return View;
         }
 
@@ -112,20 +95,20 @@ namespace Swastika.Domain.Core.ViewModels
         /// </summary>
         public virtual TModel ParseModel()
         {
-            //AutoMapper.Mapper.Map<TView, TModel>((TView)this, Model);
-            Mapper.Map<TView, TModel>(View, Model);
-            return this.Model;
+            //AutoMapper.Mapper.Map<TView, TModel>(View, Model);
+            Mapper.Map<TView, TModel>(View, View.Model);
+            return View.Model;
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ViewModelBase{TModel, TView}"/> class.
         /// </summary>
         /// <param name="model">The model.</param>
-        public SWViewModelBase(TModel model)
+        public SWViewModelBase(TModel model, TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
-            Model = model;
+            View.Model = model;
             ParseView();
-            View.ExpandView();
+            View.ExpandView(_context, _transaction);
         }
 
         /// <summary>
@@ -136,7 +119,7 @@ namespace Swastika.Domain.Core.ViewModels
         {
             View = view;
             ParseModel();
-            view.ExpandModel(Model);
+            view.ExpandModel(View.Model);
         }
 
         /// <summary>
@@ -153,42 +136,17 @@ namespace Swastika.Domain.Core.ViewModels
         }
         public virtual RepositoryResponse<TView> SaveModel(bool isSaveSubModels = false, TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
-            try
+            View.Validate();
+            if (View.IsValid)
             {
-                View.Validate();
-                if (View.IsValid)
+                var result = View.SaveModel(isSaveSubModels, _context, _transaction);
+
+                if (result)
                 {
-                    var result = View.SaveModel(Model, _context, _transaction);
-                    if (result && isSaveSubModels)
-                    {
-                        result = View.SaveSubModels(Model, _context, _transaction);
-                    }
-
-                    if (result)
-                    {
-                        return new RepositoryResponse<TView>()
-                        {
-                            IsSucceed = true,
-                            Data = ParseView()
-                        };
-                    }
-                    else
-                    {
-                        return new RepositoryResponse<TView>()
-                        {
-                            IsSucceed = false,
-                            Data = default(TView)
-                        };
-                    }
-
-                    if (result)
-                    {
-                        ParseView();
-                    }
                     return new RepositoryResponse<TView>()
                     {
-                        IsSucceed = result,
-                        Data = View
+                        IsSucceed = true,
+                        Data = ParseView()
                     };
                 }
                 else
@@ -196,60 +154,36 @@ namespace Swastika.Domain.Core.ViewModels
                     return new RepositoryResponse<TView>()
                     {
                         IsSucceed = false,
-                        Data = null,
-                        Errors = View.errors
+                        Data = default(TView)
                     };
                 }
             }
-            catch (Exception ex)
+            else
             {
                 return new RepositoryResponse<TView>()
                 {
                     IsSucceed = false,
-                    Data = default(TView),
-                    Ex = ex
+                    Data = null,
+                    Errors = View.errors
                 };
             }
 
         }
-        public virtual async Task<RepositoryResponse<TView>> SaveModelAsync(bool isSaveSubModels = false, TDbContext _context = null, IDbContextTransaction _transaction = null)
+        public virtual async Task<RepositoryResponse<TView>> SaveModelAsync(bool isSaveSubModels = false
+            , TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
-            try
+            View.Validate();
+            if (View.IsValid)
             {
-                View.Validate();
-                if (View.IsValid)
+                var result = await View.SaveModelAsync(isSaveSubModels, _context, _transaction);
+
+                if (result)
                 {
-                    var result = await View.SaveModelAsync(Model, _context, _transaction);
-                    if (result && isSaveSubModels)
-                    {
-                        result = await View.SaveSubModelsAsync(Model, _context, _transaction);
-                    }
-
-                    if (result)
-                    {
-                        return new RepositoryResponse<TView>()
-                        {
-                            IsSucceed = true,
-                            Data = ParseView()
-                        };
-                    }
-                    else
-                    {
-                        return new RepositoryResponse<TView>()
-                        {
-                            IsSucceed = false,
-                            Data = default(TView)
-                        };
-                    }
-
-                    if (result)
-                    {
-                        ParseView();
-                        View.ExpandView();
-                    }
+                    ParseView();
+                    View.ExpandView();
                     return new RepositoryResponse<TView>()
                     {
-                        IsSucceed = result,
+                        IsSucceed = true,
                         Data = View
                     };
                 }
@@ -258,82 +192,23 @@ namespace Swastika.Domain.Core.ViewModels
                     return new RepositoryResponse<TView>()
                     {
                         IsSucceed = false,
-                        Data = null,
-                        Errors = View.errors
+                        Data = default(TView)
                     };
                 }
+
+
             }
-            catch (Exception ex)
+            else
             {
+
                 return new RepositoryResponse<TView>()
                 {
                     IsSucceed = false,
-                    Data = default(TView),
-                    Ex = ex
+                    Data = null,
+                    Errors = View.errors
                 };
             }
 
-        }
-
-        public virtual async Task<RepositoryResponse<TView>> RemoveModel(bool isSaveSubModels = false, TDbContext _context = null, IDbContextTransaction _transaction = null)
-        {
-            try
-            {
-                if (View.IsValid)
-                {
-                    var result = await View.RemoveModelAsync(Model, _context, _transaction);
-                    if (result && isSaveSubModels)
-                    {
-                        result = await View.SaveSubModelsAsync(Model, _context, _transaction);
-                    }
-
-                    if (result)
-                    {
-                        return new RepositoryResponse<TView>()
-                        {
-                            IsSucceed = true,
-                            Data = ParseView()
-                        };
-                    }
-                    else
-                    {
-
-                        return new RepositoryResponse<TView>()
-                        {
-                            IsSucceed = false,
-                            Data = default(TView)
-                        };
-                    }
-
-                    if (result)
-                    {
-                        ParseView();
-                    }
-                    return new RepositoryResponse<TView>()
-                    {
-                        IsSucceed = result,
-                        Data = View
-                    };
-                }
-                else
-                {
-                    return new RepositoryResponse<TView>()
-                    {
-                        IsSucceed = false,
-                        Data = null,
-                        Errors = View.errors
-                    };
-                }
-            }
-            catch (Exception ex)
-            {
-                return new RepositoryResponse<TView>()
-                {
-                    IsSucceed = false,
-                    Data = default(TView),
-                    Ex = ex
-                };
-            }
         }
     }
 }

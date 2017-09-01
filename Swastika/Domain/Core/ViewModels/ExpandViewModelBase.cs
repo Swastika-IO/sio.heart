@@ -13,15 +13,18 @@ namespace Swastika.Domain.Core.ViewModels
     where TDbContext : DbContext
     where TModel : class
     {
-        //[JsonIgnore]
-        //public TModel Model { get; set; }
+        [JsonIgnore]
+        public TModel Model { get; set; }
         [JsonIgnore]
         public List<SupportedCulture> ListSupportedCulture { get; set; }
+        [JsonIgnore]
+        public string ResponseKey { get; set; }
+
         [JsonIgnore]
         public List<string> errors = new List<string>();
         [JsonIgnore]
         public bool IsValid = true;
-        public virtual void ExpandView() { }
+        public virtual void ExpandView(TDbContext _context = null, IDbContextTransaction _transaction = null) { }
         public virtual void ExpandModel(TModel model) { }
         public virtual void Validate()
         {
@@ -32,20 +35,17 @@ namespace Swastika.Domain.Core.ViewModels
             return default(Task<bool>);
         }
 
-        public virtual Task<bool> SaveModelAsync(TModel model, TDbContext _context = null, IDbContextTransaction _transaction = null)
-        {
-            return default(Task<bool>);
-        }
-        public virtual Task<bool> SaveSubModelsAsync(TModel model, TDbContext _context = null, IDbContextTransaction _transaction = null)
+        public abstract Task<bool> SaveModelAsync(bool isSaveSubModels = false, TDbContext _context = null, IDbContextTransaction _transaction = null);
+        
+
+        public virtual Task<bool> SaveSubModelsAsync(TModel parent, TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
             return default(Task<bool>);
         }
 
-        public virtual bool SaveModel(TModel model, TDbContext _context = null, IDbContextTransaction _transaction = null)
-        {
-            return false;
-        }
-        public virtual bool SaveSubModels(TModel model, TDbContext _context = null, IDbContextTransaction _transaction = null)
+        public abstract bool SaveModel(bool isSaveSubModels = false, TDbContext _context = null, IDbContextTransaction _transaction = null);
+
+        public virtual bool SaveSubModels(TModel parent, TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
             return false;
         }
