@@ -444,7 +444,7 @@ namespace Swastika.Infrastructure.Data.Repository
                     return new RepositoryResponse<TView>()
                     {
                         IsSucceed = true,
-                        Data = ParseView(model, Constants.ViewModelType.BackEnd)
+                        Data = this as TView //ParseView(model, Constants.ViewModelType.BackEnd)
                     };
                 }
                 else
