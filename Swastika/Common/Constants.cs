@@ -19,7 +19,9 @@ namespace Swastika.Common
             Layouts,
             Pages,
             Modules,
-            Articles,            
+            Articles,
+            Widgets,
+
         }
         public enum ViewModelType
         {
@@ -32,7 +34,9 @@ namespace Swastika.Common
             Blank = 0,
             Article = 1,
             List = 2,
-            Home = 3
+            Home = 3,
+            StaticUrl = 4,
+            Modules = 5
         }
 
         public enum CatePosition
