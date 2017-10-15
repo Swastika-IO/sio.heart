@@ -1,0 +1,11 @@
+E:\_Workspace\Github\Swastika-Heart\Swastika\bin\Release\netstandard1.6\Swastika.deps.json
+E:\_Workspace\Github\Swastika-Heart\Swastika\bin\Release\netstandard1.6\Swastika.dll
+E:\_Workspace\Github\Swastika-Heart\Swastika\bin\Release\netstandard1.6\Swastika.pdb
+E:\_Workspace\Github\Swastika-Heart\Swastika\bin\Release\netstandard1.6\Swastika.Identity.dll
+E:\_Workspace\Github\Swastika-Heart\Swastika\bin\Release\netstandard1.6\Swastika.Identity.pdb
+E:\_Workspace\Github\Swastika-Heart\Swastika\obj\Release\netstandard1.6\Swastika.csprojResolveAssemblyReference.cache
+E:\_Workspace\Github\Swastika-Heart\Swastika\obj\Release\netstandard1.6\Swastika.csproj.CoreCompileInputs.cache
+E:\_Workspace\Github\Swastika-Heart\Swastika\obj\Release\netstandard1.6\Swastika.AssemblyInfoInputs.cache
+E:\_Workspace\Github\Swastika-Heart\Swastika\obj\Release\netstandard1.6\Swastika.AssemblyInfo.cs
+E:\_Workspace\Github\Swastika-Heart\Swastika\obj\Release\netstandard1.6\Swastika.dll
+E:\_Workspace\Github\Swastika-Heart\Swastika\obj\Release\netstandard1.6\Swastika.pdb
