@@ -9,7 +9,7 @@ namespace Swastika.Common
 {
     public class Common
     {
-        private static string defaultImagePath = "http://placehold.it/200x200";
+        //private static string defaultImagePath = "http://placehold.it/200x200";
 
         public static Stream LoadImage(string strImage64)
         {
@@ -97,7 +97,7 @@ namespace Swastika.Common
                     return string.Empty;
                 }
             }
-            catch (Exception ex)
+            catch
             {
                 return string.Empty;
             }

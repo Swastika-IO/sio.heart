@@ -6,6 +6,12 @@ namespace Swastika.Common
 {
     public class Constants
     {        
+        public class StringTemplates
+        {
+            public const string TemplateFolder = @"Views/Shared/{0}";
+            public const string FileFolder = @"wwwroot/Uploads/Files/{0}";
+        }
+
         public enum SearchType
         {
             All,
@@ -19,8 +25,19 @@ namespace Swastika.Common
             Layouts,
             Pages,
             Modules,
-            Articles,            
+            Articles,
+            Widgets,
+
         }
+        public enum FileFolder
+        {
+            Styles,
+            Scripts,
+            Images,
+            Fonts,
+            Others
+        }
+
         public enum ViewModelType
         {
             FrontEnd = 0,
@@ -32,7 +49,9 @@ namespace Swastika.Common
             Blank = 0,
             Article = 1,
             List = 2,
-            Home = 3
+            Home = 3,
+            StaticUrl = 4,
+            Modules = 5
         }
 
         public enum CatePosition
