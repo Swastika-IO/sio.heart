@@ -6,6 +6,12 @@ namespace Swastika.Common
 {
     public class Constants
     {        
+        public class StringTemplates
+        {
+            public const string TemplateFolder = @"Views/Shared/{0}";
+            public const string FileFolder = @"wwwroot/Uploads/Files/{0}";
+        }
+
         public enum SearchType
         {
             All,
@@ -23,6 +29,15 @@ namespace Swastika.Common
             Widgets,
 
         }
+        public enum FileFolder
+        {
+            Styles,
+            Scripts,
+            Images,
+            Fonts,
+            Others
+        }
+
         public enum ViewModelType
         {
             FrontEnd = 0,

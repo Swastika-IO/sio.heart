@@ -26,6 +26,7 @@ namespace Swastika.Domain.Core.ViewModels
         public bool IsValid = true;
         public virtual void ExpandView(TDbContext _context = null, IDbContextTransaction _transaction = null) { }
         public virtual void ExpandModel(TModel model) { }
+
         public virtual void Validate()
         {
         }

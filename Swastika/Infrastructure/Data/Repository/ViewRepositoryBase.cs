@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
+using Microsoft.Data.OData.Query;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using Swastika.Common.Helper;
 using Swastika.Domain.Core.Models;
-using Swastika.Domain.Core.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,17 +20,16 @@ namespace Swastika.Infrastructure.Data.Repository
     /// <typeparam name="TView">The type of the view.</typeparam>
     /// <typeparam name="TDbContext">The type of the context.</typeparam>
     /// <seealso cref="Swastika.Extension.Blog.Interfaces.IRepository{TModel, TView}" />
-    public abstract class SWRepositoryBase<TModel, TBaseView, TView, TDbContext>
+    public abstract class ViewRepositoryBase<TDbContext, TModel, TView>
        where TModel : class
-        where TBaseView : SWViewModelBase<TDbContext, TModel, TView>
-        where TView : ExpandViewModelBase<TDbContext, TModel>
+        where TView : Swastika.Infrastructure.Data.ViewModels.ViewModelBase<TDbContext, TModel, TView>
         where TDbContext : DbContext
     {
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SWBaseRepository{TModel, TView, TContext}"/> class.
         /// </summary>
-        public SWRepositoryBase()
+        public ViewRepositoryBase()
         {
             RegisterAutoMapper();
         }
@@ -83,21 +82,21 @@ namespace Swastika.Infrastructure.Data.Repository
         /// <returns></returns>
         public virtual TView ParseView(TModel model, TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
-            Type classType = typeof(TBaseView);
+            Type classType = typeof(TView);
             ConstructorInfo classConstructor = classType.GetConstructor(new Type[] { model.GetType(), typeof(TDbContext), typeof(IDbContextTransaction) });
-            TBaseView vm = default(TBaseView);
+            TView vm = default(TView);
             if (classConstructor != null)
             {
-                vm = (TBaseView)classConstructor.Invoke(new object[] { model, _context, _transaction });
+                vm = (TView)classConstructor.Invoke(new object[] { model, _context, _transaction });
 
             }
             else
             {
                 classConstructor = classType.GetConstructor(new Type[] { model.GetType() });
-                vm = (TBaseView)classConstructor.Invoke(new object[] { model });
+                vm = (TView)classConstructor.Invoke(new object[] { model });
             }
 
-            return vm.View;
+            return vm;
         }
 
         /// <summary>
@@ -196,7 +195,12 @@ namespace Swastika.Infrastructure.Data.Repository
                 bool result = context.SaveChanges() > 0;
                 if (result && isSaveSubModels)
                 {
-                    result = view.SaveSubModels(view.Model, context, transaction);
+                    var saveResult = view.SaveSubModels(view.Model, context, transaction);
+                    if (!saveResult.IsSucceed)
+                    {
+                        view.Errors.AddRange(saveResult.Errors);
+                    }
+                    result = saveResult.IsSucceed;
                 }
                 if (result)
                 {
@@ -222,7 +226,7 @@ namespace Swastika.Infrastructure.Data.Repository
                     return new RepositoryResponse<TView>()
                     {
                         IsSucceed = false,
-                        Data = default(TView)
+                        Data = view
                     };
                 }
 
@@ -269,7 +273,8 @@ namespace Swastika.Infrastructure.Data.Repository
                 bool result = await context.SaveChangesAsync() > 0;
                 if (result && isSaveSubModels)
                 {
-                    result = await view.SaveSubModelsAsync(view.Model, context, transaction);
+                    var saveResult = await view.SaveSubModelsAsync(view.Model, context, transaction);
+                    result = saveResult.IsSucceed;
                 }
                 if (result)
                 {
@@ -297,7 +302,7 @@ namespace Swastika.Infrastructure.Data.Repository
                     return new RepositoryResponse<TView>()
                     {
                         IsSucceed = false,
-                        Data = default(TView)
+                        Data = view
                     };
                 }
 
@@ -348,7 +353,12 @@ namespace Swastika.Infrastructure.Data.Repository
                 context.SaveChanges();
                 if (result && isSaveSubModels)
                 {
-                    result = view.SaveSubModels(view.Model, context, transaction);
+                    var saveResult = view.SaveSubModels(view.Model, context, transaction);
+                    if (!saveResult.IsSucceed)
+                    {
+                        view.Errors.AddRange(saveResult.Errors);
+                    }
+                    result = saveResult.IsSucceed;
                 }
                 if (result)
                 {
@@ -424,7 +434,12 @@ namespace Swastika.Infrastructure.Data.Repository
                 context.SaveChanges();
                 if (result && isSaveSubModels)
                 {
-                    result = await view.SaveSubModelsAsync(view.Model, context, transaction);
+                    var saveResult = await view.SaveSubModelsAsync(view.Model, context, transaction);
+                    if (!saveResult.IsSucceed)
+                    {
+                        view.Errors.AddRange(saveResult.Errors);
+                    }
+                    result = saveResult.IsSucceed;
                 }
                 if (result)
                 {
@@ -449,7 +464,7 @@ namespace Swastika.Infrastructure.Data.Repository
                     return new RepositoryResponse<TView>()
                     {
                         IsSucceed = false,
-                        Data = default(TView)
+                        Data = view
                     };
                 }
             }
@@ -482,63 +497,28 @@ namespace Swastika.Infrastructure.Data.Repository
 
         #region GetModelList
 
-        /// <summary>
-        /// Gets the view model list asynchronous.
-        /// </summary>
-        /// <param name="isGetSubModels">if set to <c>true</c> [is get sub Items].</param>
-        /// <returns></returns>
-        public virtual async Task<List<TView>> GetViewModelListAsync(TDbContext _context = null, IDbContextTransaction _transaction = null)
-        {
-            var context = _context ?? InitContext();
-            var transaction = _transaction ?? context.Database.BeginTransaction();
-            List<TView> lstViewResult = new List<TView>();
-            try
-            {
-                var lstModel = await context.Set<TModel>().ToListAsync();
-                lstModel.ForEach(model => context.Entry(model).State = EntityState.Detached);
-                lstViewResult = ParseView(lstModel, _context, _transaction);
-                return lstViewResult;
-            }
-            // TODO: Add more specific exeption types instead of Exception only
-            catch (Exception ex)
-            {
-                LogErrorMessage(ex);
-                if (_transaction == null)
-                {
-                    //if current transaction is root transaction
-                    transaction.Rollback();
-                }
-
-                return lstViewResult;
-            }
-            finally
-            {
-                if (_context == null)
-                {
-                    //if current Context is Root
-                    context.Dispose();
-                }
-            }
-        }
-
+       
 
         /// <summary>
         /// Gets the model list.
         /// </summary>
         /// <param name="isGetSubModels">if set to <c>true</c> [is get sub Items].</param>
         /// <returns></returns>
-        public virtual List<TView> GetModelList(TDbContext _context = null, IDbContextTransaction _transaction = null)
+        public virtual RepositoryResponse<List<TView>> GetModelList(TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
             var context = _context ?? InitContext();
             var transaction = _transaction ?? context.Database.BeginTransaction();
-            List<TView> lstViewResult = new List<TView>();
+            List<TView> result = new List<TView>();
             try
             {
                 var lstModel = context.Set<TModel>().ToList();
 
                 lstModel.ForEach(model => context.Entry(model).State = EntityState.Detached);
-                lstViewResult = ParseView(lstModel, _context, _transaction);
-                return lstViewResult;
+                result = ParseView(lstModel, _context, _transaction);
+                return new RepositoryResponse<List<TView>>() {
+                    IsSucceed = true,
+                    Data = result
+                };
             }
             // TODO: Add more specific exeption types instead of Exception only
             catch (Exception ex)
@@ -550,7 +530,11 @@ namespace Swastika.Infrastructure.Data.Repository
                     transaction.Rollback();
                 }
 
-                return lstViewResult;
+                return new RepositoryResponse<List<TView>>() {
+                    IsSucceed = false,
+                    Data = null,
+                    Ex = ex
+                };
             }
             finally
             {
@@ -571,8 +555,8 @@ namespace Swastika.Infrastructure.Data.Repository
         /// <param name="PageSize">Size of the page.</param>
         /// <param name="isGetSubModels">if set to <c>true</c> [is get sub Items].</param>
         /// <returns></returns>
-        public virtual PaginationModel<TView> GetModelList(
-            Expression<Func<TModel, int>> orderBy, string direction, int? PageIndex, int? PageSize
+        public virtual RepositoryResponse<PaginationModel<TView>> GetModelList(
+            string orderByPropertyName, OrderByDirection direction, int? PageIndex, int? PageSize
             , TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
             var context = _context ?? InitContext();
@@ -580,6 +564,8 @@ namespace Swastika.Infrastructure.Data.Repository
 
             try
             {
+                dynamic orderBy = GetLambda(orderByPropertyName);
+                IQueryable<TModel> sorted = null;
                 List<TModel> lstModel = new List<TModel>();
                 var query = context.Set<TModel>();
 
@@ -598,37 +584,33 @@ namespace Swastika.Infrastructure.Data.Repository
                 // TODO: should we change "direction" to boolean "isDesc" and use if condition instead?
                 switch (direction)
                 {
-                    case "desc":
+                    case OrderByDirection.Descending:
+                        sorted = Queryable.OrderByDescending(query, orderBy);
                         if (PageSize.HasValue)
                         {
-                            lstModel = query
-                                .OrderByDescending(orderBy)
+                            lstModel = sorted
                                 .Skip(PageIndex.Value * PageSize.Value)
                                 .Take(PageSize.Value)
                                 .ToList();
                         }
                         else
                         {
-                            lstModel = query
-                                .OrderByDescending(orderBy)
-                                .ToList();
+                            lstModel = sorted.ToList();
                         }
                         break;
 
                     default:
+                        sorted = Queryable.OrderBy(query, orderBy);
                         if (PageSize.HasValue)
                         {
-                            lstModel = query
-                                .OrderBy(orderBy)
+                            lstModel = sorted
                                 .Skip(PageIndex.Value * PageSize.Value)
                                 .Take(PageSize.Value)
                                 .ToList();
                         }
                         else
                         {
-                            lstModel = query
-                                .OrderBy(orderBy)
-                                .ToList();
+                            lstModel = sorted.ToList();
                         }
                         break;
                 }
@@ -637,7 +619,11 @@ namespace Swastika.Infrastructure.Data.Repository
                 var lstViewResult = ParseView(lstModel, _context, _transaction);
 
                 result.Items = lstViewResult;
-                return result;
+                return new RepositoryResponse<PaginationModel<TView>>()
+                {
+                    IsSucceed = true,
+                    Data = result
+                };
             }
             // TODO: Add more specific exeption types instead of Exception only
             catch (Exception ex)
@@ -649,7 +635,12 @@ namespace Swastika.Infrastructure.Data.Repository
                     transaction.Rollback();
                 }
 
-                return null;
+                return new RepositoryResponse<PaginationModel<TView>>()
+                {
+                    IsSucceed = false,
+                    Data = null,
+                    Ex = ex
+                };
             }
             finally
             {
@@ -660,84 +651,30 @@ namespace Swastika.Infrastructure.Data.Repository
                 }
             }
         }
+
+
 
         /// <summary>
         /// Gets the model list.
         /// </summary>
-        /// <param name="orderBy">The order by.</param>
-        /// <param name="direction">The direction.</param>
-        /// <param name="PageIndex">Index of the page.</param>
-        /// <param name="PageSize">Size of the page.</param>
         /// <param name="isGetSubModels">if set to <c>true</c> [is get sub Items].</param>
         /// <returns></returns>
-        public virtual PaginationModel<TView> GetModelList(
-            Expression<Func<TModel, string>> orderBy, string direction, int? PageIndex, int? PageSize
-            , TDbContext _context = null, IDbContextTransaction _transaction = null)
+        public virtual async Task<RepositoryResponse<List<TView>>> GetModelListAsync(TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
             var context = _context ?? InitContext();
             var transaction = _transaction ?? context.Database.BeginTransaction();
-
+            List<TView> result = new List<TView>();
             try
             {
-                List<TModel> lstModel = new List<TModel>();
-
-                var query = context.Set<TModel>();
-                PaginationModel<TView> result = new PaginationModel<TView>()
-                {
-                    TotalItems = query.Count(),
-                    PageIndex = PageIndex ?? 0
-                };
-                result.PageSize = PageSize ?? result.TotalItems;
-
-                if (PageSize.HasValue)
-                {
-                    result.TotalPage = result.TotalItems / PageSize.Value + (result.TotalItems % PageSize.Value > 0 ? 1 : 0);
-                }
-
-                // TODO: should we change "direction" to boolean "isDesc" and use if condition instead?
-                switch (direction)
-                {
-                    case "desc":
-                        if (PageSize.HasValue)
-                        {
-                            lstModel = query
-                                .OrderByDescending(orderBy)
-                                .Skip(PageIndex.Value * PageSize.Value)
-                                .Take(PageSize.Value)
-                                .ToList();
-                        }
-                        else
-                        {
-                            lstModel = query
-                                .OrderByDescending(orderBy)
-                                .ToList();
-                        }
-                        break;
-
-                    default:
-                        if (PageSize.HasValue)
-                        {
-                            lstModel = query
-                                .OrderBy(orderBy)
-                                .Skip(PageIndex.Value * PageSize.Value)
-                                .Take(PageSize.Value)
-                                .ToList();
-                        }
-                        else
-                        {
-                            lstModel = query
-                                .OrderBy(orderBy)
-                                .ToList();
-                        }
-                        break;
-                }
+                var lstModel = await context.Set<TModel>().ToListAsync();
 
                 lstModel.ForEach(model => context.Entry(model).State = EntityState.Detached);
-
-                var lstViewResult = ParseView(lstModel, _context, _transaction);
-                result.Items = lstViewResult;
-
-                return result;
+                result = ParseView(lstModel, _context, _transaction);
+                return new RepositoryResponse<List<TView>>()
+                {
+                    IsSucceed = true,
+                    Data = result
+                };
             }
             // TODO: Add more specific exeption types instead of Exception only
             catch (Exception ex)
@@ -749,105 +686,12 @@ namespace Swastika.Infrastructure.Data.Repository
                     transaction.Rollback();
                 }
 
-                return null;
-            }
-            finally
-            {
-                if (_context == null)
+                return new RepositoryResponse<List<TView>>()
                 {
-                    //if current Context is Root
-                    context.Dispose();
-                }
-            }
-        }
-
-        /// <summary>
-        /// Gets the model list.
-        /// </summary>
-        /// <param name="orderBy">The order by.</param>
-        /// <param name="direction">The direction.</param>
-        /// <param name="PageIndex">Index of the page.</param>
-        /// <param name="PageSize">Size of the page.</param>
-        /// <param name="isGetSubModels">if set to <c>true</c> [is get sub Items].</param>
-        /// <returns></returns>
-        public virtual PaginationModel<TView> GetModelList(
-            Expression<Func<TModel, DateTime>> orderBy, string direction, int? PageIndex, int? PageSize
-            , TDbContext _context = null, IDbContextTransaction _transaction = null)
-        {
-            var context = _context ?? InitContext();
-            var transaction = _transaction ?? context.Database.BeginTransaction();
-
-            try
-            {
-                List<TModel> lstModel = new List<TModel>();
-                var query = context.Set<TModel>();
-
-                PaginationModel<TView> result = new PaginationModel<TView>()
-                {
-                    TotalItems = query.Count(),
-                    PageIndex = PageIndex ?? 0
+                    IsSucceed = false,
+                    Data = null,
+                    Ex = ex
                 };
-                result.PageSize = PageSize ?? result.TotalItems;
-
-                if (PageSize.HasValue)
-                {
-                    result.TotalPage = result.TotalItems / PageSize.Value + (result.TotalItems % PageSize.Value > 0 ? 1 : 0);
-                }
-
-                switch (direction)
-                {
-                    case "desc":
-                        if (PageSize.HasValue)
-                        {
-                            lstModel = query
-                                .OrderByDescending(orderBy)
-                                .Skip(PageIndex.Value * PageSize.Value)
-                                .Take(PageSize.Value)
-                                .ToList();
-                        }
-                        else
-                        {
-                            lstModel = query
-                                .OrderByDescending(orderBy)
-                                .ToList();
-                        }
-                        break;
-
-                    default:
-                        if (PageSize.HasValue)
-                        {
-                            lstModel = query
-                                .OrderBy(orderBy)
-                                .Skip(PageIndex.Value * PageSize.Value)
-                                .Take(PageSize.Value).ToList();
-                        }
-                        else
-                        {
-                            lstModel = query
-                                .OrderBy(orderBy)
-                                .ToList();
-                        }
-                        break;
-                }
-
-                lstModel.ForEach(model => context.Entry(model).State = EntityState.Detached);
-
-                var lstViewResult = ParseView(lstModel, _context, _transaction);
-
-                result.Items = lstViewResult;
-                return result;
-            }
-            // TODO: Add more specific exeption types instead of Exception only
-            catch (Exception ex)
-            {
-                LogErrorMessage(ex);
-                if (_transaction == null)
-                {
-                    //if current transaction is root transaction
-                    transaction.Rollback();
-                }
-
-                return null;
             }
             finally
             {
@@ -858,6 +702,7 @@ namespace Swastika.Infrastructure.Data.Repository
                 }
             }
         }
+
 
         /// <summary>
         /// Gets the model list asynchronous.
@@ -868,8 +713,8 @@ namespace Swastika.Infrastructure.Data.Repository
         /// <param name="PageSize">Size of the page.</param>
         /// <param name="isGetSubModels">if set to <c>true</c> [is get sub Items].</param>
         /// <returns></returns>
-        public virtual async Task<PaginationModel<TView>> GetModelListAsync(
-            Expression<Func<TModel, string>> orderBy, string direction, int? PageIndex, int? PageSize
+        public virtual async Task<RepositoryResponse<PaginationModel<TView>>> GetModelListAsync(
+            string orderByPropertyName, OrderByDirection direction, int? PageIndex, int? PageSize
             , TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
             var context = _context ?? InitContext();
@@ -877,6 +722,8 @@ namespace Swastika.Infrastructure.Data.Repository
 
             try
             {
+                dynamic orderBy = GetLambda(orderByPropertyName);
+                IQueryable<TModel> sorted = null;
                 List<TModel> lstModel = new List<TModel>();
                 var query = context.Set<TModel>();
 
@@ -894,34 +741,32 @@ namespace Swastika.Infrastructure.Data.Repository
 
                 switch (direction)
                 {
-                    case "desc":
+                    case OrderByDirection.Descending:
+                        sorted = Queryable.OrderByDescending(query, orderBy);
                         if (PageSize.HasValue)
                         {
-                            lstModel = await query
-                                .OrderByDescending(orderBy)
+                            lstModel = await sorted
                                 .Skip(PageIndex.Value * PageSize.Value)
                                 .Take(PageSize.Value)
                                 .ToListAsync();
                         }
                         else
                         {
-                            lstModel = await query
-                                .OrderByDescending(orderBy)
-                                .ToListAsync();
+                            lstModel = await sorted.ToListAsync();
                         }
                         break;
 
                     default:
+                        sorted = Queryable.OrderBy(query, orderBy);
                         if (PageSize.HasValue)
                         {
-                            lstModel = await query.OrderBy(orderBy)
+                            lstModel = await sorted
                                 .Skip(PageIndex.Value * PageSize.Value)
                                 .Take(PageSize.Value).ToListAsync();
                         }
                         else
                         {
-                            lstModel = await query.OrderBy(orderBy)
-                                .ToListAsync();
+                            lstModel = await sorted.ToListAsync();
                         }
                         break;
                 }
@@ -931,145 +776,11 @@ namespace Swastika.Infrastructure.Data.Repository
                 var lstViewResult = ParseView(lstModel, _context, _transaction);
 
                 result.Items = lstViewResult;
-
-                return result;
-            }
-            // TODO: Add more specific exeption types instead of Exception only
-            catch (Exception ex)
-            {
-                LogErrorMessage(ex);
-                if (_transaction == null)
+                return new RepositoryResponse<PaginationModel<TView>>()
                 {
-                    //if current transaction is root transaction
-                    transaction.Rollback();
-                }
-
-                return null;
-            }
-            finally
-            {
-                if (_context == null)
-                {
-                    //if current Context is Root
-                    context.Dispose();
-                }
-            }
-        }
-
-        /// <summary>
-        /// Gets the model list asynchronous.
-        /// </summary>
-        /// <param name="isGetSubModels">if set to <c>true</c> [is get sub Items].</param>
-        /// <returns></returns>
-        public virtual async Task<List<TView>> GetModelListAsync(TDbContext _context = null, IDbContextTransaction _transaction = null)
-        {
-            var context = _context ?? InitContext();
-            var transaction = _transaction ?? context.Database.BeginTransaction();
-
-            try
-            {
-                var lstModel = await context.Set<TModel>().ToListAsync();
-                lstModel.ForEach(model => context.Entry(model).State = EntityState.Detached);
-                var lstViewResult = ParseView(lstModel, _context, _transaction);
-
-                return lstViewResult;
-            }
-            // TODO: Add more specific exeption types instead of Exception only
-            catch (Exception ex)
-            {
-                LogErrorMessage(ex);
-                if (_transaction == null)
-                {
-                    //if current transaction is root transaction
-                    transaction.Rollback();
-                }
-
-                return null;
-            }
-            finally
-            {
-                if (_context == null)
-                {
-                    //if current Context is Root
-                    context.Dispose();
-                }
-            }
-        }
-
-        /// <summary>
-        /// Gets the model list asynchronous.
-        /// </summary>
-        /// <param name="orderBy">The order by.</param>
-        /// <param name="direction">The direction.</param>
-        /// <param name="PageIndex">Index of the page.</param>
-        /// <param name="PageSize">Size of the page.</param>
-        /// <param name="isGetSubModels">if set to <c>true</c> [is get sub Items].</param>
-        /// <returns></returns>
-        public virtual async Task<PaginationModel<TView>> GetModelListAsync(
-            Expression<Func<TModel, DateTime>> orderBy, string direction, int? PageIndex, int? PageSize
-            , TDbContext _context = null, IDbContextTransaction _transaction = null)
-        {
-            var context = _context ?? InitContext();
-            var transaction = _transaction ?? context.Database.BeginTransaction();
-
-            try
-            {
-                List<TModel> lstModel = new List<TModel>();
-                var query = context.Set<TModel>();
-
-                PaginationModel<TView> result = new PaginationModel<TView>()
-                {
-                    TotalItems = query.Count(),
-                    PageIndex = PageIndex ?? 0
+                    IsSucceed = true,
+                    Data = result
                 };
-                result.PageSize = PageSize ?? result.TotalItems;
-
-                if (PageSize.HasValue)
-                {
-                    result.TotalPage = result.TotalItems / PageSize.Value + (result.TotalItems % PageSize.Value > 0 ? 1 : 0);
-                }
-
-                switch (direction)
-                {
-                    case "desc":
-                        if (PageSize.HasValue)
-                        {
-                            lstModel = await query
-                                .OrderByDescending(orderBy)
-                                .Skip(PageIndex.Value * PageSize.Value)
-                                .Take(PageSize.Value)
-                                .ToListAsync();
-                        }
-                        else
-                        {
-                            lstModel = await query
-                                .OrderByDescending(orderBy)
-                                .ToListAsync();
-                        }
-                        break;
-
-                    default:
-                        if (PageSize.HasValue)
-                        {
-                            lstModel = await query
-                                .OrderBy(orderBy)
-                                .Skip(PageIndex.Value * PageSize.Value)
-                                .Take(PageSize.Value)
-                                .ToListAsync();
-                        }
-                        else
-                        {
-                            lstModel = await query
-                                .OrderBy(orderBy)
-                                .ToListAsync();
-                        }
-                        break;
-                }
-                lstModel.ForEach(model => context.Entry(model).State = EntityState.Detached);
-                var lstViewResult = ParseView(lstModel, _context, _transaction);
-                result.Items = lstViewResult;
-
-                return result;
             }
             // TODO: Add more specific exeption types instead of Exception only
             catch (Exception ex)
@@ -1081,106 +792,12 @@ namespace Swastika.Infrastructure.Data.Repository
                     transaction.Rollback();
                 }
 
-                return null;
-            }
-            finally
-            {
-                if (_context == null)
+                return new RepositoryResponse<PaginationModel<TView>>()
                 {
-                    //if current Context is Root
-                    context.Dispose();
-                }
-            }
-        }
-
-        /// <summary>
-        /// Gets the model list asynchronous.
-        /// </summary>
-        /// <param name="orderBy">The order by.</param>
-        /// <param name="direction">The direction.</param>
-        /// <param name="PageIndex">Index of the page.</param>
-        /// <param name="PageSize">Size of the page.</param>
-        /// <param name="isGetSubModels">if set to <c>true</c> [is get sub Items].</param>
-        /// <returns></returns>
-        public virtual async Task<PaginationModel<TView>> GetModelListAsync(
-            Expression<Func<TModel, int>> orderBy, string direction, int? PageIndex, int? PageSize
-            , TDbContext _context = null, IDbContextTransaction _transaction = null)
-        {
-            var context = _context ?? InitContext();
-            var transaction = _transaction ?? context.Database.BeginTransaction();
-
-            try
-            {
-                List<TModel> lstModel = new List<TModel>();
-                var query = context.Set<TModel>();
-
-                PaginationModel<TView> result = new PaginationModel<TView>()
-                {
-                    TotalItems = query.Count(),
-                    PageIndex = PageIndex ?? 0
+                    IsSucceed = false,
+                    Data = null,
+                    Ex = ex
                 };
-                result.PageSize = PageSize ?? result.TotalItems;
-
-                if (PageSize.HasValue)
-                {
-                    result.TotalPage = result.TotalItems / PageSize.Value + (result.TotalItems % PageSize.Value > 0 ? 1 : 0);
-                }
-
-                switch (direction)
-                {
-                    case "desc":
-                        if (PageSize.HasValue)
-                        {
-                            lstModel = await query
-                                .OrderByDescending(orderBy)
-                                .Skip(PageIndex.Value * PageSize.Value)
-                                .Take(PageSize.Value)
-                                .ToListAsync();
-                        }
-                        else
-                        {
-                            lstModel = await query
-                                .OrderByDescending(orderBy)
-                                .ToListAsync();
-                        }
-                        break;
-
-                    default:
-                        if (PageSize.HasValue)
-                        {
-                            lstModel = await query
-                                .OrderBy(orderBy)
-                                .Skip(PageIndex.Value * PageSize.Value)
-                                .Take(PageSize.Value)
-                                .ToListAsync();
-                        }
-                        else
-                        {
-                            lstModel = await query
-                                .OrderBy(orderBy)
-                                .ToListAsync();
-                        }
-                        break;
-                }
-
-                lstModel.ForEach(model => context.Entry(model).State = EntityState.Detached);
-
-                var lstViewResult = ParseView(lstModel, _context, _transaction);
-
-                result.Items = lstViewResult;
-                return result;
-            }
-            // TODO: Add more specific exeption types instead of Exception only
-            catch (Exception ex)
-            {
-                LogErrorMessage(ex);
-                if (_transaction == null)
-                {
-                    //if current transaction is root transaction
-                    transaction.Rollback();
-                }
-
-                return null;
             }
             finally
             {
@@ -1192,7 +809,7 @@ namespace Swastika.Infrastructure.Data.Repository
             }
         }
 
-
+        
         #endregion GetModelList
 
         #region GetModelListBy
@@ -1203,7 +820,7 @@ namespace Swastika.Infrastructure.Data.Repository
         /// <param name="predicate">The predicate.</param>
         /// <param name="isGetSubModels">if set to <c>true</c> [is get sub Items].</param>
         /// <returns></returns>
-        public virtual List<TView> GetModelListBy(Expression<Func<TModel, bool>> predicate
+        public virtual RepositoryResponse<List<TView>> GetModelListBy(Expression<Func<TModel, bool>> predicate
             , TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
             var context = _context ?? InitContext();
@@ -1214,7 +831,11 @@ namespace Swastika.Infrastructure.Data.Repository
                 var lstModel = context.Set<TModel>().Where(predicate).ToList();
                 lstModel.ForEach(model => context.Entry(model).State = EntityState.Detached);
                 var lstViewResult = ParseView(lstModel, _context, _transaction);
-                return lstViewResult;
+                return new RepositoryResponse<List<TView>>()
+                {
+                    IsSucceed = true,
+                    Data = lstViewResult
+                };
             }
             // TODO: Add more specific exeption types instead of Exception only
             catch (Exception ex)
@@ -1226,7 +847,12 @@ namespace Swastika.Infrastructure.Data.Repository
                     transaction.Rollback();
                 }
 
-                return null;
+                return new RepositoryResponse<List<TView>>()
+                {
+                    IsSucceed = false,
+                    Data = null,
+                    Ex = ex
+                };
             }
             finally
             {
@@ -1248,8 +874,8 @@ namespace Swastika.Infrastructure.Data.Repository
         /// <param name="PageSize">Size of the page.</param>
         /// <param name="isGetSubModels">if set to <c>true</c> [is get sub Items].</param>
         /// <returns></returns>
-        public virtual PaginationModel<TView> GetModelListBy(
-            Expression<Func<TModel, bool>> predicate, Expression<Func<TModel, string>> orderBy, string direction, int? PageIndex, int? PageSize
+        public virtual RepositoryResponse<PaginationModel<TView>> GetModelListBy(
+            Expression<Func<TModel, bool>> predicate, string orderByPropertyName, OrderByDirection direction, int? PageIndex, int? PageSize
             , TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
             var context = _context ?? InitContext();
@@ -1257,9 +883,10 @@ namespace Swastika.Infrastructure.Data.Repository
 
             try
             {
+                dynamic orderBy = GetLambda(orderByPropertyName);
                 List<TModel> lstModel = new List<TModel>();
                 var query = context.Set<TModel>().Where(predicate);
-
+                IQueryable<TModel> sorted = null;
                 PaginationModel<TView> result = new PaginationModel<TView>()
                 {
                     TotalItems = query.Count(),
@@ -1274,37 +901,34 @@ namespace Swastika.Infrastructure.Data.Repository
 
                 switch (direction)
                 {
-                    case "desc":
+                    case OrderByDirection.Descending:
+                        sorted = Queryable.OrderByDescending(query, orderBy);
                         if (PageSize.HasValue)
                         {
-                            lstModel = query
-                                .OrderByDescending(orderBy)
-                                .Skip(PageIndex.Value * PageSize.Value)
+                            
+
+                            lstModel = sorted.Skip(PageIndex.Value * PageSize.Value)
                                 .Take(PageSize.Value)
                                 .ToList();
                         }
                         else
                         {
-                            lstModel = query
-                                .OrderByDescending(orderBy)
-                                .ToList();
+                            lstModel = sorted.ToList();
                         }
                         break;
 
                     default:
+                        sorted = Queryable.OrderBy(query, orderBy);
                         if (PageSize.HasValue)
                         {
-                            lstModel = query
-                                .OrderBy(orderBy)
+                            lstModel = sorted
                                 .Skip(PageIndex.Value * PageSize.Value)
                                 .Take(PageSize.Value)
                                 .ToList();
                         }
                         else
                         {
-                            lstModel = query
-                                .OrderBy(orderBy)
-                                .ToList();
+                            lstModel = sorted.ToList();
                         }
                         break;
                 }
@@ -1312,106 +936,11 @@ namespace Swastika.Infrastructure.Data.Repository
                 lstModel.ForEach(model => context.Entry(model).State = EntityState.Detached);
                 var lstViewResult = ParseView(lstModel, _context, _transaction);
                 result.Items = lstViewResult;
-                return result;
-            }
-            // TODO: Add more specific exeption types instead of Exception only
-            catch (Exception ex)
-            {
-                LogErrorMessage(ex);
-                if (_transaction == null)
+                return new RepositoryResponse<PaginationModel<TView>>()
                 {
-                    //if current transaction is root transaction
-                    transaction.Rollback();
-                }
-
-                return null;
-            }
-            finally
-            {
-                if (_context == null)
-                {
-                    //if current Context is Root
-                    context.Dispose();
-                }
-            }
-        }
-
-        /// <summary>
-        /// Gets the model list by.
-        /// </summary>
-        /// <param name="predicate">The predicate.</param>
-        /// <param name="orderBy">The order by.</param>
-        /// <param name="direction">The direction.</param>
-        /// <param name="PageIndex">Index of the page.</param>
-        /// <param name="PageSize">Size of the page.</param>
-        /// <param name="isGetSubModels">if set to <c>true</c> [is get sub Items].</param>
-        /// <returns></returns>
-        public virtual PaginationModel<TView> GetModelListBy(
-            Expression<Func<TModel, bool>> predicate, Expression<Func<TModel, double>> orderBy
-            , string direction, int? PageIndex, int? PageSize
-            , TDbContext _context = null, IDbContextTransaction _transaction = null)
-        {
-            var context = _context ?? InitContext();
-            var transaction = _transaction ?? context.Database.BeginTransaction();
-
-            try
-            {
-                List<TModel> lstModel = new List<TModel>();
-                var query = context.Set<TModel>().Where(predicate);
-
-                PaginationModel<TView> result = new PaginationModel<TView>()
-                {
-                    TotalItems = query.Count(),
-                    PageIndex = PageIndex ?? 0
+                    IsSucceed = true,
+                    Data = result
                 };
-                result.PageSize = PageSize ?? result.TotalItems;
-
-                if (PageSize.HasValue)
-                {
-                    result.TotalPage = result.TotalItems / PageSize.Value + (result.TotalItems % PageSize.Value > 0 ? 1 : 0);
-                }
-
-                switch (direction)
-                {
-                    case "desc":
-                        if (PageSize.HasValue)
-                        {
-                            lstModel = query
-                                .OrderByDescending(orderBy)
-                                .Skip(PageIndex.Value * PageSize.Value)
-                                .Take(PageSize.Value)
-                                .ToList();
-                        }
-                        else
-                        {
-                            lstModel = query
-                                .OrderByDescending(orderBy)
-                                .ToList();
-                        }
-                        break;
-
-                    default:
-                        if (PageSize.HasValue)
-                        {
-                            lstModel = query
-                                .OrderBy(orderBy)
-                                .Skip(PageIndex.Value * PageSize.Value)
-                                .Take(PageSize.Value)
-                                .ToList();
-                        }
-                        else
-                        {
-                            lstModel = query
-                                .OrderBy(orderBy)
-                                .ToList();
-                        }
-                        break;
-                }
-
-                lstModel.ForEach(model => context.Entry(model).State = EntityState.Detached);
-                var lstViewResult = ParseView(lstModel, _context, _transaction);
-                result.Items = lstViewResult;
-                return result;
             }
             // TODO: Add more specific exeption types instead of Exception only
             catch (Exception ex)
@@ -1423,107 +952,12 @@ namespace Swastika.Infrastructure.Data.Repository
                     transaction.Rollback();
                 }
 
-                return null;
-            }
-            finally
-            {
-                if (_context == null)
+                return new RepositoryResponse<PaginationModel<TView>>()
                 {
-                    //if current Context is Root
-                    context.Dispose();
-                }
-            }
-        }
-
-        /// <summary>
-        /// Gets the model list by.
-        /// </summary>
-        /// <param name="predicate">The predicate.</param>
-        /// <param name="orderBy">The order by.</param>
-        /// <param name="direction">The direction.</param>
-        /// <param name="PageIndex">Index of the page.</param>
-        /// <param name="PageSize">Size of the page.</param>
-        /// <param name="isGetSubModels">if set to <c>true</c> [is get sub Items].</param>
-        /// <returns></returns>
-        public virtual PaginationModel<TView> GetModelListBy(
-            Expression<Func<TModel, bool>> predicate, Expression<Func<TModel, int>> orderBy
-            , string direction, int? PageIndex, int? PageSize
-            , TDbContext _context = null, IDbContextTransaction _transaction = null)
-        {
-            var context = _context ?? InitContext();
-            var transaction = _transaction ?? context.Database.BeginTransaction();
-
-            try
-            {
-                List<TModel> lstModel = new List<TModel>();
-                var query = context.Set<TModel>().Where(predicate);
-
-                PaginationModel<TView> result = new PaginationModel<TView>()
-                {
-                    TotalItems = query.Count(),
-                    PageIndex = PageIndex ?? 0
+                    IsSucceed = false,
+                    Data = null,
+                    Ex = ex
                 };
-                result.PageSize = PageSize ?? result.TotalItems;
-
-                if (PageSize.HasValue)
-                {
-                    result.TotalPage = result.TotalItems / PageSize.Value + (result.TotalItems % PageSize.Value > 0 ? 1 : 0);
-                }
-                switch (direction)
-                {
-                    case "desc":
-                        if (PageSize.HasValue)
-                        {
-                            lstModel = query
-                                .OrderByDescending(orderBy)
-                                .Skip(PageIndex.Value * PageSize.Value)
-                                .Take(PageSize.Value)
-                                .ToList();
-                        }
-                        else
-                        {
-                            lstModel = query
-                                .OrderByDescending(orderBy)
-                                .ToList();
-                        }
-                        break;
-
-                    default:
-                        if (PageSize.HasValue)
-                        {
-                            lstModel = query
-                                .OrderBy(orderBy)
-                                .Skip(PageIndex.Value * PageSize.Value)
-                                .Take(PageSize.Value)
-                                .ToList();
-                        }
-                        else
-                        {
-                            lstModel = query
-                                .OrderBy(orderBy)
-                                .ToList();
-                        }
-                        break;
-                }
-
-                lstModel.ForEach(model => context.Entry(model).State = EntityState.Detached);
-
-                var lstViewResult = ParseView(lstModel, _context, _transaction);
-
-                result.Items = lstViewResult;
-                return result;
-            }
-            // TODO: Add more specific exeption types instead of Exception only
-            catch (Exception ex)
-            {
-                LogErrorMessage(ex);
-                if (_transaction == null)
-                {
-                    //if current transaction is root transaction
-                    transaction.Rollback();
-                }
-
-                return null;
             }
             finally
             {
@@ -1535,104 +969,6 @@ namespace Swastika.Infrastructure.Data.Repository
             }
         }
 
-        /// <summary>
-        /// Gets the model list by.
-        /// </summary>
-        /// <param name="predicate">The predicate.</param>
-        /// <param name="orderBy">The order by.</param>
-        /// <param name="direction">The direction.</param>
-        /// <param name="PageIndex">Index of the page.</param>
-        /// <param name="PageSize">Size of the page.</param>
-        /// <param name="isGetSubModels">if set to <c>true</c> [is get sub Items].</param>
-        /// <returns></returns>
-        public virtual PaginationModel<TView> GetModelListBy(
-            Expression<Func<TModel, bool>> predicate, Expression<Func<TModel, DateTime>> orderBy
-            , string direction, int? PageIndex, int? PageSize
-            , TDbContext _context = null, IDbContextTransaction _transaction = null)
-        {
-            var context = _context ?? InitContext();
-            var transaction = _transaction ?? context.Database.BeginTransaction();
-
-            try
-            {
-                List<TModel> lstModel = new List<TModel>();
-                var query = context.Set<TModel>().Where(predicate);
-
-                PaginationModel<TView> result = new PaginationModel<TView>()
-                {
-                    TotalItems = query.Count(),
-                    PageIndex = PageIndex ?? 0
-                };
-                result.PageSize = PageSize ?? result.TotalItems;
-
-                if (PageSize.HasValue)
-                {
-                    result.TotalPage = result.TotalItems / PageSize.Value + (result.TotalItems % PageSize.Value > 0 ? 1 : 0);
-                }
-                switch (direction)
-                {
-                    case "desc":
-                        if (PageSize.HasValue)
-                        {
-                            lstModel = query
-                                .OrderByDescending(orderBy)
-                                .Skip(PageIndex.Value * PageSize.Value)
-                                .Take(PageSize.Value)
-                                .ToList();
-                        }
-                        else
-                        {
-                            lstModel = query
-                                .OrderByDescending(orderBy)
-                                .ToList();
-                        }
-                        break;
-
-                    default:
-                        if (PageSize.HasValue)
-                        {
-                            lstModel = query
-                                .OrderBy(orderBy)
-                                .Skip(PageIndex.Value * PageSize.Value)
-                                .Take(PageSize.Value)
-                                .ToList();
-                        }
-                        else
-                        {
-                            lstModel = query
-                                .OrderBy(orderBy)
-                                .ToList();
-                        }
-                        break;
-                }
-
-                lstModel.ForEach(model => context.Entry(model).State = EntityState.Detached);
-                var lstViewResult = ParseView(lstModel, _context, _transaction);
-
-                result.Items = lstViewResult;
-                return result;
-            }
-            // TODO: Add more specific exeption types instead of Exception only
-            catch (Exception ex)
-            {
-                LogErrorMessage(ex);
-                if (_transaction == null)
-                {
-                    //if current transaction is root transaction
-                    transaction.Rollback();
-                }
-
-                return null;
-            }
-            finally
-            {
-                if (_context == null)
-                {
-                    //if current Context is Root
-                    context.Dispose();
-                }
-            }
-        }
 
         /// <summary>
         /// Gets the model list by asynchronous.
@@ -1640,7 +976,7 @@ namespace Swastika.Infrastructure.Data.Repository
         /// <param name="predicate">The predicate.</param>
         /// <param name="isGetSubModels">if set to <c>true</c> [is get sub Items].</param>
         /// <returns></returns>
-        public virtual async Task<List<TView>> GetModelListByAsync(Expression<Func<TModel, bool>> predicate
+        public virtual async Task<RepositoryResponse<List<TView>>> GetModelListByAsync(Expression<Func<TModel, bool>> predicate
             , TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
             var context = _context ?? InitContext();
@@ -1651,8 +987,12 @@ namespace Swastika.Infrastructure.Data.Repository
                 var query = context.Set<TModel>().Where(predicate);
                 var lstModel = await query.ToListAsync();
                 lstModel.ForEach(model => context.Entry(model).State = EntityState.Detached);
-                var lstViewResult = ParseView(lstModel, _context, _transaction);
-                return lstViewResult;
+                var result = ParseView(lstModel, _context, _transaction);
+                return new RepositoryResponse<List<TView>>()
+                {
+                    IsSucceed = true,
+                    Data = result
+                };
             }
             catch (Exception ex)
             {
@@ -1663,7 +1003,12 @@ namespace Swastika.Infrastructure.Data.Repository
                     transaction.Rollback();
                 }
 
-                return null;
+                return new RepositoryResponse<List<TView>>()
+                {
+                    IsSucceed = false,
+                    Data = null,
+                    Ex = ex
+                };
             }
             finally
             {
@@ -1685,9 +1030,9 @@ namespace Swastika.Infrastructure.Data.Repository
         /// <param name="PageSize">Size of the page.</param>
         /// <param name="isGetSubModels">if set to <c>true</c> [is get sub Items].</param>
         /// <returns></returns>
-        public virtual async Task<PaginationModel<TView>> GetModelListByAsync(
-            Expression<Func<TModel, bool>> predicate, Expression<Func<TModel, int>> orderBy
-            , string direction, int? PageIndex, int? PageSize
+        public virtual async Task<RepositoryResponse<PaginationModel<TView>>> GetModelListByAsync(
+            Expression<Func<TModel, bool>> predicate, string orderByPropertyName
+            , OrderByDirection direction, int? PageIndex, int? PageSize
             , TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
             var context = _context ?? InitContext();
@@ -1695,9 +1040,11 @@ namespace Swastika.Infrastructure.Data.Repository
 
             try
             {
+                dynamic orderBy = GetLambda(orderByPropertyName);
+                IQueryable<TModel> sorted = null;
                 List<TModel> lstModel = new List<TModel>();
                 var query = context.Set<TModel>().Where(predicate);
-
+                
                 PaginationModel<TView> result = new PaginationModel<TView>()
                 {
                     TotalItems = query.Count(),
@@ -1711,37 +1058,33 @@ namespace Swastika.Infrastructure.Data.Repository
                 }
                 switch (direction)
                 {
-                    case "desc":
+                    case OrderByDirection.Descending:
+                        sorted = Queryable.OrderByDescending(query, orderBy);
                         if (PageSize.HasValue)
                         {
-                            lstModel = await query
-                                .OrderByDescending(orderBy)
+                            lstModel = await sorted
                                 .Skip(PageIndex.Value * PageSize.Value)
                                 .Take(PageSize.Value)
                                 .ToListAsync();
                         }
                         else
                         {
-                            lstModel = await query
-                                .OrderByDescending(orderBy)
-                                .ToListAsync();
+                            lstModel = await sorted.ToListAsync();
                         }
                         break;
 
                     default:
+                        sorted = Queryable.OrderBy(query, orderBy);
                         if (PageSize.HasValue)
                         {
-                            lstModel = await query
-                                .OrderBy(orderBy)
+                            lstModel = await sorted
                                 .Skip(PageIndex.Value * PageSize.Value)
                                 .Take(PageSize.Value)
                                 .ToListAsync();
                         }
                         else
                         {
-                            lstModel = await query
-                                .OrderBy(orderBy)
-                                .ToListAsync();
+                            lstModel = await sorted.ToListAsync();
                         }
                         break;
                 }
@@ -1750,105 +1093,11 @@ namespace Swastika.Infrastructure.Data.Repository
                 var lstViewResult = ParseView(lstModel, _context, _transaction);
 
                 result.Items = lstViewResult;
-                return result;
-            }
-            catch (Exception ex)
-            {
-                LogErrorMessage(ex);
-                if (_transaction == null)
+                return new RepositoryResponse<PaginationModel<TView>>()
                 {
-                    //if current transaction is root transaction
-                    transaction.Rollback();
-                }
-
-                return null;
-            }
-            finally
-            {
-                if (_context == null)
-                {
-                    //if current Context is Root
-                    context.Dispose();
-                }
-            }
-        }
-
-        /// <summary>
-        /// Gets the model list by asynchronous.
-        /// </summary>
-        /// <param name="predicate">The predicate.</param>
-        /// <param name="orderBy">The order by.</param>
-        /// <param name="direction">The direction.</param>
-        /// <param name="PageIndex">Index of the page.</param>
-        /// <param name="PageSize">Size of the page.</param>
-        /// <param name="isGetSubModels">if set to <c>true</c> [is get sub Items].</param>
-        /// <returns></returns>
-        public virtual async Task<PaginationModel<TView>> GetModelListByAsync(
-            Expression<Func<TModel, bool>> predicate, Expression<Func<TModel, string>> orderBy
-            , string direction, int? PageIndex, int? PageSize
-            , TDbContext _context = null, IDbContextTransaction _transaction = null)
-        {
-            var context = _context ?? InitContext();
-            var transaction = _transaction ?? context.Database.BeginTransaction();
-
-            try
-            {
-                List<TModel> lstModel = new List<TModel>();
-                var query = context.Set<TModel>().Where(predicate);
-
-                PaginationModel<TView> result = new PaginationModel<TView>()
-                {
-                    TotalItems = query.Count(),
-                    PageIndex = PageIndex ?? 0
+                    IsSucceed = true,
+                    Data = result
                 };
-                result.PageSize = PageSize ?? result.TotalItems;
-
-                if (PageSize.HasValue)
-                {
-                    result.TotalPage = result.TotalItems / PageSize.Value + (result.TotalItems % PageSize.Value > 0 ? 1 : 0);
-                }
-                switch (direction)
-                {
-                    case "desc":
-                        if (PageSize.HasValue)
-                        {
-                            lstModel = await query
-                                .OrderByDescending(orderBy)
-                                .Skip(PageIndex.Value * PageSize.Value)
-                                .Take(PageSize.Value)
-                                .ToListAsync();
-                        }
-                        else
-                        {
-                            lstModel = await query
-                                .OrderByDescending(orderBy)
-                                .ToListAsync();
-                        }
-                        break;
-
-                    default:
-                        if (PageSize.HasValue)
-                        {
-                            lstModel = await query
-                                .OrderBy(orderBy)
-                                .Skip(PageIndex.Value * PageSize.Value)
-                                .Take(PageSize.Value)
-                                .ToListAsync();
-                        }
-                        else
-                        {
-                            lstModel = await query
-                                .OrderBy(orderBy)
-                                .ToListAsync();
-                        }
-                        break;
-                }
-                lstModel.ForEach(model => context.Entry(model).State = EntityState.Detached);
-
-                var lstViewResult = ParseView(lstModel, _context, _transaction);
-
-                result.Items = lstViewResult;
-                return result;
             }
             catch (Exception ex)
             {
@@ -1859,103 +1108,12 @@ namespace Swastika.Infrastructure.Data.Repository
                     transaction.Rollback();
                 }
 
-                return null;
-            }
-            finally
-            {
-                if (_context == null)
+                return new RepositoryResponse<PaginationModel<TView>>()
                 {
-                    //if current Context is Root
-                    context.Dispose();
-                }
-            }
-        }
-
-        /// <summary>
-        /// Gets the model list by asynchronous.
-        /// </summary>
-        /// <param name="predicate">The predicate.</param>
-        /// <param name="orderBy">The order by.</param>
-        /// <param name="direction">The direction.</param>
-        /// <param name="PageIndex">Index of the page.</param>
-        /// <param name="PageSize">Size of the page.</param>
-        /// <param name="isGetSubModels">if set to <c>true</c> [is get sub Items].</param>
-        /// <returns></returns>
-        public virtual async Task<PaginationModel<TView>> GetModelListByAsync(
-            Expression<Func<TModel, bool>> predicate, Expression<Func<TModel, DateTime>> orderBy
-            , string direction, int? PageIndex, int? PageSize
-            , TDbContext _context = null, IDbContextTransaction _transaction = null)
-        {
-            var context = _context ?? InitContext();
-            var transaction = _transaction ?? context.Database.BeginTransaction();
-
-            try
-            {
-                List<TModel> lstModel = new List<TModel>();
-                var query = context.Set<TModel>().Where(predicate);
-
-                PaginationModel<TView> result = new PaginationModel<TView>()
-                {
-                    TotalItems = query.Count(),
-                    PageIndex = PageIndex ?? 0
+                    IsSucceed = false,
+                    Data = null,
+                    Ex = ex
                 };
-                result.PageSize = PageSize ?? result.TotalItems;
-                if (PageSize.HasValue)
-                {
-                    result.TotalPage = result.TotalItems / PageSize.Value + (result.TotalItems % PageSize.Value > 0 ? 1 : 0);
-                }
-                switch (direction)
-                {
-                    case "desc":
-                        if (PageSize.HasValue)
-                        {
-                            lstModel = await query
-                                .OrderByDescending(orderBy)
-                                .Skip(PageIndex.Value * PageSize.Value)
-                                .Take(PageSize.Value)
-                                .ToListAsync();
-                        }
-                        else
-                        {
-                            lstModel = await query
-                                .OrderByDescending(orderBy)
-                                .ToListAsync();
-                        }
-                        break;
-
-                    default:
-                        if (PageSize.HasValue)
-                        {
-                            lstModel = await query
-                                .OrderBy(orderBy)
-                                .Skip(PageIndex.Value * PageSize.Value)
-                                .Take(PageSize.Value)
-                                .ToListAsync();
-                        }
-                        else
-                        {
-                            lstModel = await query
-                                .OrderBy(orderBy)
-                                .ToListAsync();
-                        }
-                        break;
-                }
-                lstModel.ForEach(model => context.Entry(model).State = EntityState.Detached);
-                var lstViewResult = ParseView(lstModel, _context, _transaction);
-
-                result.Items = lstViewResult;
-                return result;
-            }
-            catch (Exception ex)
-            {
-                LogErrorMessage(ex);
-                if (_transaction == null)
-                {
-                    //if current transaction is root transaction
-                    transaction.Rollback();
-                }
-
-                return null;
             }
             finally
             {
@@ -1967,6 +1125,7 @@ namespace Swastika.Infrastructure.Data.Repository
             }
         }
 
+       
         #endregion GetModelListBy
 
         /// <summary>
@@ -1975,7 +1134,8 @@ namespace Swastika.Infrastructure.Data.Repository
         /// <param name="predicate">The predicate.</param>
         /// <param name="isGetSubModels">if set to <c>true</c> [is get sub Items].</param>
         /// <returns></returns>
-        public virtual TView GetSingleModel(Expression<Func<TModel, bool>> predicate, TDbContext _context = null, IDbContextTransaction _transaction = null)
+        public virtual RepositoryResponse<TView> GetSingleModel(Expression<Func<TModel, bool>> predicate
+            , TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
             var context = _context ?? InitContext();
             var transaction = _transaction ?? context.Database.BeginTransaction();
@@ -1986,12 +1146,19 @@ namespace Swastika.Infrastructure.Data.Repository
                 {
                     context.Entry(model).State = EntityState.Detached;
                     var viewResult = ParseView(model, context, transaction);
-
-                    return viewResult;
+                    return new RepositoryResponse<TView>()
+                    {
+                        IsSucceed = true,
+                        Data = viewResult
+                    };
                 }
                 else
                 {
-                    return default(TView);
+                    return new RepositoryResponse<TView>()
+                    {
+                        IsSucceed = true,
+                        Data = default(TView)
+                    };
                 }
             }// TODO: Add more specific exeption types instead of Exception only
             catch (Exception ex)
@@ -2003,7 +1170,11 @@ namespace Swastika.Infrastructure.Data.Repository
                     transaction.Rollback();
                 }
 
-                return default(TView);
+                return new RepositoryResponse<TView>()
+                {
+                    IsSucceed = true,
+                    Data = default(TView)
+                };
             }
             finally
             {
@@ -2021,7 +1192,7 @@ namespace Swastika.Infrastructure.Data.Repository
         /// <param name="predicate">The predicate.</param>
         /// <param name="isGetSubModels">if set to <c>true</c> [is get sub Items].</param>
         /// <returns></returns>
-        public virtual async Task<TView> GetSingleModelAsync(Expression<Func<TModel, bool>> predicate
+        public virtual async Task<RepositoryResponse<TView>> GetSingleModelAsync(Expression<Func<TModel, bool>> predicate
             , TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
             var context = _context ?? InitContext();
@@ -2035,11 +1206,19 @@ namespace Swastika.Infrastructure.Data.Repository
                     context.Entry(model).State = EntityState.Detached;
 
                     var viewResult = ParseView(model, context, transaction);
-                    return viewResult;
+                    return new RepositoryResponse<TView>()
+                    {
+                        IsSucceed = true,
+                        Data = viewResult
+                    };
                 }
                 else
                 {
-                    return default(TView);
+                    return new RepositoryResponse<TView>()
+                    {
+                        IsSucceed = true,
+                        Data = default(TView)
+                    };
                 }
             }
             catch (Exception ex)
@@ -2051,7 +1230,11 @@ namespace Swastika.Infrastructure.Data.Repository
                     transaction.Rollback();
                 }
 
-                return default(TView);
+                return new RepositoryResponse<TView>()
+                {
+                    IsSucceed = true,
+                    Data = default(TView)
+                };
             }
             finally
             {
@@ -2598,6 +1781,14 @@ namespace Swastika.Infrastructure.Data.Repository
         public virtual Task<bool> SaveSubModelAsync(TModel model, TDbContext context, IDbContextTransaction _transaction)
         {
             throw new NotImplementedException();
+        }
+
+
+        protected LambdaExpression GetLambda(string propName)
+        {
+            var parameter = Expression.Parameter(typeof(TModel));
+            var memberExpression = Expression.Property(parameter, propName);
+            return Expression.Lambda(memberExpression, parameter);
         }
 
         /// <summary>
