@@ -551,12 +551,12 @@ namespace Swastika.Infrastructure.Data.Repository
         /// </summary>
         /// <param name="orderBy">The order by.</param>
         /// <param name="direction">The direction.</param>
-        /// <param name="PageIndex">Index of the page.</param>
-        /// <param name="PageSize">Size of the page.</param>
+        /// <param name="pageIndex">Index of the page.</param>
+        /// <param name="pageSize">Size of the page.</param>
         /// <param name="isGetSubModels">if set to <c>true</c> [is get sub Items].</param>
         /// <returns></returns>
         public virtual RepositoryResponse<PaginationModel<TView>> GetModelList(
-            string orderByPropertyName, OrderByDirection direction, int? PageIndex, int? PageSize
+            string orderByPropertyName, OrderByDirection direction, int? pageSize, int? pageIndex
             , TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
             var context = _context ?? InitContext();
@@ -572,13 +572,13 @@ namespace Swastika.Infrastructure.Data.Repository
                 PaginationModel<TView> result = new PaginationModel<TView>()
                 {
                     TotalItems = query.Count(),
-                    PageIndex = PageIndex ?? 0
+                    PageIndex = pageIndex ?? 0
                 };
-                result.PageSize = PageSize ?? result.TotalItems;
+                result.PageSize = pageSize ?? result.TotalItems;
 
-                if (PageSize.HasValue)
+                if (pageSize.HasValue)
                 {
-                    result.TotalPage = result.TotalItems / PageSize.Value + (result.TotalItems % PageSize.Value > 0 ? 1 : 0);
+                    result.TotalPage = result.TotalItems / pageSize.Value + (result.TotalItems % pageSize.Value > 0 ? 1 : 0);
                 }
 
                 // TODO: should we change "direction" to boolean "isDesc" and use if condition instead?
@@ -586,11 +586,11 @@ namespace Swastika.Infrastructure.Data.Repository
                 {
                     case OrderByDirection.Descending:
                         sorted = Queryable.OrderByDescending(query, orderBy);
-                        if (PageSize.HasValue)
+                        if (pageSize.HasValue)
                         {
                             lstModel = sorted
-                                .Skip(PageIndex.Value * PageSize.Value)
-                                .Take(PageSize.Value)
+                                .Skip(pageIndex.Value * pageSize.Value)
+                                .Take(pageSize.Value)
                                 .ToList();
                         }
                         else
@@ -601,11 +601,11 @@ namespace Swastika.Infrastructure.Data.Repository
 
                     default:
                         sorted = Queryable.OrderBy(query, orderBy);
-                        if (PageSize.HasValue)
+                        if (pageSize.HasValue)
                         {
                             lstModel = sorted
-                                .Skip(PageIndex.Value * PageSize.Value)
-                                .Take(PageSize.Value)
+                                .Skip(pageIndex.Value * pageSize.Value)
+                                .Take(pageSize.Value)
                                 .ToList();
                         }
                         else
@@ -709,12 +709,12 @@ namespace Swastika.Infrastructure.Data.Repository
         /// </summary>
         /// <param name="orderBy">The order by.</param>
         /// <param name="direction">The direction.</param>
-        /// <param name="PageIndex">Index of the page.</param>
-        /// <param name="PageSize">Size of the page.</param>
+        /// <param name="pageIndex">Index of the page.</param>
+        /// <param name="pageSize">Size of the page.</param>
         /// <param name="isGetSubModels">if set to <c>true</c> [is get sub Items].</param>
         /// <returns></returns>
         public virtual async Task<RepositoryResponse<PaginationModel<TView>>> GetModelListAsync(
-            string orderByPropertyName, OrderByDirection direction, int? PageIndex, int? PageSize
+            string orderByPropertyName, OrderByDirection direction, int? pageSize, int? pageIndex
             , TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
             var context = _context ?? InitContext();
@@ -730,24 +730,24 @@ namespace Swastika.Infrastructure.Data.Repository
                 PaginationModel<TView> result = new PaginationModel<TView>()
                 {
                     TotalItems = query.Count(),
-                    PageIndex = PageIndex ?? 0
+                    PageIndex = pageIndex ?? 0
                 };
-                result.PageSize = PageSize ?? result.TotalItems;
+                result.PageSize = pageSize ?? result.TotalItems;
 
-                if (PageSize.HasValue)
+                if (pageSize.HasValue)
                 {
-                    result.TotalPage = result.TotalItems / PageSize.Value + (result.TotalItems % PageSize.Value > 0 ? 1 : 0);
+                    result.TotalPage = result.TotalItems / pageSize.Value + (result.TotalItems % pageSize.Value > 0 ? 1 : 0);
                 }
 
                 switch (direction)
                 {
                     case OrderByDirection.Descending:
                         sorted = Queryable.OrderByDescending(query, orderBy);
-                        if (PageSize.HasValue)
+                        if (pageSize.HasValue)
                         {
                             lstModel = await sorted
-                                .Skip(PageIndex.Value * PageSize.Value)
-                                .Take(PageSize.Value)
+                                .Skip(pageIndex.Value * pageSize.Value)
+                                .Take(pageSize.Value)
                                 .ToListAsync();
                         }
                         else
@@ -758,11 +758,11 @@ namespace Swastika.Infrastructure.Data.Repository
 
                     default:
                         sorted = Queryable.OrderBy(query, orderBy);
-                        if (PageSize.HasValue)
+                        if (pageSize.HasValue)
                         {
                             lstModel = await sorted
-                                .Skip(PageIndex.Value * PageSize.Value)
-                                .Take(PageSize.Value).ToListAsync();
+                                .Skip(pageIndex.Value * pageSize.Value)
+                                .Take(pageSize.Value).ToListAsync();
                         }
                         else
                         {
@@ -870,12 +870,12 @@ namespace Swastika.Infrastructure.Data.Repository
         /// <param name="predicate">The predicate.</param>
         /// <param name="orderBy">The order by.</param>
         /// <param name="direction">The direction.</param>
-        /// <param name="PageIndex">Index of the page.</param>
-        /// <param name="PageSize">Size of the page.</param>
+        /// <param name="pageIndex">Index of the page.</param>
+        /// <param name="pageSize">Size of the page.</param>
         /// <param name="isGetSubModels">if set to <c>true</c> [is get sub Items].</param>
         /// <returns></returns>
         public virtual RepositoryResponse<PaginationModel<TView>> GetModelListBy(
-            Expression<Func<TModel, bool>> predicate, string orderByPropertyName, OrderByDirection direction, int? PageIndex, int? PageSize
+            Expression<Func<TModel, bool>> predicate, string orderByPropertyName, OrderByDirection direction, int? pageSize, int? pageIndex
             , TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
             var context = _context ?? InitContext();
@@ -890,25 +890,25 @@ namespace Swastika.Infrastructure.Data.Repository
                 PaginationModel<TView> result = new PaginationModel<TView>()
                 {
                     TotalItems = query.Count(),
-                    PageIndex = PageIndex ?? 0
+                    PageIndex = pageIndex ?? 0
                 };
-                result.PageSize = PageSize ?? result.TotalItems;
+                result.PageSize = pageSize ?? result.TotalItems;
 
-                if (PageSize.HasValue)
+                if (pageSize.HasValue)
                 {
-                    result.TotalPage = result.TotalItems / PageSize.Value + (result.TotalItems % PageSize.Value > 0 ? 1 : 0);
+                    result.TotalPage = result.TotalItems / pageSize.Value + (result.TotalItems % pageSize.Value > 0 ? 1 : 0);
                 }
 
                 switch (direction)
                 {
                     case OrderByDirection.Descending:
                         sorted = Queryable.OrderByDescending(query, orderBy);
-                        if (PageSize.HasValue)
+                        if (pageSize.HasValue)
                         {
                             
 
-                            lstModel = sorted.Skip(PageIndex.Value * PageSize.Value)
-                                .Take(PageSize.Value)
+                            lstModel = sorted.Skip(pageIndex.Value * pageSize.Value)
+                                .Take(pageSize.Value)
                                 .ToList();
                         }
                         else
@@ -919,11 +919,11 @@ namespace Swastika.Infrastructure.Data.Repository
 
                     default:
                         sorted = Queryable.OrderBy(query, orderBy);
-                        if (PageSize.HasValue)
+                        if (pageSize.HasValue)
                         {
                             lstModel = sorted
-                                .Skip(PageIndex.Value * PageSize.Value)
-                                .Take(PageSize.Value)
+                                .Skip(pageIndex.Value * pageSize.Value)
+                                .Take(pageSize.Value)
                                 .ToList();
                         }
                         else
@@ -1026,13 +1026,13 @@ namespace Swastika.Infrastructure.Data.Repository
         /// <param name="predicate">The predicate.</param>
         /// <param name="orderBy">The order by.</param>
         /// <param name="direction">The direction.</param>
-        /// <param name="PageIndex">Index of the page.</param>
-        /// <param name="PageSize">Size of the page.</param>
+        /// <param name="pageIndex">Index of the page.</param>
+        /// <param name="pageSize">Size of the page.</param>
         /// <param name="isGetSubModels">if set to <c>true</c> [is get sub Items].</param>
         /// <returns></returns>
         public virtual async Task<RepositoryResponse<PaginationModel<TView>>> GetModelListByAsync(
             Expression<Func<TModel, bool>> predicate, string orderByPropertyName
-            , OrderByDirection direction, int? PageIndex, int? PageSize
+            , OrderByDirection direction, int? pageSize, int? pageIndex
             , TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
             var context = _context ?? InitContext();
@@ -1048,23 +1048,23 @@ namespace Swastika.Infrastructure.Data.Repository
                 PaginationModel<TView> result = new PaginationModel<TView>()
                 {
                     TotalItems = query.Count(),
-                    PageIndex = PageIndex ?? 0
+                    PageIndex = pageIndex ?? 0
                 };
-                result.PageSize = PageSize ?? result.TotalItems;
+                result.PageSize = pageSize ?? result.TotalItems;
 
-                if (PageSize.HasValue)
+                if (pageSize.HasValue)
                 {
-                    result.TotalPage = result.TotalItems / PageSize.Value + (result.TotalItems % PageSize.Value > 0 ? 1 : 0);
+                    result.TotalPage = result.TotalItems / pageSize.Value + (result.TotalItems % pageSize.Value > 0 ? 1 : 0);
                 }
                 switch (direction)
                 {
                     case OrderByDirection.Descending:
                         sorted = Queryable.OrderByDescending(query, orderBy);
-                        if (PageSize.HasValue)
+                        if (pageSize.HasValue)
                         {
                             lstModel = await sorted
-                                .Skip(PageIndex.Value * PageSize.Value)
-                                .Take(PageSize.Value)
+                                .Skip(pageIndex.Value * pageSize.Value)
+                                .Take(pageSize.Value)
                                 .ToListAsync();
                         }
                         else
@@ -1075,11 +1075,11 @@ namespace Swastika.Infrastructure.Data.Repository
 
                     default:
                         sorted = Queryable.OrderBy(query, orderBy);
-                        if (PageSize.HasValue)
+                        if (pageSize.HasValue)
                         {
                             lstModel = await sorted
-                                .Skip(PageIndex.Value * PageSize.Value)
-                                .Take(PageSize.Value)
+                                .Skip(pageIndex.Value * pageSize.Value)
+                                .Take(pageSize.Value)
                                 .ToListAsync();
                         }
                         else
@@ -1156,7 +1156,7 @@ namespace Swastika.Infrastructure.Data.Repository
                 {
                     return new RepositoryResponse<TView>()
                     {
-                        IsSucceed = true,
+                        IsSucceed = false,
                         Data = default(TView)
                     };
                 }
@@ -1216,7 +1216,7 @@ namespace Swastika.Infrastructure.Data.Repository
                 {
                     return new RepositoryResponse<TView>()
                     {
-                        IsSucceed = true,
+                        IsSucceed = false,
                         Data = default(TView)
                     };
                 }

@@ -13,10 +13,11 @@ namespace Swastika.Infrastructure.Data.ViewModels
 {
 
     public abstract class ViewModelBase<TDbContext, TModel, TView>
-        where TDbContext: DbContext
-        where TModel : class 
+        where TDbContext : DbContext
+        where TModel : class
         where TView : ViewModelBase<TDbContext, TModel, TView> // instance of inherited
     {
+
         private static DefaultRepository<TDbContext, TModel, TView> _repo;
 
         [JsonIgnore]
@@ -34,7 +35,7 @@ namespace Swastika.Infrastructure.Data.ViewModels
         }
 
         private IMapper _mapper;
-        
+
         [JsonIgnore]
         public IMapper Mapper
         {
@@ -109,10 +110,7 @@ namespace Swastika.Infrastructure.Data.ViewModels
         }
 
         [JsonIgnore]
-        public List<SupportedCulture> ListSupportedCulture { get; set; }
-
-        [JsonIgnore]
-        public bool IsValid = true;       
+        public bool IsValid = true;
 
         /// <summary>
         /// Parses the view.
@@ -138,7 +136,7 @@ namespace Swastika.Infrastructure.Data.ViewModels
         {
         }
 
-        public async Task<RepositoryResponse<TView>> SaveModelAsync(bool isSaveSubModels = false, TDbContext _context = null, IDbContextTransaction _transaction = null)
+        public virtual async Task<RepositoryResponse<TView>> SaveModelAsync(bool isSaveSubModels = false, TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
             Validate();
             if (IsValid)
@@ -166,7 +164,7 @@ namespace Swastika.Infrastructure.Data.ViewModels
             return taskSource.Task.Result;
         }
 
-        public RepositoryResponse<TView> SaveModel(bool isSaveSubModels = false, TDbContext _context = null, IDbContextTransaction _transaction = null)
+        public virtual RepositoryResponse<TView> SaveModel(bool isSaveSubModels = false, TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
             Validate();
             if (IsValid)
@@ -200,6 +198,8 @@ namespace Swastika.Infrastructure.Data.ViewModels
         {
             this.Model = model;
             ParseView(_context, _transaction);
+
         }
     }
 }
+

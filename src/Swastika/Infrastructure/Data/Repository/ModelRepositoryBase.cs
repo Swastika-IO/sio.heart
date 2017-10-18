@@ -481,7 +481,7 @@ namespace Swastika.Infrastructure.Data.Repository
         /// <param name="isGetSubModels">if set to <c>true</c> [is get sub models].</param>
         /// <returns></returns>
         public virtual RepositoryResponse<PaginationModel<TModel>> GetModelList(
-            string orderByPropertyName, OrderByDirection direction, int? pageIndex, int? pageSize,
+            string orderByPropertyName, OrderByDirection direction, int? pageSize, int? pageIndex,
             TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
             var context = _context ?? InitContext();
@@ -632,7 +632,7 @@ namespace Swastika.Infrastructure.Data.Repository
         /// <returns></returns>
 
         public virtual async Task<RepositoryResponse<PaginationModel<TModel>>> GetModelListAsync(
-            string orderByPropertyName, OrderByDirection direction, int? pageIndex, int? pageSize,
+            string orderByPropertyName, OrderByDirection direction, int? pageSize, int? pageIndex,
             TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
             var context = _context ?? InitContext();
@@ -787,7 +787,7 @@ namespace Swastika.Infrastructure.Data.Repository
         /// <param name="isGetSubModels">if set to <c>true</c> [is get sub models].</param>
         /// <returns></returns>
         public virtual RepositoryResponse<PaginationModel<TModel>> GetModelListBy(
-            Expression<Func<TModel, bool>> predicate, string orderByPropertyName, OrderByDirection direction, int? pageIndex, int? pageSize,
+            Expression<Func<TModel, bool>> predicate, string orderByPropertyName, OrderByDirection direction, int? pageSize, int? pageIndex,
             TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
 
@@ -939,7 +939,7 @@ namespace Swastika.Infrastructure.Data.Repository
         /// <returns></returns>
         public virtual async Task<RepositoryResponse<PaginationModel<TModel>>> GetModelListByAsync(
             Expression<Func<TModel, bool>> predicate, string orderByPropertyName, OrderByDirection direction,
-            int? pageIndex, int? pageSize,
+            int? pageSize, int? pageIndex,
             TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
             var context = _context ?? InitContext();
