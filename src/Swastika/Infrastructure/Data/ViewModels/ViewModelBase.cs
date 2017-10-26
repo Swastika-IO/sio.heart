@@ -141,6 +141,7 @@ namespace Swastika.Infrastructure.Data.ViewModels
             Validate();
             if (IsValid)
             {
+                ParseModel();
                 var result = await Repository.SaveModelAsync((TView)this, isSaveSubModels, _context, _transaction);
 
                 return result;
@@ -169,6 +170,7 @@ namespace Swastika.Infrastructure.Data.ViewModels
             Validate();
             if (IsValid)
             {
+                ParseModel();
                 var result = Repository.SaveModel((TView)this, isSaveSubModels, _context, _transaction);
 
                 return result;
