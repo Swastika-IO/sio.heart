@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
@@ -13,6 +14,7 @@ namespace Swastika.Common.Helper
         public int TotalPage { get; set; }
         public int TotalItems { get; set; }
         public List<T> Items { get; set; }
+        public List<JObject> JsonItems { get; set; } = new List<JObject>();
         public PaginationModel()
         {
             PageIndex = 0;
