@@ -131,11 +131,179 @@ namespace Swastika.Infrastructure.Data.ViewModels
             Mapper.Map<TView, TModel>((TView)this, Model);
             return this.Model;
         }
+        /// <summary>
+        /// Initializes the context.
+        /// </summary>
+        /// <returns></returns>
+        public virtual TDbContext InitContext()
+        {
+            Type classType = typeof(TDbContext);
+            ConstructorInfo classConstructor = classType.GetConstructor(new Type[] { });
+            TDbContext context = (TDbContext)classConstructor.Invoke(new object[] { });
 
+            return context;
+        }
         public virtual void Validate()
         {
         }
 
+        public virtual async Task<RepositoryResponse<bool>> RemoveModelAsync(bool isRemoveRelatedModels, TDbContext _context = null, IDbContextTransaction _transaction = null)
+        {
+
+            var context = _context ?? InitContext();
+            var transaction = _transaction ?? context.Database.BeginTransaction();
+            try
+            {
+                RepositoryResponse<bool> result = new RepositoryResponse<bool>();
+                if (isRemoveRelatedModels)
+                {
+                    var removeRelatedResult = await RemoveRelatedModelsAsync((TView)this, context, transaction);
+                    if (removeRelatedResult.IsSucceed)
+                    {
+                        result = await Repository.RemoveModelAsync(Model, context, transaction);
+                    }
+                    else
+                    {
+                        result = await Repository.RemoveModelAsync(Model, context, transaction);
+                    }
+                }
+                if (result.IsSucceed)
+                {
+
+                    if (_transaction == null)
+                    {
+                        transaction.Commit();
+                    }
+
+                    return new RepositoryResponse<bool>()
+                    {
+                        IsSucceed = true,
+                        Data = true
+                    };
+                }
+                else
+                {
+                    if (_transaction == null)
+                    {
+                        transaction.Rollback();
+                    }
+
+                    return new RepositoryResponse<bool>()
+                    {
+                        IsSucceed = false,
+                        Data = false
+                    };
+                }
+            }
+            // TODO: Add more specific exeption types instead of Exception only
+            catch (Exception ex)
+            {
+                if (_transaction == null)
+                {
+                    //if current transaction is root transaction
+                    transaction.Rollback();
+                }
+
+                return new RepositoryResponse<bool>()
+                {
+                    IsSucceed = false,
+                    Data = false,
+                    Ex = ex
+                };
+            }
+            finally
+            {
+                if (_context == null)
+                {
+                    //if current Context is Root
+                    context.Dispose();
+                }
+            }
+        }
+        public virtual async Task<RepositoryResponse<bool>> RemoveRelatedModelsAsync(TView view, TDbContext _context = null, IDbContextTransaction _transaction = null)
+        {
+            var taskSource = new TaskCompletionSource<RepositoryResponse<bool>>();
+            taskSource.SetResult(new RepositoryResponse<bool>());
+            return taskSource.Task.Result;
+        }
+
+        public virtual  RepositoryResponse<bool> RemoveModel(bool isRemoveRelatedModels, TDbContext _context = null, IDbContextTransaction _transaction = null)
+        {
+
+            var context = _context ?? InitContext();
+            var transaction = _transaction ?? context.Database.BeginTransaction();
+            try
+            {
+                RepositoryResponse<bool> result = new RepositoryResponse<bool>();
+                if (isRemoveRelatedModels)
+                {
+                    var removeRelatedResult =  RemoveRelatedModels((TView)this, context, transaction);
+                    if (removeRelatedResult.IsSucceed)
+                    {
+                        result =  Repository.RemoveModel(Model, context, transaction);
+                    }
+                    else
+                    {
+                        result =  Repository.RemoveModel(Model, context, transaction);
+                    }
+                }
+                if (result.IsSucceed)
+                {
+
+                    if (_transaction == null)
+                    {
+                        transaction.Commit();
+                    }
+
+                    return new RepositoryResponse<bool>()
+                    {
+                        IsSucceed = true,
+                        Data = true
+                    };
+                }
+                else
+                {
+                    if (_transaction == null)
+                    {
+                        transaction.Rollback();
+                    }
+
+                    return new RepositoryResponse<bool>()
+                    {
+                        IsSucceed = false,
+                        Data = false
+                    };
+                }
+            }
+            // TODO: Add more specific exeption types instead of Exception only
+            catch (Exception ex)
+            {
+                if (_transaction == null)
+                {
+                    //if current transaction is root transaction
+                    transaction.Rollback();
+                }
+
+                return new RepositoryResponse<bool>()
+                {
+                    IsSucceed = false,
+                    Data = false,
+                    Ex = ex
+                };
+            }
+            finally
+            {
+                if (_context == null)
+                {
+                    //if current Context is Root
+                    context.Dispose();
+                }
+            }
+        }
+        public virtual  RepositoryResponse<bool> RemoveRelatedModels(TView view, TDbContext _context = null, IDbContextTransaction _transaction = null)
+        {
+            return new RepositoryResponse<bool>();
+        }
         public virtual async Task<RepositoryResponse<TView>> SaveModelAsync(bool isSaveSubModels = false, TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
             Validate();
