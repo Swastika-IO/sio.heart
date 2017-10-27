@@ -147,14 +147,14 @@ namespace Swastika.Infrastructure.Data.ViewModels
         {
         }
 
-        public virtual async Task<RepositoryResponse<bool>> RemoveModelAsync(bool isRemoveRelatedModels, TDbContext _context = null, IDbContextTransaction _transaction = null)
+        public virtual async Task<RepositoryResponse<bool>> RemoveModelAsync(bool isRemoveRelatedModels = false, TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
 
             var context = _context ?? InitContext();
             var transaction = _transaction ?? context.Database.BeginTransaction();
             try
             {
-                RepositoryResponse<bool> result = new RepositoryResponse<bool>();
+                RepositoryResponse<bool> result = new RepositoryResponse<bool>() { IsSucceed = true };
                 if (isRemoveRelatedModels)
                 {
                     var removeRelatedResult = await RemoveRelatedModelsAsync((TView)this, context, transaction);
@@ -227,14 +227,14 @@ namespace Swastika.Infrastructure.Data.ViewModels
             return taskSource.Task.Result;
         }
 
-        public virtual  RepositoryResponse<bool> RemoveModel(bool isRemoveRelatedModels, TDbContext _context = null, IDbContextTransaction _transaction = null)
+        public virtual  RepositoryResponse<bool> RemoveModel(bool isRemoveRelatedModels = false, TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
 
             var context = _context ?? InitContext();
             var transaction = _transaction ?? context.Database.BeginTransaction();
             try
             {
-                RepositoryResponse<bool> result = new RepositoryResponse<bool>();
+                RepositoryResponse<bool> result = new RepositoryResponse<bool>() { IsSucceed = true };
                 if (isRemoveRelatedModels)
                 {
                     var removeRelatedResult =  RemoveRelatedModels((TView)this, context, transaction);
