@@ -7,9 +7,21 @@ using Microsoft.AspNetCore.Http;
 
 namespace Swastika.Common
 {
-    public class Common
+    public class CommonHelper
     {
         //private static string defaultImagePath = "http://placehold.it/200x200";
+        public static string ParseJsonPropertyName(string input)
+        {
+            if (!string.IsNullOrEmpty(input))
+            {
+                return Char.ToLower(input[0]) + input.Substring(1);
+            }
+            else
+            {
+                return string.Empty;
+            }
+            
+        }
 
         public static Stream LoadImage(string strImage64)
         {

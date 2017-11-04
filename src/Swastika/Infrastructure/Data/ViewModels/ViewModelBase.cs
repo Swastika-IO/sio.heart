@@ -155,18 +155,16 @@ namespace Swastika.Infrastructure.Data.ViewModels
             try
             {
                 RepositoryResponse<bool> result = new RepositoryResponse<bool>() { IsSucceed = true };
+                ParseModel();
                 if (isRemoveRelatedModels)
                 {
                     var removeRelatedResult = await RemoveRelatedModelsAsync((TView)this, context, transaction);
                     if (removeRelatedResult.IsSucceed)
                     {
                         result = await Repository.RemoveModelAsync(Model, context, transaction);
-                    }
-                    else
-                    {
-                        result = await Repository.RemoveModelAsync(Model, context, transaction);
-                    }
+                    }                  
                 }
+                result = await Repository.RemoveModelAsync(Model, context, transaction);
                 if (result.IsSucceed)
                 {
 
@@ -235,18 +233,17 @@ namespace Swastika.Infrastructure.Data.ViewModels
             try
             {
                 RepositoryResponse<bool> result = new RepositoryResponse<bool>() { IsSucceed = true };
+                ParseModel();
                 if (isRemoveRelatedModels)
                 {
                     var removeRelatedResult =  RemoveRelatedModels((TView)this, context, transaction);
                     if (removeRelatedResult.IsSucceed)
                     {
                         result =  Repository.RemoveModel(Model, context, transaction);
-                    }
-                    else
-                    {
-                        result =  Repository.RemoveModel(Model, context, transaction);
-                    }
+                    }                    
                 }
+                result = Repository.RemoveModel(Model, context, transaction);
+
                 if (result.IsSucceed)
                 {
 
