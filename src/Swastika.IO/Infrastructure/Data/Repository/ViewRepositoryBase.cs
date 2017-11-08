@@ -1446,7 +1446,7 @@ namespace Swastika.Infrastructure.Data.Repository
             {
                 TModel model = context.Set<TModel>().FirstOrDefault(predicate);
                 bool result = true;
-                if (model != null)
+                if (model != null && CheckIsExists(model, context, transaction))
                 {
                     context.Entry(model).State = EntityState.Deleted;
                     result = context.SaveChanges() > 0;
@@ -1521,7 +1521,7 @@ namespace Swastika.Infrastructure.Data.Repository
             try
             {
                 bool result = true;
-                if (model != null)
+                if (model != null && CheckIsExists(model, context, transaction))
                 {
                     context.Entry(model).State = EntityState.Deleted;
                     result = context.SaveChanges() > 0;
@@ -1597,7 +1597,7 @@ namespace Swastika.Infrastructure.Data.Repository
             {
                 TModel model = await context.Set<TModel>().FirstOrDefaultAsync(predicate);
                 bool result = true;
-                if (model != null)
+                if (model != null && CheckIsExists(model, context, transaction))
                 {
                     context.Entry(model).State = EntityState.Deleted;
                     result = await context.SaveChangesAsync() > 0;
@@ -1672,7 +1672,7 @@ namespace Swastika.Infrastructure.Data.Repository
             try
             {
                 bool result = true;
-                if (model != null)
+                if (model != null && CheckIsExists(model, context, transaction))
                 {
                     context.Entry(model).State = EntityState.Deleted;
                     result = await context.SaveChangesAsync() > 0;

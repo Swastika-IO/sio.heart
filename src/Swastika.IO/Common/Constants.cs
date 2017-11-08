@@ -27,7 +27,6 @@ namespace Swastika.Common
             Modules,
             Articles,
             Widgets,
-
         }
         public enum FileFolder
         {
