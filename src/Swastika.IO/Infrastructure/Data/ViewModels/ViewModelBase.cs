@@ -357,6 +357,18 @@ namespace Swastika.Infrastructure.Data.ViewModels
             return new RepositoryResponse<bool>();
         }
 
+        public virtual RepositoryResponse<TView> Clone(string desSpecificulture, TDbContext _context = null, IDbContextTransaction _transaction = null)
+        {
+            return new RepositoryResponse<TView>();
+        }
+
+        public virtual async Task<RepositoryResponse<TView>> CloneAsync(string desSpecificulture, TDbContext _context = null, IDbContextTransaction _transaction = null)
+        {
+            var taskSource = new TaskCompletionSource<RepositoryResponse<TView>>();
+            taskSource.SetResult(new RepositoryResponse<TView>());
+            return taskSource.Task.Result;
+        }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ViewModelBase{TModel, TView}"/> class.
         /// </summary>
