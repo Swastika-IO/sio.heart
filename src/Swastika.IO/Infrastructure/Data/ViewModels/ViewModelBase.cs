@@ -6,6 +6,8 @@ using Swastika.Domain.Core.Models;
 using Swastika.Infrastructure.Data.Repository;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 
@@ -145,6 +147,14 @@ namespace Swastika.Infrastructure.Data.ViewModels
         }
         public virtual void Validate()
         {
+            var context = new System.ComponentModel.DataAnnotations.ValidationContext(this, serviceProvider: null, items: null);
+            var results = new List<ValidationResult>();
+
+            IsValid = Validator.TryValidateObject(this, context, results);
+            if (!IsValid)
+            {
+                Errors.AddRange(results.Select(e => e.ErrorMessage));
+            }
         }
 
         public virtual async Task<RepositoryResponse<bool>> RemoveModelAsync(bool isRemoveRelatedModels = false, TDbContext _context = null, IDbContextTransaction _transaction = null)
@@ -162,7 +172,7 @@ namespace Swastika.Infrastructure.Data.ViewModels
                     if (removeRelatedResult.IsSucceed)
                     {
                         result = await Repository.RemoveModelAsync(Model, context, transaction);
-                    }                  
+                    }
                 }
                 result = await Repository.RemoveModelAsync(Model, context, transaction);
                 if (result.IsSucceed)
@@ -225,7 +235,7 @@ namespace Swastika.Infrastructure.Data.ViewModels
             return taskSource.Task.Result;
         }
 
-        public virtual  RepositoryResponse<bool> RemoveModel(bool isRemoveRelatedModels = false, TDbContext _context = null, IDbContextTransaction _transaction = null)
+        public virtual RepositoryResponse<bool> RemoveModel(bool isRemoveRelatedModels = false, TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
 
             var context = _context ?? InitContext();
@@ -236,11 +246,11 @@ namespace Swastika.Infrastructure.Data.ViewModels
                 ParseModel();
                 if (isRemoveRelatedModels)
                 {
-                    var removeRelatedResult =  RemoveRelatedModels((TView)this, context, transaction);
+                    var removeRelatedResult = RemoveRelatedModels((TView)this, context, transaction);
                     if (removeRelatedResult.IsSucceed)
                     {
-                        result =  Repository.RemoveModel(Model, context, transaction);
-                    }                    
+                        result = Repository.RemoveModel(Model, context, transaction);
+                    }
                 }
                 result = Repository.RemoveModel(Model, context, transaction);
 
@@ -297,7 +307,7 @@ namespace Swastika.Infrastructure.Data.ViewModels
                 }
             }
         }
-        public virtual  RepositoryResponse<bool> RemoveRelatedModels(TView view, TDbContext _context = null, IDbContextTransaction _transaction = null)
+        public virtual RepositoryResponse<bool> RemoveRelatedModels(TView view, TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
             return new RepositoryResponse<bool>();
         }
