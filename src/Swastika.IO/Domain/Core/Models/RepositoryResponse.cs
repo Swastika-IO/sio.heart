@@ -9,6 +9,6 @@ namespace Swastika.Domain.Core.Models
         public bool IsSucceed { get; set; }
         public TResult Data { get; set; }
         public Exception Ex { get; set; }
-        public List<string> Errors { get; set; }
+        public List<string> Errors { get; set; } = new List<string>();
     }
 }
