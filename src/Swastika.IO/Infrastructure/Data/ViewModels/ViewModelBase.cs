@@ -83,6 +83,8 @@ namespace Swastika.Infrastructure.Data.ViewModels
 
         [JsonIgnore]
         public List<string> Errors = new List<string>();
+        [JsonIgnore]
+        public Exception Ex { get; set; }
 
         /// <summary>
         /// The model
@@ -199,7 +201,9 @@ namespace Swastika.Infrastructure.Data.ViewModels
                     return new RepositoryResponse<bool>()
                     {
                         IsSucceed = false,
-                        Data = false
+                        Data = false,
+                        Errors = result.Errors,
+                        Ex = result.Ex
                     };
                 }
             }
@@ -278,7 +282,9 @@ namespace Swastika.Infrastructure.Data.ViewModels
                     return new RepositoryResponse<bool>()
                     {
                         IsSucceed = false,
-                        Data = false
+                        Data = false,
+                        Errors = result.Errors,
+                        Ex = result.Ex
                     };
                 }
             }
