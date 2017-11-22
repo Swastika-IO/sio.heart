@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 using System.Threading.Tasks;
 
@@ -19,9 +20,9 @@ namespace Swastika.Infrastructure.Data.ViewModels
         where TModel : class
         where TView : ViewModelBase<TDbContext, TModel, TView> // instance of inherited
     {
-
+        public string Specificulture { get; set; }
         private static DefaultRepository<TDbContext, TModel, TView> _repo;
-
+        public bool IsLazyLoad { get; set; } = true;
         [JsonIgnore]
         public static DefaultRepository<TDbContext, TModel, TView> Repository
         {
@@ -132,6 +133,7 @@ namespace Swastika.Infrastructure.Data.ViewModels
         public virtual TModel ParseModel()
         {
             //AutoMapper.Mapper.Map<TView, TModel>((TView)this, Model);
+            this.Model = InitModel();
             Mapper.Map<TView, TModel>((TView)this, Model);
             return this.Model;
         }
@@ -147,12 +149,48 @@ namespace Swastika.Infrastructure.Data.ViewModels
 
             return context;
         }
-        public virtual void Validate()
+
+        /// <summary>
+        /// Initializes the context.
+        /// </summary>
+        /// <returns></returns>
+        public virtual TModel InitModel()
         {
-            var context = new System.ComponentModel.DataAnnotations.ValidationContext(this, serviceProvider: null, items: null);
+            Type classType = typeof(TModel);
+            ConstructorInfo classConstructor = classType.GetConstructor(new Type[] { });
+            TModel context = (TModel)classConstructor.Invoke(new object[] { });
+
+            return context;
+        }
+
+        /// <summary>
+        /// Initializes the context.
+        /// </summary>
+        /// <returns></returns>
+        public virtual TView InitView(TModel model = null, bool isLazyLoad = true, TDbContext _context = null, IDbContextTransaction _transaction = null)
+        {
+            Type classType = typeof(TView);
+            TView view = default(TView);
+
+            ConstructorInfo classConstructor = classType.GetConstructor(new Type[] { });
+            if (model==null &&classConstructor != null)
+            {
+                view = (TView)classConstructor.Invoke(new object[] { });
+                return view;
+            }
+            else
+            {
+                classConstructor = classType.GetConstructor(new Type[] { typeof(TModel), typeof(bool), typeof(TDbContext), typeof(IDbContextTransaction) });
+                return (TView)classConstructor.Invoke(new object[] { model, isLazyLoad, _context, _transaction });
+            }
+        }
+
+        public virtual void Validate(TDbContext _context = null, IDbContextTransaction _transaction = null)
+        {
+            var validateContext = new System.ComponentModel.DataAnnotations.ValidationContext(this, serviceProvider: null, items: null);
             var results = new List<ValidationResult>();
 
-            IsValid = Validator.TryValidateObject(this, context, results);
+            IsValid = Validator.TryValidateObject(this, validateContext, results);
             if (!IsValid)
             {
                 Errors.AddRange(results.Select(e => e.ErrorMessage));
@@ -373,16 +411,73 @@ namespace Swastika.Infrastructure.Data.ViewModels
             return new RepositoryResponse<bool>();
         }
 
-        public virtual RepositoryResponse<TView> Clone(string desSpecificulture, TDbContext _context = null, IDbContextTransaction _transaction = null)
-        {
-            return new RepositoryResponse<TView>();
-        }
+        //public virtual RepositoryResponse<TView> Clone(string desSpecificulture, TDbContext _context = null, IDbContextTransaction _transaction = null)
+        //{
+        //    return new RepositoryResponse<TView>();
+        //}
 
-        public virtual async Task<RepositoryResponse<TView>> CloneAsync(string desSpecificulture, TDbContext _context = null, IDbContextTransaction _transaction = null)
+        public virtual async Task<RepositoryResponse<TView>> CloneAsync(Expression<Func<TModel, bool>> predicate, string desSpecificulture, TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
-            var taskSource = new TaskCompletionSource<RepositoryResponse<TView>>();
-            taskSource.SetResult(new RepositoryResponse<TView>());
-            return taskSource.Task.Result;
+            var context = _context ?? InitContext();
+            var transaction = _transaction ?? context.Database.BeginTransaction();
+            RepositoryResponse<TView> result = new RepositoryResponse<TView>() { };
+
+            try
+            {
+                TModel newModel = InitModel();
+                TView view = InitView();
+                //         var keyName = context.Model.FindEntityType(typeof(TModel)).FindPrimaryKey().Properties
+                //.Select(x => x.Name).ToList();
+                //         var entityType = context.Model.GetEntityTypes(typeof(TModel));
+                //         var key = entityType.key();
+
+                result = await Repository.GetSingleModelAsync(predicate, context, transaction);
+
+                if (!result.IsSucceed)
+                {
+
+                    ModelMapper.Map(this.Model, newModel);
+                    view = InitView(newModel, false, context, transaction);
+                    view.Specificulture = desSpecificulture;
+                    result = await view.SaveModelAsync(false, context, transaction);
+                }
+
+
+                if (result.IsSucceed)
+                {
+
+                    if (_transaction == null)
+                    {
+                        transaction.Commit();
+                    }
+
+                }
+                else
+                {
+
+                    if (_transaction == null)
+                    {
+                        transaction.Rollback();
+                    }
+                }
+                return result;
+
+            }
+            catch (Exception ex)
+            {
+                result.Ex = ex;
+                return result;
+            }
+            finally
+            {
+                if (_context == null)
+                {
+                    _context.Dispose();
+                }
+            }
+            //    var taskSource = new TaskCompletionSource<RepositoryResponse<TView>>();
+            //taskSource.SetResult(new RepositoryResponse<TView>());
+            //return taskSource.Task.Result;
         }
 
         /// <summary>
@@ -393,6 +488,17 @@ namespace Swastika.Infrastructure.Data.ViewModels
         {
             this.Model = model;
             ParseView(_context, _transaction);
+
+        }
+        public ViewModelBase(TModel model, bool isLazyLoad, TDbContext _context = null, IDbContextTransaction _transaction = null)
+        {
+            this.Model = model;
+            IsLazyLoad = isLazyLoad;
+            ParseView(_context, _transaction);
+
+        }
+        public ViewModelBase()
+        {
 
         }
     }

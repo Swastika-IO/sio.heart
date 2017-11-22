@@ -188,33 +188,31 @@ namespace Swastika.Infrastructure.Data.Repository
         {
             TDbContext context = _context ?? InitContext();
             var transaction = _transaction ?? context.Database.BeginTransaction();
+            RepositoryResponse<TView> result = new RepositoryResponse<TView>() { IsSucceed = true };
             try
             {
 
                 context.Entry(view.Model).State = EntityState.Added;
-                bool result = context.SaveChanges() > 0;
-                if (result && isSaveSubModels)
+                result.IsSucceed = context.SaveChanges() > 0;
+                if (result.IsSucceed && isSaveSubModels)
                 {
                     var saveResult = view.SaveSubModels(view.Model, context, transaction);
                     if (!saveResult.IsSucceed)
                     {
-                        view.Errors.AddRange(saveResult.Errors);
+                        result.Errors.AddRange(saveResult.Errors);
                     }
-                    result = saveResult.IsSucceed;
+                    
+                    result.IsSucceed = saveResult.IsSucceed;
                 }
-                if (result)
+                if (result.IsSucceed)
                 {
-
+                    result.Data = view;
                     if (_transaction == null)
                     {
                         transaction.Commit();
                     }
 
-                    return new RepositoryResponse<TView>()
-                    {
-                        IsSucceed = true,
-                        Data = view
-                    };
+                    return result;
                 }
                 else
                 {
@@ -223,28 +221,20 @@ namespace Swastika.Infrastructure.Data.Repository
                         transaction.Rollback();
                     }
 
-                    return new RepositoryResponse<TView>()
-                    {
-                        IsSucceed = false,
-                        Data = view
-                    };
+                    return result;
                 }
 
             }
             // TODO: Add more specific exeption types instead of Exception only
             catch (Exception ex)
             {
+                result.Ex = ex;
                 LogErrorMessage(ex);
                 if (_transaction == null)
                 {
                     transaction.Rollback();
                 }
-                return new RepositoryResponse<TView>()
-                {
-                    IsSucceed = false,
-                    Data = default(TView),
-                    Ex = ex
-                };
+                return result;
             }
             finally
             {
@@ -267,30 +257,31 @@ namespace Swastika.Infrastructure.Data.Repository
         {
             TDbContext context = _context ?? InitContext();
             var transaction = _transaction ?? context.Database.BeginTransaction();
+            RepositoryResponse<TView> result = new RepositoryResponse<TView>() { IsSucceed = true };
             try
             {
                 context.Entry(view.Model).State = EntityState.Added;
-                bool result = await context.SaveChangesAsync() > 0;
-                if (result && isSaveSubModels)
+                result.IsSucceed = await context.SaveChangesAsync() > 0;
+                if (result.IsSucceed && isSaveSubModels)
                 {
                     var saveResult = await view.SaveSubModelsAsync(view.Model, context, transaction);
-                    result = saveResult.IsSucceed;
+                    if (!saveResult.IsSucceed)
+                    {
+                        result.Errors.AddRange(saveResult.Errors);
+                    }
+                    result.IsSucceed = saveResult.IsSucceed;
                 }
-                if (result)
+                if (result.IsSucceed)
                 {
                     //var data = ParseView(view.Model, context, transaction);
-
+                    result.Data = view;
                     if (_transaction == null)
                     {
                         //if current transaction is root transaction
                         transaction.Commit();
                     }
 
-                    return new RepositoryResponse<TView>()
-                    {
-                        IsSucceed = true,
-                        Data = view //ParseView(view.Model, context, transaction)
-                    };
+                    return result;
                 }
                 else
                 {
@@ -299,11 +290,7 @@ namespace Swastika.Infrastructure.Data.Repository
                         //if current transaction is root transaction
                         transaction.Rollback();
                     }
-                    return new RepositoryResponse<TView>()
-                    {
-                        IsSucceed = false,
-                        Data = view
-                    };
+                    return result;
                 }
 
 
@@ -311,6 +298,7 @@ namespace Swastika.Infrastructure.Data.Repository
             // TODO: Add more specific exeption types instead of Exception only
             catch (Exception ex)
             {
+                result.Ex = ex;
                 LogErrorMessage(ex);
                 if (_transaction == null)
                 {
@@ -318,11 +306,7 @@ namespace Swastika.Infrastructure.Data.Repository
                     transaction.Rollback();
                 }
 
-                return new RepositoryResponse<TView>()
-                {
-                    IsSucceed = false,
-                    Data = default(TView)
-                };
+                return result;
             }
             finally
             {
@@ -345,33 +329,30 @@ namespace Swastika.Infrastructure.Data.Repository
         {
             TDbContext context = _context ?? InitContext();
             var transaction = _transaction ?? context.Database.BeginTransaction();
+            RepositoryResponse<TView> result = new RepositoryResponse<TView>() { IsSucceed = true };
             try
             {
-                bool result = true;
                 //context.Entry(view.Model).State = EntityState.Modified;
                 context.Set<TModel>().Update(view.Model);
                 context.SaveChanges();
-                if (result && isSaveSubModels)
+                if (result.IsSucceed && isSaveSubModels)
                 {
                     var saveResult = view.SaveSubModels(view.Model, context, transaction);
                     if (!saveResult.IsSucceed)
                     {
-                        view.Errors.AddRange(saveResult.Errors);
+                        result.Errors.AddRange(saveResult.Errors);
                     }
-                    result = saveResult.IsSucceed;
+                    result.IsSucceed = saveResult.IsSucceed;
                 }
-                if (result)
+                if (result.IsSucceed)
                 {
+                    result.Data = view;
                     if (_transaction == null)
                     {
                         //if current transaction is root transaction
                         transaction.Commit();
                     }
-                    return new RepositoryResponse<TView>()
-                    {
-                        IsSucceed = true,
-                        Data = view // ParseView(view.Model, context, transaction)
-                    };
+                    return result;
                 }
                 else
                 {
@@ -380,11 +361,7 @@ namespace Swastika.Infrastructure.Data.Repository
                         //if current transaction is root transaction
                         transaction.Rollback();
                     }
-                    return new RepositoryResponse<TView>()
-                    {
-                        IsSucceed = false,
-                        Data = default(TView)
-                    };
+                    return result;
                 }
 
 
@@ -393,17 +370,13 @@ namespace Swastika.Infrastructure.Data.Repository
             catch (Exception ex)
             {
                 LogErrorMessage(ex);
+                result.Ex = ex;
                 if (_transaction == null)
                 {
                     //if current transaction is root transaction
                     transaction.Rollback();
                 }
-                return new RepositoryResponse<TView>()
-                {
-                    IsSucceed = false,
-                    Data = default(TView),
-                    Ex = ex
-                };
+                return result;
             }
             finally
             {
@@ -426,33 +399,30 @@ namespace Swastika.Infrastructure.Data.Repository
         {
             var context = _context ?? InitContext();
             var transaction = _transaction ?? context.Database.BeginTransaction();
+            RepositoryResponse<TView> result = new RepositoryResponse<TView>() { IsSucceed = true };
             try
             {
-                bool result = true;
                 //context.Entry(view.Model).State = EntityState.Modified;
                 context.Set<TModel>().Update(view.Model);
                 context.SaveChanges();
-                if (result && isSaveSubModels)
+                if (result.IsSucceed && isSaveSubModels)
                 {
                     var saveResult = await view.SaveSubModelsAsync(view.Model, context, transaction);
                     if (!saveResult.IsSucceed)
                     {
-                        view.Errors.AddRange(saveResult.Errors);
+                        result.Errors.AddRange(saveResult.Errors);
                     }
-                    result = saveResult.IsSucceed;
+                    result.IsSucceed = saveResult.IsSucceed;
                 }
-                if (result)
+                if (result.IsSucceed)
                 {
+                    result.Data = view;
                     if (_transaction == null)
                     {
                         //if current transaction is root transaction
                         transaction.Commit();
                     }
-                    return new RepositoryResponse<TView>()
-                    {
-                        IsSucceed = true,
-                        Data = view//ParseView(view.Model, context, transaction)
-                    };
+                    return result;
                 }
                 else
                 {
@@ -461,11 +431,7 @@ namespace Swastika.Infrastructure.Data.Repository
                         //if current transaction is root transaction
                         transaction.Rollback();
                     }
-                    return new RepositoryResponse<TView>()
-                    {
-                        IsSucceed = false,
-                        Data = view
-                    };
+                    return result;
                 }
             }
             // TODO: Add more specific exeption types instead of Exception only
@@ -477,13 +443,8 @@ namespace Swastika.Infrastructure.Data.Repository
                     //if current transaction is root transaction
                     transaction.Rollback();
                 }
-
-                return new RepositoryResponse<TView>()
-                {
-                    IsSucceed = false,
-                    Data = default(TView),
-                    Ex = ex
-                };
+                result.Ex = ex;
+                return result;
             }
             finally
             {
