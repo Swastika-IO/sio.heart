@@ -183,7 +183,7 @@ namespace Swastika.Infrastructure.Data.Repository
         /// </summary>
         /// <param name="model">The model.</param>
         /// <returns></returns>
-        public virtual RepositoryResponse<TView> CreateModel(TView view, bool isSaveSubModels = false
+        public virtual RepositoryResponse<TView> CreateModel(TView view
             , TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
             TDbContext context = _context ?? InitContext();
@@ -194,16 +194,16 @@ namespace Swastika.Infrastructure.Data.Repository
 
                 context.Entry(view.Model).State = EntityState.Added;
                 result.IsSucceed = context.SaveChanges() > 0;
-                if (result.IsSucceed && isSaveSubModels)
-                {
-                    var saveResult = view.SaveSubModels(view.Model, context, transaction);
-                    if (!saveResult.IsSucceed)
-                    {
-                        result.Errors.AddRange(saveResult.Errors);
-                    }
-                    
-                    result.IsSucceed = saveResult.IsSucceed;
-                }
+                //if (result.IsSucceed && isSaveSubModels)
+                //{
+                //    var saveResult = view.SaveSubModels(view.Model, context, transaction);
+                //    if (!saveResult.IsSucceed)
+                //    {
+                //        result.Errors.AddRange(saveResult.Errors);
+                //    }
+
+                //    result.IsSucceed = saveResult.IsSucceed;
+                //}
                 if (result.IsSucceed)
                 {
                     result.Data = view;
@@ -252,7 +252,7 @@ namespace Swastika.Infrastructure.Data.Repository
         /// </summary>
         /// <param name="model">The model.</param>
         /// <returns></returns>
-        public virtual async Task<RepositoryResponse<TView>> CreateModelAsync(TView view, bool isSaveSubModels = false
+        public virtual async Task<RepositoryResponse<TView>> CreateModelAsync(TView view
             , TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
             TDbContext context = _context ?? InitContext();
@@ -262,15 +262,15 @@ namespace Swastika.Infrastructure.Data.Repository
             {
                 context.Entry(view.Model).State = EntityState.Added;
                 result.IsSucceed = await context.SaveChangesAsync() > 0;
-                if (result.IsSucceed && isSaveSubModels)
-                {
-                    var saveResult = await view.SaveSubModelsAsync(view.Model, context, transaction);
-                    if (!saveResult.IsSucceed)
-                    {
-                        result.Errors.AddRange(saveResult.Errors);
-                    }
-                    result.IsSucceed = saveResult.IsSucceed;
-                }
+                //if (result.IsSucceed && isSaveSubModels)
+                //{
+                //    var saveResult = await view.SaveSubModelsAsync(view.Model, context, transaction);
+                //    if (!saveResult.IsSucceed)
+                //    {
+                //        result.Errors.AddRange(saveResult.Errors);
+                //    }
+                //    result.IsSucceed = saveResult.IsSucceed;
+                //}
                 if (result.IsSucceed)
                 {
                     //var data = ParseView(view.Model, context, transaction);
@@ -324,7 +324,7 @@ namespace Swastika.Infrastructure.Data.Repository
         /// </summary>
         /// <param name="model">The model.</param>
         /// <returns></returns>
-        public virtual RepositoryResponse<TView> EditModel(TView view, bool isSaveSubModels = false
+        public virtual RepositoryResponse<TView> EditModel(TView view
             , TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
             TDbContext context = _context ?? InitContext();
@@ -335,15 +335,15 @@ namespace Swastika.Infrastructure.Data.Repository
                 //context.Entry(view.Model).State = EntityState.Modified;
                 context.Set<TModel>().Update(view.Model);
                 context.SaveChanges();
-                if (result.IsSucceed && isSaveSubModels)
-                {
-                    var saveResult = view.SaveSubModels(view.Model, context, transaction);
-                    if (!saveResult.IsSucceed)
-                    {
-                        result.Errors.AddRange(saveResult.Errors);
-                    }
-                    result.IsSucceed = saveResult.IsSucceed;
-                }
+                //if (result.IsSucceed && isSaveSubModels)
+                //{
+                //    var saveResult = view.SaveSubModels(view.Model, context, transaction);
+                //    if (!saveResult.IsSucceed)
+                //    {
+                //        result.Errors.AddRange(saveResult.Errors);
+                //    }
+                //    result.IsSucceed = saveResult.IsSucceed;
+                //}
                 if (result.IsSucceed)
                 {
                     result.Data = view;
@@ -394,8 +394,7 @@ namespace Swastika.Infrastructure.Data.Repository
         /// </summary>
         /// <param name="model">The model.</param>
         /// <returns></returns>
-        public virtual async Task<RepositoryResponse<TView>> EditModelAsync(TView view, bool isSaveSubModels = false
-            , TDbContext _context = null, IDbContextTransaction _transaction = null)
+        public virtual async Task<RepositoryResponse<TView>> EditModelAsync(TView view, TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
             var context = _context ?? InitContext();
             var transaction = _transaction ?? context.Database.BeginTransaction();
@@ -404,16 +403,16 @@ namespace Swastika.Infrastructure.Data.Repository
             {
                 //context.Entry(view.Model).State = EntityState.Modified;
                 context.Set<TModel>().Update(view.Model);
-                context.SaveChanges();
-                if (result.IsSucceed && isSaveSubModels)
-                {
-                    var saveResult = await view.SaveSubModelsAsync(view.Model, context, transaction);
-                    if (!saveResult.IsSucceed)
-                    {
-                        result.Errors.AddRange(saveResult.Errors);
-                    }
-                    result.IsSucceed = saveResult.IsSucceed;
-                }
+                result.IsSucceed = (await context.SaveChangesAsync()) > 0;
+                //if (result.IsSucceed && isSaveSubModels)
+                //{
+                //    var saveResult = await view.SaveSubModelsAsync(view.Model, context, transaction);
+                //    if (!saveResult.IsSucceed)
+                //    {
+                //        result.Errors.AddRange(saveResult.Errors);
+                //    }
+                //    result.IsSucceed = saveResult.IsSucceed;
+                //}
                 if (result.IsSucceed)
                 {
                     result.Data = view;
@@ -458,7 +457,7 @@ namespace Swastika.Infrastructure.Data.Repository
 
         #region GetModelList
 
-       
+
 
         /// <summary>
         /// Gets the model list.
@@ -476,7 +475,8 @@ namespace Swastika.Infrastructure.Data.Repository
 
                 lstModel.ForEach(model => context.Entry(model).State = EntityState.Detached);
                 result = ParseView(lstModel, _context, _transaction);
-                return new RepositoryResponse<List<TView>>() {
+                return new RepositoryResponse<List<TView>>()
+                {
                     IsSucceed = true,
                     Data = result
                 };
@@ -491,7 +491,8 @@ namespace Swastika.Infrastructure.Data.Repository
                     transaction.Rollback();
                 }
 
-                return new RepositoryResponse<List<TView>>() {
+                return new RepositoryResponse<List<TView>>()
+                {
                     IsSucceed = false,
                     Data = null,
                     Ex = ex
@@ -770,7 +771,7 @@ namespace Swastika.Infrastructure.Data.Repository
             }
         }
 
-        
+
         #endregion GetModelList
 
         #region GetModelListBy
@@ -866,7 +867,7 @@ namespace Swastika.Infrastructure.Data.Repository
                         sorted = Queryable.OrderByDescending(query, orderBy);
                         if (pageSize.HasValue)
                         {
-                            
+
 
                             lstModel = sorted.Skip(pageIndex.Value * pageSize.Value)
                                 .Take(pageSize.Value)
@@ -1005,7 +1006,7 @@ namespace Swastika.Infrastructure.Data.Repository
                 IQueryable<TModel> sorted = null;
                 List<TModel> lstModel = new List<TModel>();
                 var query = context.Set<TModel>().Where(predicate);
-                
+
                 PaginationModel<TView> result = new PaginationModel<TView>()
                 {
                     TotalItems = query.Count(),
@@ -1086,7 +1087,7 @@ namespace Swastika.Infrastructure.Data.Repository
             }
         }
 
-       
+
         #endregion GetModelListBy
 
         /// <summary>
@@ -1703,11 +1704,11 @@ namespace Swastika.Infrastructure.Data.Repository
         {
             if (CheckIsExists(view.Model, _context, _transaction))
             {
-                return EditModel(view, isSaveSubModels, _context, _transaction);
+                return EditModel(view, _context, _transaction);
             }
             else
             {
-                return CreateModel(view, isSaveSubModels, _context, _transaction);
+                return CreateModel(view, _context, _transaction);
             }
         }
 
@@ -1721,17 +1722,12 @@ namespace Swastika.Infrastructure.Data.Repository
         {
             if (CheckIsExists(view.Model, _context, _transaction))
             {
-                return EditModelAsync(view, isSaveSubModels, _context, _transaction);
+                return EditModelAsync(view, _context, _transaction);
             }
             else
             {
-                return CreateModelAsync(view, isSaveSubModels, _context, _transaction);
+                return CreateModelAsync(view, _context, _transaction);
             }
-        }
-
-        public virtual bool SaveSubModel(TModel model, TDbContext context, IDbContextTransaction _transaction)
-        {
-            return false;
         }
 
         /// <summary>

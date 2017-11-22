@@ -14,15 +14,18 @@ using System.Threading.Tasks;
 
 namespace Swastika.Infrastructure.Data.ViewModels
 {
+   
 
     public abstract class ViewModelBase<TDbContext, TModel, TView>
         where TDbContext : DbContext
         where TModel : class
         where TView : ViewModelBase<TDbContext, TModel, TView> // instance of inherited
     {
+
         public string Specificulture { get; set; }
         private static DefaultRepository<TDbContext, TModel, TView> _repo;
         public bool IsLazyLoad { get; set; } = true;
+        public bool IsClone { get; set; }
         [JsonIgnore]
         public static DefaultRepository<TDbContext, TModel, TView> Repository
         {
@@ -173,7 +176,7 @@ namespace Swastika.Infrastructure.Data.ViewModels
             TView view = default(TView);
 
             ConstructorInfo classConstructor = classType.GetConstructor(new Type[] { });
-            if (model==null &&classConstructor != null)
+            if (model == null && classConstructor != null)
             {
                 view = (TView)classConstructor.Invoke(new object[] { });
                 return view;
@@ -355,15 +358,87 @@ namespace Swastika.Infrastructure.Data.ViewModels
         {
             return new RepositoryResponse<bool>();
         }
+
         public virtual async Task<RepositoryResponse<TView>> SaveModelAsync(bool isSaveSubModels = false, TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
+            var context = _context ?? InitContext();
+            var transaction = _transaction ?? context.Database.BeginTransaction();
+            RepositoryResponse<TView> result = new RepositoryResponse<TView>() { IsSucceed = true };
             Validate();
             if (IsValid)
             {
-                ParseModel();
-                var result = await Repository.SaveModelAsync((TView)this, isSaveSubModels, _context, _transaction);
+                try
+                {
 
-                return result;
+                    ParseModel();
+                    result = await Repository.SaveModelAsync((TView)this,_context: context,_transaction: transaction);
+
+                    // Save sub Models
+                    if (result.IsSucceed && isSaveSubModels)
+                    {
+                        var saveResult = await SaveSubModelsAsync(Model, context, transaction);
+                        if (!saveResult.IsSucceed)
+                        {
+                            result.Errors.AddRange(saveResult.Errors);
+                        }
+                        result.IsSucceed = result.IsSucceed && saveResult.IsSucceed;
+                        
+                    }
+
+                    // Clone Models
+                    if (result.IsSucceed && IsClone)
+                    {
+                        var cloneResult = await CloneAsync(_context: context, _transaction: transaction);
+                        if (!cloneResult.IsSucceed)
+                        {
+                            result.Errors.AddRange(cloneResult.Errors);
+                            result.Ex = cloneResult.Ex;
+                        }
+                        result.IsSucceed = result.IsSucceed && cloneResult.IsSucceed;
+                    }
+
+
+                    //Commit context
+                    if (result.IsSucceed)
+                    {
+                        result.Data = this as TView;
+                        if (_transaction == null)
+                        {
+                            //if current transaction is root transaction
+                            transaction.Commit();
+                        }
+                        return result;
+                    }
+                    else
+                    {
+                        if (_transaction == null)
+                        {
+                            //if current transaction is root transaction
+                            transaction.Rollback();
+                        }
+                        return result;
+                    }
+                }
+                // TODO: Add more specific exeption types instead of Exception only
+                catch (Exception ex)
+                {
+                    Repository.LogErrorMessage(ex);
+                    if (_transaction == null)
+                    {
+                        //if current transaction is root transaction
+                        transaction.Rollback();
+                    }
+                    result.Ex = ex;
+                    return result;
+                }
+                finally
+                {
+                    if (_context == null)
+                    {
+                        //if current Context is Root
+                        context.Dispose();
+                    }
+                }
             }
             else
             {
@@ -386,13 +461,84 @@ namespace Swastika.Infrastructure.Data.ViewModels
 
         public virtual RepositoryResponse<TView> SaveModel(bool isSaveSubModels = false, TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
+            var context = _context ?? InitContext();
+            var transaction = _transaction ?? context.Database.BeginTransaction();
+            RepositoryResponse<TView> result = new RepositoryResponse<TView>() { IsSucceed = true };
             Validate();
             if (IsValid)
             {
-                ParseModel();
-                var result = Repository.SaveModel((TView)this, isSaveSubModels, _context, _transaction);
+                try
+                {
 
-                return result;
+                    ParseModel();
+                    result = Repository.SaveModel((TView)this, _context: context, _transaction: transaction);
+
+                    // Save sub Models
+                    if (result.IsSucceed && isSaveSubModels)
+                    {
+                        var saveResult = SaveSubModels(Model, context, transaction);
+                        if (!saveResult.IsSucceed)
+                        {
+                            result.Errors.AddRange(saveResult.Errors);
+                        }
+                        result.IsSucceed = result.IsSucceed && saveResult.IsSucceed;
+
+                    }
+
+                    // Clone Models
+                    //if (IsClone)
+                    //{
+                    //    var cloneResult = Clone(_context: context, _transaction: transaction);
+                    //    if (!cloneResult.IsSucceed)
+                    //    {
+                    //        result.Errors.AddRange(cloneResult.Errors);
+                    //        result.Ex = cloneResult.Ex;
+                    //    }
+                    //    result.IsSucceed = result.IsSucceed && cloneResult.IsSucceed;
+                    //}
+
+
+                    //Commit context
+                    if (result.IsSucceed)
+                    {
+                        result.Data = this as TView;
+                        if (_transaction == null)
+                        {
+                            //if current transaction is root transaction
+                            transaction.Commit();
+                        }
+                        return result;
+                    }
+                    else
+                    {
+                        if (_transaction == null)
+                        {
+                            //if current transaction is root transaction
+                            transaction.Rollback();
+                        }
+                        return result;
+                    }
+                }
+                // TODO: Add more specific exeption types instead of Exception only
+                catch (Exception ex)
+                {
+                    Repository.LogErrorMessage(ex);
+                    if (_transaction == null)
+                    {
+                        //if current transaction is root transaction
+                        transaction.Rollback();
+                    }
+                    result.Ex = ex;
+                    return result;
+                }
+                finally
+                {
+                    if (_context == null)
+                    {
+                        //if current Context is Root
+                        context.Dispose();
+                    }
+                }
             }
             else
             {
@@ -405,60 +551,82 @@ namespace Swastika.Infrastructure.Data.ViewModels
             }
         }
 
-
         public virtual RepositoryResponse<bool> SaveSubModels(TModel parent, TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
             return new RepositoryResponse<bool>();
         }
 
-        //public virtual RepositoryResponse<TView> Clone(string desSpecificulture, TDbContext _context = null, IDbContextTransaction _transaction = null)
-        //{
-        //    return new RepositoryResponse<TView>();
-        //}
-
-        public virtual async Task<RepositoryResponse<TView>> CloneAsync(Expression<Func<TModel, bool>> predicate, string desSpecificulture, TDbContext _context = null, IDbContextTransaction _transaction = null)
+        public virtual async Task<RepositoryResponse<List<TView>>> CloneAsync(TDbContext _context = null, IDbContextTransaction _transaction = null
+            , List<SupportedCulture> supportedCultures = null)
         {
             var context = _context ?? InitContext();
             var transaction = _transaction ?? context.Database.BeginTransaction();
-            RepositoryResponse<TView> result = new RepositoryResponse<TView>() { };
-
+            RepositoryResponse<List<TView>> result = new RepositoryResponse<List<TView>>() { Data = new List<TView>() };
+            
             try
             {
-                TModel newModel = InitModel();
-                TView view = InitView();
-                //         var keyName = context.Model.FindEntityType(typeof(TModel)).FindPrimaryKey().Properties
-                //.Select(x => x.Name).ToList();
-                //         var entityType = context.Model.GetEntityTypes(typeof(TModel));
-                //         var key = entityType.key();
-
-                result = await Repository.GetSingleModelAsync(predicate, context, transaction);
-
-                if (!result.IsSucceed)
+                if (supportedCultures==null)
                 {
-
-                    ModelMapper.Map(this.Model, newModel);
-                    view = InitView(newModel, false, context, transaction);
-                    view.Specificulture = desSpecificulture;
-                    result = await view.SaveModelAsync(false, context, transaction);
+                    supportedCultures = new List<SupportedCulture>();
                 }
-
-
-                if (result.IsSucceed)
+                foreach (var culture in supportedCultures.Where(c => c.Specificulture != Specificulture
+                    && c.IsSupported))
                 {
+                    string desSpecificulture = culture.Specificulture;
 
-                    if (_transaction == null)
+                    TView view = InitView();
+                    Mapper.Map(this.Model, view);                    
+                    view.Specificulture = desSpecificulture;                  
+
+                    bool isExist = Repository.CheckIsExists(view.ParseModel(), _context: context, _transaction: transaction);
+
+                    if (isExist)
                     {
-                        transaction.Commit();
+                        result.IsSucceed = true;
+                        result.Data.Add(InitView(view.Model, true, context, transaction));
+                    }
+                    else
+                    {                        
+                        var cloneResult= await view.SaveModelAsync(false, context, transaction);
+                        if (cloneResult.IsSucceed)
+                        {
+                            var cloneSubResult = await CloneSubModelsAsync(cloneResult.Data, context, transaction);
+                            if (cloneSubResult.IsSucceed)
+                            {
+                                cloneResult.Errors.AddRange(cloneSubResult.Errors);
+                                cloneResult.Ex = cloneSubResult.Ex;
+                            }
+
+                            result.IsSucceed = result.IsSucceed && cloneResult.IsSucceed && cloneSubResult.IsSucceed;
+                            result.Data.Add(cloneResult.Data);
+                        }
+                        else
+                        {
+                            result.Errors.AddRange(cloneResult.Errors);
+                            result.Ex = cloneResult.Ex;
+                        }
+                        
                     }
 
-                }
-                else
-                {
 
-                    if (_transaction == null)
+                    if (result.IsSucceed)
                     {
-                        transaction.Rollback();
+
+                        if (_transaction == null)
+                        {
+                            transaction.Commit();
+                        }
+
                     }
+                    else
+                    {
+
+                        if (_transaction == null)
+                        {
+                            transaction.Rollback();
+                        }
+                    }
+                
                 }
                 return result;
 
@@ -480,13 +648,23 @@ namespace Swastika.Infrastructure.Data.ViewModels
             //return taskSource.Task.Result;
         }
 
+        public virtual async Task<RepositoryResponse<bool>> CloneSubModelsAsync(TView parent, TDbContext _context = null, IDbContextTransaction _transaction = null)
+        {
+            var taskSource = new TaskCompletionSource<RepositoryResponse<bool>>();
+            taskSource.SetResult(new RepositoryResponse<bool>() { IsSucceed = true, Data = true });
+            return taskSource.Task.Result;
+        }
+        
+
+        
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ViewModelBase{TModel, TView}"/> class.
         /// </summary>
         /// <param name="model">The model.</param>
         public ViewModelBase(TModel model, TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
-            this.Model = model;
+            this.Model = model;            
             ParseView(_context, _transaction);
 
         }
