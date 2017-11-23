@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace Swastika.Infrastructure.Data.ViewModels
 {
-   
+
 
     public abstract class ViewModelBase<TDbContext, TModel, TView>
         where TDbContext : DbContext
@@ -123,13 +123,22 @@ namespace Swastika.Infrastructure.Data.ViewModels
         /// <summary>
         /// Parses the view.
         /// </summary>
-        public virtual TView ParseView(TDbContext _context = null, IDbContextTransaction _transaction = null)
+        public virtual TView ParseView(bool isExpand = true, TDbContext _context = null, IDbContextTransaction _transaction = null
+            )
         {
             //AutoMapper.Mapper.Map<TModel, TView>(Model, (TView)this);
             Mapper.Map<TModel, TView>(Model, (TView)this);
+            if (isExpand)
+            {
+                ExpandView();
+
+            }
             return (TView)this;
         }
+        public virtual void ExpandView(TDbContext _context = null, IDbContextTransaction _transaction = null)
+        {
 
+        }
         /// <summary>
         /// Parses the model.
         /// </summary>
@@ -193,7 +202,7 @@ namespace Swastika.Infrastructure.Data.ViewModels
                     classConstructor = classType.GetConstructor(new Type[] { typeof(TModel), typeof(TDbContext), typeof(IDbContextTransaction) });
                     return (TView)classConstructor.Invoke(new object[] { model, _context, _transaction });
                 }
-                
+
             }
         }
 
@@ -380,7 +389,7 @@ namespace Swastika.Infrastructure.Data.ViewModels
                 {
 
                     ParseModel();
-                    result = await Repository.SaveModelAsync((TView)this,_context: context,_transaction: transaction);
+                    result = await Repository.SaveModelAsync((TView)this, _context: context, _transaction: transaction);
 
                     // Save sub Models
                     if (result.IsSucceed && isSaveSubModels)
@@ -391,7 +400,7 @@ namespace Swastika.Infrastructure.Data.ViewModels
                             result.Errors.AddRange(saveResult.Errors);
                         }
                         result.IsSucceed = result.IsSucceed && saveResult.IsSucceed;
-                        
+
                     }
 
                     // Clone Models
@@ -570,9 +579,11 @@ namespace Swastika.Infrastructure.Data.ViewModels
         {
             var context = _context ?? InitContext();
             var transaction = _transaction ?? context.Database.BeginTransaction();
-            RepositoryResponse<List<TView>> result = new RepositoryResponse<List<TView>>() {
+            RepositoryResponse<List<TView>> result = new RepositoryResponse<List<TView>>()
+            {
                 IsSucceed = true,
-                Data = new List<TView>() };
+                Data = new List<TView>()
+            };
 
             try
             {
@@ -587,8 +598,9 @@ namespace Swastika.Infrastructure.Data.ViewModels
 
                         TView view = InitView();
                         Mapper.Map(this.Model, view);
+                        view.ParseView(isExpand: false, _context: context, _transaction: transaction);
                         view.Specificulture = desSpecificulture;
-
+                        
                         bool isExist = Repository.CheckIsExists(view.ParseModel(), _context: context, _transaction: transaction);
 
                         if (isExist)
@@ -646,7 +658,7 @@ namespace Swastika.Infrastructure.Data.ViewModels
                     return result;
                 }
             }
-           
+
             catch (Exception ex)
             {
                 result.IsSucceed = false;
@@ -671,9 +683,9 @@ namespace Swastika.Infrastructure.Data.ViewModels
             taskSource.SetResult(new RepositoryResponse<bool>() { IsSucceed = true, Data = true });
             return taskSource.Task.Result;
         }
-        
 
-        
+
+
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ViewModelBase{TModel, TView}"/> class.
@@ -681,15 +693,15 @@ namespace Swastika.Infrastructure.Data.ViewModels
         /// <param name="model">The model.</param>
         public ViewModelBase(TModel model, TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
-            this.Model = model;            
-            ParseView(_context, _transaction);
+            this.Model = model;
+            ParseView(_context: _context, _transaction: _transaction);
 
         }
         public ViewModelBase(TModel model, bool isLazyLoad, TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
             this.Model = model;
             IsLazyLoad = isLazyLoad;
-            ParseView(_context, _transaction);
+            ParseView(isExpand: isLazyLoad, _context: _context, _transaction: _transaction);
 
         }
         public ViewModelBase()
