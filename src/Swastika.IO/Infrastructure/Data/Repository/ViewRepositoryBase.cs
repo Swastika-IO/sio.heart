@@ -31,7 +31,7 @@ namespace Swastika.Infrastructure.Data.Repository
         /// </summary>
         public ViewRepositoryBase()
         {
-            RegisterAutoMapper();
+            //RegisterAutoMapper();
         }
 
         /// <summary>
@@ -51,7 +51,7 @@ namespace Swastika.Infrastructure.Data.Repository
         /// Registers the automatic mapper.
         /// </summary>
         public virtual void RegisterAutoMapper()
-        {
+        {            
             Mapper.Initialize(cfg =>
             {
                 cfg.CreateMap<TModel, TView>();
