@@ -21,7 +21,7 @@ namespace Swastika.Infrastructure.Data.ViewModels
         where TModel : class
         where TView : ViewModelBase<TDbContext, TModel, TView> // instance of inherited
     {
-
+        public List<SupportedCulture> ListSupportedCulture { get; set; }
         public string Specificulture { get; set; }
         private static DefaultRepository<TDbContext, TModel, TView> _repo;
         public bool IsLazyLoad { get; set; } = true;
@@ -184,7 +184,16 @@ namespace Swastika.Infrastructure.Data.ViewModels
             else
             {
                 classConstructor = classType.GetConstructor(new Type[] { typeof(TModel), typeof(bool), typeof(TDbContext), typeof(IDbContextTransaction) });
-                return (TView)classConstructor.Invoke(new object[] { model, isLazyLoad, _context, _transaction });
+                if (classConstructor != null)
+                {
+                    return (TView)classConstructor.Invoke(new object[] { model, isLazyLoad, _context, _transaction });
+                }
+                else
+                {
+                    classConstructor = classType.GetConstructor(new Type[] { typeof(TModel), typeof(TDbContext), typeof(IDbContextTransaction) });
+                    return (TView)classConstructor.Invoke(new object[] { model, _context, _transaction });
+                }
+                
             }
         }
 
@@ -388,7 +397,7 @@ namespace Swastika.Infrastructure.Data.ViewModels
                     // Clone Models
                     if (result.IsSucceed && IsClone)
                     {
-                        var cloneResult = await CloneAsync(_context: context, _transaction: transaction);
+                        var cloneResult = await CloneAsync(ListSupportedCulture, _context: context, _transaction: transaction);
                         if (!cloneResult.IsSucceed)
                         {
                             result.Errors.AddRange(cloneResult.Errors);
@@ -556,83 +565,91 @@ namespace Swastika.Infrastructure.Data.ViewModels
             return new RepositoryResponse<bool>();
         }
 
-        public virtual async Task<RepositoryResponse<List<TView>>> CloneAsync(TDbContext _context = null, IDbContextTransaction _transaction = null
-            , List<SupportedCulture> supportedCultures = null)
+        public virtual async Task<RepositoryResponse<List<TView>>> CloneAsync(List<SupportedCulture> supportedCultures
+            , TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
             var context = _context ?? InitContext();
             var transaction = _transaction ?? context.Database.BeginTransaction();
-            RepositoryResponse<List<TView>> result = new RepositoryResponse<List<TView>>() { Data = new List<TView>() };
-            
+            RepositoryResponse<List<TView>> result = new RepositoryResponse<List<TView>>() {
+                IsSucceed = true,
+                Data = new List<TView>() };
+
             try
             {
-                if (supportedCultures==null)
+                if (supportedCultures != null)
                 {
-                    supportedCultures = new List<SupportedCulture>();
-                }
-                foreach (var culture in supportedCultures.Where(c => c.Specificulture != Specificulture
-                    && c.IsSupported))
-                {
-                    string desSpecificulture = culture.Specificulture;
 
-                    TView view = InitView();
-                    Mapper.Map(this.Model, view);                    
-                    view.Specificulture = desSpecificulture;                  
 
-                    bool isExist = Repository.CheckIsExists(view.ParseModel(), _context: context, _transaction: transaction);
-
-                    if (isExist)
+                    foreach (var culture in supportedCultures.Where(c => c.Specificulture != Specificulture
+                        && c.IsSupported))
                     {
-                        result.IsSucceed = true;
-                        result.Data.Add(InitView(view.Model, true, context, transaction));
-                    }
-                    else
-                    {                        
-                        var cloneResult= await view.SaveModelAsync(false, context, transaction);
-                        if (cloneResult.IsSucceed)
-                        {
-                            var cloneSubResult = await CloneSubModelsAsync(cloneResult.Data, context, transaction);
-                            if (cloneSubResult.IsSucceed)
-                            {
-                                cloneResult.Errors.AddRange(cloneSubResult.Errors);
-                                cloneResult.Ex = cloneSubResult.Ex;
-                            }
+                        string desSpecificulture = culture.Specificulture;
 
-                            result.IsSucceed = result.IsSucceed && cloneResult.IsSucceed && cloneSubResult.IsSucceed;
-                            result.Data.Add(cloneResult.Data);
+                        TView view = InitView();
+                        Mapper.Map(this.Model, view);
+                        view.Specificulture = desSpecificulture;
+
+                        bool isExist = Repository.CheckIsExists(view.ParseModel(), _context: context, _transaction: transaction);
+
+                        if (isExist)
+                        {
+                            result.IsSucceed = true;
+                            result.Data.Add(InitView(view.Model, true, context, transaction));
                         }
                         else
                         {
-                            result.Errors.AddRange(cloneResult.Errors);
-                            result.Ex = cloneResult.Ex;
+                            var cloneResult = await view.SaveModelAsync(false, context, transaction);
+                            if (cloneResult.IsSucceed)
+                            {
+                                var cloneSubResult = await CloneSubModelsAsync(cloneResult.Data, context, transaction);
+                                if (cloneSubResult.IsSucceed)
+                                {
+                                    cloneResult.Errors.AddRange(cloneSubResult.Errors);
+                                    cloneResult.Ex = cloneSubResult.Ex;
+                                }
+
+                                result.IsSucceed = result.IsSucceed && cloneResult.IsSucceed && cloneSubResult.IsSucceed;
+                                result.Data.Add(cloneResult.Data);
+                            }
+                            else
+                            {
+                                result.Errors.AddRange(cloneResult.Errors);
+                                result.Ex = cloneResult.Ex;
+                            }
+
                         }
-                        
-                    }
 
 
-                    if (result.IsSucceed)
-                    {
-
-                        if (_transaction == null)
+                        if (result.IsSucceed)
                         {
-                            transaction.Commit();
+
+                            if (_transaction == null)
+                            {
+                                transaction.Commit();
+                            }
+
                         }
-
-                    }
-                    else
-                    {
-
-                        if (_transaction == null)
+                        else
                         {
-                            transaction.Rollback();
+
+                            if (_transaction == null)
+                            {
+                                transaction.Rollback();
+                            }
                         }
+
                     }
-                
+                    return result;
                 }
-                return result;
-
+                else
+                {
+                    return result;
+                }
             }
+           
             catch (Exception ex)
             {
+                result.IsSucceed = false;
                 result.Ex = ex;
                 return result;
             }

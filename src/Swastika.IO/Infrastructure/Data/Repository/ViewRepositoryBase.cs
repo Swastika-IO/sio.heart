@@ -403,7 +403,7 @@ namespace Swastika.Infrastructure.Data.Repository
             {
                 //context.Entry(view.Model).State = EntityState.Modified;
                 context.Set<TModel>().Update(view.Model);
-                result.IsSucceed = (await context.SaveChangesAsync()) > 0;
+                await context.SaveChangesAsync();
                 //if (result.IsSucceed && isSaveSubModels)
                 //{
                 //    var saveResult = await view.SaveSubModelsAsync(view.Model, context, transaction);
