@@ -193,17 +193,7 @@ namespace Swastika.Infrastructure.Data.Repository
             {
 
                 context.Entry(view.Model).State = EntityState.Added;
-                result.IsSucceed = context.SaveChanges() > 0;
-                //if (result.IsSucceed && isSaveSubModels)
-                //{
-                //    var saveResult = view.SaveSubModels(view.Model, context, transaction);
-                //    if (!saveResult.IsSucceed)
-                //    {
-                //        result.Errors.AddRange(saveResult.Errors);
-                //    }
-
-                //    result.IsSucceed = saveResult.IsSucceed;
-                //}
+                context.SaveChanges();
                 if (result.IsSucceed)
                 {
                     result.Data = view;
@@ -261,7 +251,7 @@ namespace Swastika.Infrastructure.Data.Repository
             try
             {
                 context.Entry(view.Model).State = EntityState.Added;
-                result.IsSucceed = await context.SaveChangesAsync() > 0;
+                await context.SaveChangesAsync();
                 //if (result.IsSucceed && isSaveSubModels)
                 //{
                 //    var saveResult = await view.SaveSubModelsAsync(view.Model, context, transaction);

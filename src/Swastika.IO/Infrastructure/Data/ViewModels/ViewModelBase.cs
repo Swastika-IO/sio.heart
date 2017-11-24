@@ -379,6 +379,7 @@ namespace Swastika.Infrastructure.Data.ViewModels
 
         public virtual async Task<RepositoryResponse<TView>> SaveModelAsync(bool isSaveSubModels = false, TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
+            bool IsRoot = _context == null;
             var context = _context ?? InitContext();
             var transaction = _transaction ?? context.Database.BeginTransaction();
             RepositoryResponse<TView> result = new RepositoryResponse<TView>() { IsSucceed = true };
@@ -387,7 +388,6 @@ namespace Swastika.Infrastructure.Data.ViewModels
             {
                 try
                 {
-
                     ParseModel();
                     result = await Repository.SaveModelAsync((TView)this, _context: context, _transaction: transaction);
 
@@ -404,9 +404,10 @@ namespace Swastika.Infrastructure.Data.ViewModels
                     }
 
                     // Clone Models
-                    if (result.IsSucceed && IsClone)
+                    if (result.IsSucceed && IsClone && IsRoot)
                     {
-                        var cloneResult = await CloneAsync(ListSupportedCulture, _context: context, _transaction: transaction);
+                        var cloneCultures = ListSupportedCulture.Where(c => c.Specificulture != Specificulture && c.IsSupported).ToList();
+                        var cloneResult = await CloneAsync(cloneCultures, _context: context, _transaction: transaction);
                         if (!cloneResult.IsSucceed)
                         {
                             result.Errors.AddRange(cloneResult.Errors);
@@ -420,7 +421,7 @@ namespace Swastika.Infrastructure.Data.ViewModels
                     if (result.IsSucceed)
                     {
                         result.Data = this as TView;
-                        if (_transaction == null)
+                        if (IsRoot)
                         {
                             //if current transaction is root transaction
                             transaction.Commit();
@@ -429,7 +430,7 @@ namespace Swastika.Infrastructure.Data.ViewModels
                     }
                     else
                     {
-                        if (_transaction == null)
+                        if (IsRoot)
                         {
                             //if current transaction is root transaction
                             transaction.Rollback();
@@ -441,7 +442,7 @@ namespace Swastika.Infrastructure.Data.ViewModels
                 catch (Exception ex)
                 {
                     Repository.LogErrorMessage(ex);
-                    if (_transaction == null)
+                    if (IsRoot)
                     {
                         //if current transaction is root transaction
                         transaction.Rollback();
@@ -451,7 +452,7 @@ namespace Swastika.Infrastructure.Data.ViewModels
                 }
                 finally
                 {
-                    if (_context == null)
+                    if (IsRoot)
                     {
                         //if current Context is Root
                         context.Dispose();
@@ -574,9 +575,10 @@ namespace Swastika.Infrastructure.Data.ViewModels
             return new RepositoryResponse<bool>();
         }
 
-        public virtual async Task<RepositoryResponse<List<TView>>> CloneAsync(List<SupportedCulture> supportedCultures
+        public virtual async Task<RepositoryResponse<List<TView>>> CloneAsync(List<SupportedCulture> cloneCultures
             , TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
+            bool IsRoot = _context == null;
             var context = _context ?? InitContext();
             var transaction = _transaction ?? context.Database.BeginTransaction();
             RepositoryResponse<List<TView>> result = new RepositoryResponse<List<TView>>()
@@ -587,17 +589,17 @@ namespace Swastika.Infrastructure.Data.ViewModels
 
             try
             {
-                if (supportedCultures != null)
+                if (cloneCultures != null)
                 {
 
 
-                    foreach (var culture in supportedCultures.Where(c => c.Specificulture != Specificulture
-                        && c.IsSupported))
+                    foreach (var culture in cloneCultures)
                     {
                         string desSpecificulture = culture.Specificulture;
 
                         TView view = InitView();
-                        Mapper.Map(this.Model, view);
+                        //Mapper.Map(this.Model, view);
+                        view.Model = this.Model;
                         view.ParseView(isExpand: false, _context: context, _transaction: transaction);
                         view.Specificulture = desSpecificulture;
                         
@@ -606,15 +608,15 @@ namespace Swastika.Infrastructure.Data.ViewModels
                         if (isExist)
                         {
                             result.IsSucceed = true;
-                            result.Data.Add(InitView(view.Model, true, context, transaction));
+                            result.Data.Add(view);
                         }
                         else
                         {
                             var cloneResult = await view.SaveModelAsync(false, context, transaction);
                             if (cloneResult.IsSucceed)
                             {
-                                var cloneSubResult = await CloneSubModelsAsync(cloneResult.Data, context, transaction);
-                                if (cloneSubResult.IsSucceed)
+                                var cloneSubResult = await CloneSubModelsAsync(cloneResult.Data, cloneCultures, context, transaction);
+                                if (!cloneSubResult.IsSucceed)
                                 {
                                     cloneResult.Errors.AddRange(cloneSubResult.Errors);
                                     cloneResult.Ex = cloneSubResult.Ex;
@@ -625,6 +627,7 @@ namespace Swastika.Infrastructure.Data.ViewModels
                             }
                             else
                             {
+                                result.IsSucceed = result.IsSucceed && cloneResult.IsSucceed;
                                 result.Errors.AddRange(cloneResult.Errors);
                                 result.Ex = cloneResult.Ex;
                             }
@@ -677,7 +680,7 @@ namespace Swastika.Infrastructure.Data.ViewModels
             //return taskSource.Task.Result;
         }
 
-        public virtual async Task<RepositoryResponse<bool>> CloneSubModelsAsync(TView parent, TDbContext _context = null, IDbContextTransaction _transaction = null)
+        public virtual async Task<RepositoryResponse<bool>> CloneSubModelsAsync(TView parent, List<SupportedCulture> cloneCultures, TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
             var taskSource = new TaskCompletionSource<RepositoryResponse<bool>>();
             taskSource.SetResult(new RepositoryResponse<bool>() { IsSucceed = true, Data = true });
