@@ -21,6 +21,7 @@ namespace Swastika.Infrastructure.Data.ViewModels
         where TModel : class
         where TView : ViewModelBase<TDbContext, TModel, TView> // instance of inherited
     {
+        #region Properties
         public List<SupportedCulture> ListSupportedCulture { get; set; }
         public string Specificulture { get; set; }
         private static DefaultRepository<TDbContext, TModel, TView> _repo;
@@ -119,7 +120,9 @@ namespace Swastika.Infrastructure.Data.ViewModels
 
         [JsonIgnore]
         public bool IsValid = true;
+        #endregion
 
+        #region Common
         /// <summary>
         /// Parses the view.
         /// </summary>
@@ -217,15 +220,18 @@ namespace Swastika.Infrastructure.Data.ViewModels
                 Errors.AddRange(results.Select(e => e.ErrorMessage));
             }
         }
+        #endregion
 
+
+        #region Async
         public virtual async Task<RepositoryResponse<bool>> RemoveModelAsync(bool isRemoveRelatedModels = false, TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
 
             var context = _context ?? InitContext();
             var transaction = _transaction ?? context.Database.BeginTransaction();
+            RepositoryResponse<bool> result = new RepositoryResponse<bool>() { IsSucceed = true };
             try
             {
-                RepositoryResponse<bool> result = new RepositoryResponse<bool>() { IsSucceed = true };
                 ParseModel();
                 if (isRemoveRelatedModels)
                 {
@@ -234,21 +240,23 @@ namespace Swastika.Infrastructure.Data.ViewModels
                     {
                         result = await Repository.RemoveModelAsync(Model, context, transaction);
                     }
+                    else
+                    {
+                        result.IsSucceed = result.IsSucceed && removeRelatedResult.IsSucceed;
+                        result.Errors.AddRange(removeRelatedResult.Errors);
+                        result.Ex = removeRelatedResult.Ex;
+                    }
                 }
-                result = await Repository.RemoveModelAsync(Model, context, transaction);
+                
                 if (result.IsSucceed)
                 {
-
+                    result = await Repository.RemoveModelAsync(Model, context, transaction);
                     if (_transaction == null)
                     {
                         transaction.Commit();
                     }
 
-                    return new RepositoryResponse<bool>()
-                    {
-                        IsSucceed = true,
-                        Data = true
-                    };
+                    return result;
                 }
                 else
                 {
@@ -256,14 +264,8 @@ namespace Swastika.Infrastructure.Data.ViewModels
                     {
                         transaction.Rollback();
                     }
-
-                    return new RepositoryResponse<bool>()
-                    {
-                        IsSucceed = false,
-                        Data = false,
-                        Errors = result.Errors,
-                        Ex = result.Ex
-                    };
+                    result.IsSucceed = false;
+                    return result;
                 }
             }
             // TODO: Add more specific exeption types instead of Exception only
@@ -274,13 +276,9 @@ namespace Swastika.Infrastructure.Data.ViewModels
                     //if current transaction is root transaction
                     transaction.Rollback();
                 }
-
-                return new RepositoryResponse<bool>()
-                {
-                    IsSucceed = false,
-                    Data = false,
-                    Ex = ex
-                };
+                result.IsSucceed = false;
+                result.Ex = ex;
+                return result;
             }
             finally
             {
@@ -291,91 +289,7 @@ namespace Swastika.Infrastructure.Data.ViewModels
                 }
             }
         }
-        public virtual async Task<RepositoryResponse<bool>> RemoveRelatedModelsAsync(TView view, TDbContext _context = null, IDbContextTransaction _transaction = null)
-        {
-            var taskSource = new TaskCompletionSource<RepositoryResponse<bool>>();
-            taskSource.SetResult(new RepositoryResponse<bool>());
-            return taskSource.Task.Result;
-        }
 
-        public virtual RepositoryResponse<bool> RemoveModel(bool isRemoveRelatedModels = false, TDbContext _context = null, IDbContextTransaction _transaction = null)
-        {
-
-            var context = _context ?? InitContext();
-            var transaction = _transaction ?? context.Database.BeginTransaction();
-            try
-            {
-                RepositoryResponse<bool> result = new RepositoryResponse<bool>() { IsSucceed = true };
-                ParseModel();
-                if (isRemoveRelatedModels)
-                {
-                    var removeRelatedResult = RemoveRelatedModels((TView)this, context, transaction);
-                    if (removeRelatedResult.IsSucceed)
-                    {
-                        result = Repository.RemoveModel(Model, context, transaction);
-                    }
-                }
-                result = Repository.RemoveModel(Model, context, transaction);
-
-                if (result.IsSucceed)
-                {
-
-                    if (_transaction == null)
-                    {
-                        transaction.Commit();
-                    }
-
-                    return new RepositoryResponse<bool>()
-                    {
-                        IsSucceed = true,
-                        Data = true
-                    };
-                }
-                else
-                {
-                    if (_transaction == null)
-                    {
-                        transaction.Rollback();
-                    }
-
-                    return new RepositoryResponse<bool>()
-                    {
-                        IsSucceed = false,
-                        Data = false,
-                        Errors = result.Errors,
-                        Ex = result.Ex
-                    };
-                }
-            }
-            // TODO: Add more specific exeption types instead of Exception only
-            catch (Exception ex)
-            {
-                if (_transaction == null)
-                {
-                    //if current transaction is root transaction
-                    transaction.Rollback();
-                }
-
-                return new RepositoryResponse<bool>()
-                {
-                    IsSucceed = false,
-                    Data = false,
-                    Ex = ex
-                };
-            }
-            finally
-            {
-                if (_context == null)
-                {
-                    //if current Context is Root
-                    context.Dispose();
-                }
-            }
-        }
-        public virtual RepositoryResponse<bool> RemoveRelatedModels(TView view, TDbContext _context = null, IDbContextTransaction _transaction = null)
-        {
-            return new RepositoryResponse<bool>();
-        }
 
         public virtual async Task<RepositoryResponse<TView>> SaveModelAsync(bool isSaveSubModels = false, TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
@@ -398,6 +312,7 @@ namespace Swastika.Infrastructure.Data.ViewModels
                         if (!saveResult.IsSucceed)
                         {
                             result.Errors.AddRange(saveResult.Errors);
+                            result.Ex = saveResult.Ex;
                         }
                         result.IsSucceed = result.IsSucceed && saveResult.IsSucceed;
 
@@ -420,12 +335,12 @@ namespace Swastika.Infrastructure.Data.ViewModels
                     //Commit context
                     if (result.IsSucceed)
                     {
-                        result.Data = this as TView;
                         if (IsRoot)
                         {
                             //if current transaction is root transaction
                             transaction.Commit();
                         }
+                        result.Data = this as TView;
                         return result;
                     }
                     else
@@ -447,6 +362,7 @@ namespace Swastika.Infrastructure.Data.ViewModels
                         //if current transaction is root transaction
                         transaction.Rollback();
                     }
+                    result.IsSucceed = false;
                     result.Ex = ex;
                     return result;
                 }
@@ -468,111 +384,6 @@ namespace Swastika.Infrastructure.Data.ViewModels
                     Errors = Errors
                 };
             }
-        }
-
-
-        public virtual async Task<RepositoryResponse<bool>> SaveSubModelsAsync(TModel parent, TDbContext _context = null, IDbContextTransaction _transaction = null)
-        {
-            var taskSource = new TaskCompletionSource<RepositoryResponse<bool>>();
-            taskSource.SetResult(new RepositoryResponse<bool>());
-            return taskSource.Task.Result;
-        }
-
-        public virtual RepositoryResponse<TView> SaveModel(bool isSaveSubModels = false, TDbContext _context = null, IDbContextTransaction _transaction = null)
-        {
-            var context = _context ?? InitContext();
-            var transaction = _transaction ?? context.Database.BeginTransaction();
-            RepositoryResponse<TView> result = new RepositoryResponse<TView>() { IsSucceed = true };
-            Validate();
-            if (IsValid)
-            {
-                try
-                {
-
-                    ParseModel();
-                    result = Repository.SaveModel((TView)this, _context: context, _transaction: transaction);
-
-                    // Save sub Models
-                    if (result.IsSucceed && isSaveSubModels)
-                    {
-                        var saveResult = SaveSubModels(Model, context, transaction);
-                        if (!saveResult.IsSucceed)
-                        {
-                            result.Errors.AddRange(saveResult.Errors);
-                        }
-                        result.IsSucceed = result.IsSucceed && saveResult.IsSucceed;
-
-                    }
-
-                    // Clone Models
-                    //if (IsClone)
-                    //{
-                    //    var cloneResult = Clone(_context: context, _transaction: transaction);
-                    //    if (!cloneResult.IsSucceed)
-                    //    {
-                    //        result.Errors.AddRange(cloneResult.Errors);
-                    //        result.Ex = cloneResult.Ex;
-                    //    }
-                    //    result.IsSucceed = result.IsSucceed && cloneResult.IsSucceed;
-                    //}
-
-
-                    //Commit context
-                    if (result.IsSucceed)
-                    {
-                        result.Data = this as TView;
-                        if (_transaction == null)
-                        {
-                            //if current transaction is root transaction
-                            transaction.Commit();
-                        }
-                        return result;
-                    }
-                    else
-                    {
-                        if (_transaction == null)
-                        {
-                            //if current transaction is root transaction
-                            transaction.Rollback();
-                        }
-                        return result;
-                    }
-                }
-                // TODO: Add more specific exeption types instead of Exception only
-                catch (Exception ex)
-                {
-                    Repository.LogErrorMessage(ex);
-                    if (_transaction == null)
-                    {
-                        //if current transaction is root transaction
-                        transaction.Rollback();
-                    }
-                    result.Ex = ex;
-                    return result;
-                }
-                finally
-                {
-                    if (_context == null)
-                    {
-                        //if current Context is Root
-                        context.Dispose();
-                    }
-                }
-            }
-            else
-            {
-                return new RepositoryResponse<TView>()
-                {
-                    IsSucceed = false,
-                    Data = null,
-                    Errors = Errors
-                };
-            }
-        }
-
-        public virtual RepositoryResponse<bool> SaveSubModels(TModel parent, TDbContext _context = null, IDbContextTransaction _transaction = null)
-        {
-            return new RepositoryResponse<bool>();
         }
 
         public virtual async Task<RepositoryResponse<List<TView>>> CloneAsync(List<SupportedCulture> cloneCultures
@@ -598,11 +409,10 @@ namespace Swastika.Infrastructure.Data.ViewModels
                         string desSpecificulture = culture.Specificulture;
 
                         TView view = InitView();
-                        //Mapper.Map(this.Model, view);
                         view.Model = this.Model;
                         view.ParseView(isExpand: false, _context: context, _transaction: transaction);
                         view.Specificulture = desSpecificulture;
-                        
+
                         bool isExist = Repository.CheckIsExists(view.ParseModel(), _context: context, _transaction: transaction);
 
                         if (isExist)
@@ -675,11 +485,27 @@ namespace Swastika.Infrastructure.Data.ViewModels
                     _context.Dispose();
                 }
             }
-            //    var taskSource = new TaskCompletionSource<RepositoryResponse<TView>>();
-            //taskSource.SetResult(new RepositoryResponse<TView>());
-            //return taskSource.Task.Result;
         }
 
+#pragma warning disable CS1998 // Override optional
+        public virtual async Task<RepositoryResponse<bool>> RemoveRelatedModelsAsync(TView view, TDbContext _context = null, IDbContextTransaction _transaction = null)
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
+        {
+            var taskSource = new TaskCompletionSource<RepositoryResponse<bool>>();
+            taskSource.SetResult(new RepositoryResponse<bool>());
+            return taskSource.Task.Result;
+        }
+
+#pragma warning disable CS1998 // Override optional
+        public virtual async Task<RepositoryResponse<bool>> SaveSubModelsAsync(TModel parent, TDbContext _context = null, IDbContextTransaction _transaction = null)
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
+        {
+            var taskSource = new TaskCompletionSource<RepositoryResponse<bool>>();
+            taskSource.SetResult(new RepositoryResponse<bool>());
+            return taskSource.Task.Result;
+        }
+
+#pragma warning disable CS1998 // Override optional
         public virtual async Task<RepositoryResponse<bool>> CloneSubModelsAsync(TView parent, List<SupportedCulture> cloneCultures, TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
             var taskSource = new TaskCompletionSource<RepositoryResponse<bool>>();
@@ -687,8 +513,288 @@ namespace Swastika.Infrastructure.Data.ViewModels
             return taskSource.Task.Result;
         }
 
+        #endregion
+
+        #region Sync
+        public virtual RepositoryResponse<bool> RemoveModel(bool isRemoveRelatedModels = false, TDbContext _context = null, IDbContextTransaction _transaction = null)
+        {
+
+            var context = _context ?? InitContext();
+            var transaction = _transaction ?? context.Database.BeginTransaction();
+            RepositoryResponse<bool> result = new RepositoryResponse<bool>() { IsSucceed = true };
+            try
+            {
+                ParseModel();
+                if (isRemoveRelatedModels)
+                {
+                    var removeRelatedResult = RemoveRelatedModels((TView)this, context, transaction);
+                    if (removeRelatedResult.IsSucceed)
+                    {
+                        result = Repository.RemoveModel(Model, context, transaction);
+                    }
+                    else
+                    {
+                        result.IsSucceed = result.IsSucceed && removeRelatedResult.IsSucceed;
+                        result.Errors.AddRange(removeRelatedResult.Errors);
+                        result.Ex = removeRelatedResult.Ex;
+                    }
+                }
+
+                if (result.IsSucceed)
+                {
+                    result = Repository.RemoveModel(Model, context, transaction);
+                    if (_transaction == null)
+                    {
+                        transaction.Commit();
+                    }
+
+                    return result;
+                }
+                else
+                {
+                    if (_transaction == null)
+                    {
+                        transaction.Rollback();
+                    }
+                    result.IsSucceed = false;
+                    return result;
+                }
+            }
+            // TODO: Add more specific exeption types instead of Exception only
+            catch (Exception ex)
+            {
+                if (_transaction == null)
+                {
+                    //if current transaction is root transaction
+                    transaction.Rollback();
+                }
+                result.IsSucceed = false;
+                result.Ex = ex;
+                return result;
+            }
+            finally
+            {
+                if (_context == null)
+                {
+                    //if current Context is Root
+                    context.Dispose();
+                }
+            }
+        }
 
 
+        public virtual RepositoryResponse<TView> SaveModel(bool isSaveSubModels = false, TDbContext _context = null, IDbContextTransaction _transaction = null)
+        {
+            bool IsRoot = _context == null;
+            var context = _context ?? InitContext();
+            var transaction = _transaction ?? context.Database.BeginTransaction();
+            RepositoryResponse<TView> result = new RepositoryResponse<TView>() { IsSucceed = true };
+            Validate();
+            if (IsValid)
+            {
+                try
+                {
+                    ParseModel();
+                    result = Repository.SaveModel((TView)this, _context: context, _transaction: transaction);
+
+                    // Save sub Models
+                    if (result.IsSucceed && isSaveSubModels)
+                    {
+                        var saveResult = SaveSubModels(Model, context, transaction);
+                        if (!saveResult.IsSucceed)
+                        {
+                            result.Errors.AddRange(saveResult.Errors);
+                            result.Ex = saveResult.Ex;
+                        }
+                        result.IsSucceed = result.IsSucceed && saveResult.IsSucceed;
+
+                    }
+
+                    // Clone Models
+                    if (result.IsSucceed && IsClone && IsRoot)
+                    {
+                        var cloneCultures = ListSupportedCulture.Where(c => c.Specificulture != Specificulture && c.IsSupported).ToList();
+                        var cloneResult = Clone(cloneCultures, _context: context, _transaction: transaction);
+                        if (!cloneResult.IsSucceed)
+                        {
+                            result.Errors.AddRange(cloneResult.Errors);
+                            result.Ex = cloneResult.Ex;
+                        }
+                        result.IsSucceed = result.IsSucceed && cloneResult.IsSucceed;
+                    }
+
+
+                    //Commit context
+                    if (result.IsSucceed)
+                    {
+                        if (IsRoot)
+                        {
+                            //if current transaction is root transaction
+                            transaction.Commit();
+                        }
+                        result.Data = this as TView;
+                        return result;
+                    }
+                    else
+                    {
+                        if (IsRoot)
+                        {
+                            //if current transaction is root transaction
+                            transaction.Rollback();
+                        }
+                        return result;
+                    }
+                }
+                // TODO: Add more specific exeption types instead of Exception only
+                catch (Exception ex)
+                {
+                    Repository.LogErrorMessage(ex);
+                    if (IsRoot)
+                    {
+                        //if current transaction is root transaction
+                        transaction.Rollback();
+                    }
+                    result.IsSucceed = false;
+                    result.Ex = ex;
+                    return result;
+                }
+                finally
+                {
+                    if (IsRoot)
+                    {
+                        //if current Context is Root
+                        context.Dispose();
+                    }
+                }
+            }
+            else
+            {
+                return new RepositoryResponse<TView>()
+                {
+                    IsSucceed = false,
+                    Data = null,
+                    Errors = Errors
+                };
+            }
+        }
+
+        public virtual RepositoryResponse<List<TView>> Clone(List<SupportedCulture> cloneCultures
+            , TDbContext _context = null, IDbContextTransaction _transaction = null)
+        {
+            bool IsRoot = _context == null;
+            var context = _context ?? InitContext();
+            var transaction = _transaction ?? context.Database.BeginTransaction();
+            RepositoryResponse<List<TView>> result = new RepositoryResponse<List<TView>>()
+            {
+                IsSucceed = true,
+                Data = new List<TView>()
+            };
+
+            try
+            {
+                if (cloneCultures != null)
+                {
+
+
+                    foreach (var culture in cloneCultures)
+                    {
+                        string desSpecificulture = culture.Specificulture;
+
+                        TView view = InitView();
+                        view.Model = this.Model;
+                        view.ParseView(isExpand: false, _context: context, _transaction: transaction);
+                        view.Specificulture = desSpecificulture;
+
+                        bool isExist = Repository.CheckIsExists(view.ParseModel(), _context: context, _transaction: transaction);
+
+                        if (isExist)
+                        {
+                            result.IsSucceed = true;
+                            result.Data.Add(view);
+                        }
+                        else
+                        {
+                            var cloneResult = view.SaveModel(false, context, transaction);
+                            if (cloneResult.IsSucceed)
+                            {
+                                var cloneSubResult = CloneSubModels(cloneResult.Data, cloneCultures, context, transaction);
+                                if (!cloneSubResult.IsSucceed)
+                                {
+                                    cloneResult.Errors.AddRange(cloneSubResult.Errors);
+                                    cloneResult.Ex = cloneSubResult.Ex;
+                                }
+
+                                result.IsSucceed = result.IsSucceed && cloneResult.IsSucceed && cloneSubResult.IsSucceed;
+                                result.Data.Add(cloneResult.Data);
+                            }
+                            else
+                            {
+                                result.IsSucceed = result.IsSucceed && cloneResult.IsSucceed;
+                                result.Errors.AddRange(cloneResult.Errors);
+                                result.Ex = cloneResult.Ex;
+                            }
+
+                        }
+
+
+                        if (result.IsSucceed)
+                        {
+
+                            if (_transaction == null)
+                            {
+                                transaction.Commit();
+                            }
+
+                        }
+                        else
+                        {
+
+                            if (_transaction == null)
+                            {
+                                transaction.Rollback();
+                            }
+                        }
+
+                    }
+                    return result;
+                }
+                else
+                {
+                    return result;
+                }
+            }
+
+            catch (Exception ex)
+            {
+                result.IsSucceed = false;
+                result.Ex = ex;
+                return result;
+            }
+            finally
+            {
+                if (_context == null)
+                {
+                    _context.Dispose();
+                }
+            }
+        }
+        public virtual RepositoryResponse<bool> RemoveRelatedModels(TView view, TDbContext _context = null, IDbContextTransaction _transaction = null)
+        {
+            return new RepositoryResponse<bool>() { IsSucceed = true };
+        }
+
+        public virtual RepositoryResponse<bool> SaveSubModels(TModel parent, TDbContext _context = null, IDbContextTransaction _transaction = null)
+        {
+            return new RepositoryResponse<bool>() { IsSucceed = true };
+        }
+
+        public virtual RepositoryResponse<bool> CloneSubModels(TView parent, List<SupportedCulture> cloneCultures, TDbContext _context = null, IDbContextTransaction _transaction = null)
+        {
+            return new RepositoryResponse<bool>() { IsSucceed = true };
+        }
+        #endregion
+
+        #region Contructor
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ViewModelBase{TModel, TView}"/> class.
@@ -711,6 +817,8 @@ namespace Swastika.Infrastructure.Data.ViewModels
         {
 
         }
+        #endregion
+
     }
 }
 
