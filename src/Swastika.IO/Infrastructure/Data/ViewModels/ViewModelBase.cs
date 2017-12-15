@@ -27,6 +27,9 @@ namespace Swastika.Infrastructure.Data.ViewModels
         private static DefaultRepository<TDbContext, TModel, TView> _repo;
         public bool IsLazyLoad { get; set; } = true;
         public bool IsClone { get; set; }
+        public int PageSize { get; set; } = 1000;
+        public int PageIndex { get; set; } = 0;
+        public int Priority { get; set; }
         [JsonIgnore]
         public static DefaultRepository<TDbContext, TModel, TView> Repository
         {
@@ -133,7 +136,31 @@ namespace Swastika.Infrastructure.Data.ViewModels
             Mapper.Map<TModel, TView>(Model, (TView)this);
             if (isExpand)
             {
-                ExpandView();
+                bool IsRoot = _context == null;
+                var context = _context ?? InitContext();
+                var transaction = _transaction ?? context.Database.BeginTransaction();
+                try
+                {
+                    ExpandView(context, transaction);
+                }
+                // TODO: Add more specific exeption types instead of Exception only
+                catch (Exception ex)
+                {
+                    Repository.LogErrorMessage(ex);
+                    if (IsRoot)
+                    {
+                        //if current transaction is root transaction
+                        transaction.Rollback();
+                    }
+                }
+                finally
+                {
+                    if (IsRoot)
+                    {
+                        //if current Context is Root
+                        context.Dispose();
+                    }
+                }
 
             }
             return (TView)this;
@@ -815,7 +842,8 @@ namespace Swastika.Infrastructure.Data.ViewModels
         }
         public ViewModelBase()
         {
-
+            this.Model = InitModel();
+            ParseView();
         }
         #endregion
 

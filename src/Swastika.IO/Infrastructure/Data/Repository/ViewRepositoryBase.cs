@@ -99,6 +99,146 @@ namespace Swastika.Infrastructure.Data.Repository
             return vm;
         }
 
+        public virtual PaginationModel<TView> ParsePagingQuery(IQueryable<TModel> query
+           , string orderByPropertyName, OrderByDirection direction
+           , int? pageSize, int? pageIndex
+           , TDbContext context, IDbContextTransaction transaction)
+        {
+            List<TModel> lstModel = new List<TModel>();
+
+            PaginationModel<TView> result = new PaginationModel<TView>()
+            {
+                TotalItems = query.Count(),
+                PageIndex = pageIndex ?? 0
+            };
+            dynamic orderBy = GetLambda(orderByPropertyName);
+            IQueryable<TModel> sorted = null;
+            try
+            {
+                result.PageSize = pageSize ?? result.TotalItems;
+
+                if (pageSize.HasValue)
+                {
+                    result.TotalPage = result.TotalItems / pageSize.Value + (result.TotalItems % pageSize.Value > 0 ? 1 : 0);
+                }
+
+                switch (direction)
+                {
+                    case OrderByDirection.Descending:
+                        sorted = Queryable.OrderByDescending(query, orderBy);
+                        if (pageSize.HasValue)
+                        {
+
+
+                            lstModel = sorted.Skip(pageIndex.Value * pageSize.Value)
+                                .Take(pageSize.Value)
+                                .ToList();
+                        }
+                        else
+                        {
+                            lstModel = sorted.ToList();
+                        }
+                        break;
+
+                    default:
+                        sorted = Queryable.OrderBy(query, orderBy);
+                        if (pageSize.HasValue)
+                        {
+                            lstModel = sorted
+                                .Skip(pageIndex.Value * pageSize.Value)
+                                .Take(pageSize.Value)
+                                .ToList();
+                        }
+                        else
+                        {
+                            lstModel = sorted.ToList();
+                        }
+                        break;
+                }
+                lstModel.ForEach(model => context.Entry(model).State = EntityState.Detached);
+                var lstView = ParseView(lstModel, context, transaction);
+                result.Items = lstView;
+                return result;
+            }
+            // TODO: Add more specific exeption types instead of Exception only
+            catch (Exception ex)
+            {
+                LogErrorMessage(ex);
+                return null;
+            }
+
+        }
+
+        public virtual async Task<PaginationModel<TView>> ParsePagingQueryAsync(IQueryable<TModel> query
+           , string orderByPropertyName, OrderByDirection direction
+           , int? pageSize, int? pageIndex
+           , TDbContext context, IDbContextTransaction transaction)
+        {
+            List<TModel> lstModel = new List<TModel>();
+
+            PaginationModel<TView> result = new PaginationModel<TView>()
+            {
+                TotalItems = query.Count(),
+                PageIndex = pageIndex ?? 0
+            };
+            dynamic orderBy = GetLambda(orderByPropertyName);
+            IQueryable<TModel> sorted = null;
+            try
+            {
+                result.PageSize = pageSize ?? result.TotalItems;
+
+                if (pageSize.HasValue)
+                {
+                    result.TotalPage = result.TotalItems / pageSize.Value + (result.TotalItems % pageSize.Value > 0 ? 1 : 0);
+                }
+
+                switch (direction)
+                {
+                    case OrderByDirection.Descending:
+                        sorted = Queryable.OrderByDescending(query, orderBy);
+                        if (pageSize.HasValue)
+                        {
+
+
+                            lstModel = await sorted.Skip(pageIndex.Value * pageSize.Value)
+                                .Take(pageSize.Value)
+                                .ToListAsync();
+                        }
+                        else
+                        {
+                            lstModel = sorted.ToList();
+                        }
+                        break;
+
+                    default:
+                        sorted = Queryable.OrderBy(query, orderBy);
+                        if (pageSize.HasValue)
+                        {
+                            lstModel = await sorted
+                                .Skip(pageIndex.Value * pageSize.Value)
+                                .Take(pageSize.Value)
+                                .ToListAsync();
+                        }
+                        else
+                        {
+                            lstModel = await sorted.ToListAsync();
+                        }
+                        break;
+                }
+                lstModel.ForEach(model => context.Entry(model).State = EntityState.Detached);
+                var lstView = ParseView(lstModel, context, transaction);
+                result.Items = lstView;
+                return result;
+            }
+            // TODO: Add more specific exeption types instead of Exception only
+            catch (Exception ex)
+            {
+                LogErrorMessage(ex);
+                return null;
+            }
+
+        }
+
         /// <summary>
         /// Determines whether the specified entity is exists.
         /// </summary>
@@ -218,6 +358,7 @@ namespace Swastika.Infrastructure.Data.Repository
             // TODO: Add more specific exeption types instead of Exception only
             catch (Exception ex)
             {
+                result.IsSucceed = false;
                 result.Ex = ex;
                 LogErrorMessage(ex);
                 if (_transaction == null)
@@ -288,6 +429,7 @@ namespace Swastika.Infrastructure.Data.Repository
             // TODO: Add more specific exeption types instead of Exception only
             catch (Exception ex)
             {
+                result.IsSucceed = false;
                 result.Ex = ex;
                 LogErrorMessage(ex);
                 if (_transaction == null)
@@ -426,13 +568,15 @@ namespace Swastika.Infrastructure.Data.Repository
             // TODO: Add more specific exeption types instead of Exception only
             catch (Exception ex)
             {
+                result.IsSucceed = false;
+                result.Ex = ex;
                 LogErrorMessage(ex);
                 if (_transaction == null)
                 {
                     //if current transaction is root transaction
                     transaction.Rollback();
                 }
-                result.Ex = ex;
+                
                 return result;
             }
             finally
@@ -464,7 +608,7 @@ namespace Swastika.Infrastructure.Data.Repository
                 var lstModel = context.Set<TModel>().ToList();
 
                 lstModel.ForEach(model => context.Entry(model).State = EntityState.Detached);
-                result = ParseView(lstModel, _context, _transaction);
+                result = ParseView(lstModel, context, transaction);
                 return new RepositoryResponse<List<TView>>()
                 {
                     IsSucceed = true,
@@ -516,61 +660,11 @@ namespace Swastika.Infrastructure.Data.Repository
 
             try
             {
-                dynamic orderBy = GetLambda(orderByPropertyName);
-                IQueryable<TModel> sorted = null;
-                List<TModel> lstModel = new List<TModel>();
                 var query = context.Set<TModel>();
 
-                PaginationModel<TView> result = new PaginationModel<TView>()
-                {
-                    TotalItems = query.Count(),
-                    PageIndex = pageIndex ?? 0
-                };
-                result.PageSize = pageSize ?? result.TotalItems;
+                var result = ParsePagingQuery(query, orderByPropertyName, direction, pageSize, pageIndex
+                    , context, transaction);
 
-                if (pageSize.HasValue)
-                {
-                    result.TotalPage = result.TotalItems / pageSize.Value + (result.TotalItems % pageSize.Value > 0 ? 1 : 0);
-                }
-
-                // TODO: should we change "direction" to boolean "isDesc" and use if condition instead?
-                switch (direction)
-                {
-                    case OrderByDirection.Descending:
-                        sorted = Queryable.OrderByDescending(query, orderBy);
-                        if (pageSize.HasValue)
-                        {
-                            lstModel = sorted
-                                .Skip(pageIndex.Value * pageSize.Value)
-                                .Take(pageSize.Value)
-                                .ToList();
-                        }
-                        else
-                        {
-                            lstModel = sorted.ToList();
-                        }
-                        break;
-
-                    default:
-                        sorted = Queryable.OrderBy(query, orderBy);
-                        if (pageSize.HasValue)
-                        {
-                            lstModel = sorted
-                                .Skip(pageIndex.Value * pageSize.Value)
-                                .Take(pageSize.Value)
-                                .ToList();
-                        }
-                        else
-                        {
-                            lstModel = sorted.ToList();
-                        }
-                        break;
-                }
-
-                lstModel.ForEach(model => context.Entry(model).State = EntityState.Detached);
-                var lstViewResult = ParseView(lstModel, _context, _transaction);
-
-                result.Items = lstViewResult;
                 return new RepositoryResponse<PaginationModel<TView>>()
                 {
                     IsSucceed = true,
@@ -674,60 +768,12 @@ namespace Swastika.Infrastructure.Data.Repository
 
             try
             {
-                dynamic orderBy = GetLambda(orderByPropertyName);
-                IQueryable<TModel> sorted = null;
-                List<TModel> lstModel = new List<TModel>();
                 var query = context.Set<TModel>();
 
-                PaginationModel<TView> result = new PaginationModel<TView>()
-                {
-                    TotalItems = query.Count(),
-                    PageIndex = pageIndex ?? 0
-                };
-                result.PageSize = pageSize ?? result.TotalItems;
-
-                if (pageSize.HasValue)
-                {
-                    result.TotalPage = result.TotalItems / pageSize.Value + (result.TotalItems % pageSize.Value > 0 ? 1 : 0);
-                }
-
-                switch (direction)
-                {
-                    case OrderByDirection.Descending:
-                        sorted = Queryable.OrderByDescending(query, orderBy);
-                        if (pageSize.HasValue)
-                        {
-                            lstModel = await sorted
-                                .Skip(pageIndex.Value * pageSize.Value)
-                                .Take(pageSize.Value)
-                                .ToListAsync();
-                        }
-                        else
-                        {
-                            lstModel = await sorted.ToListAsync();
-                        }
-                        break;
-
-                    default:
-                        sorted = Queryable.OrderBy(query, orderBy);
-                        if (pageSize.HasValue)
-                        {
-                            lstModel = await sorted
-                                .Skip(pageIndex.Value * pageSize.Value)
-                                .Take(pageSize.Value).ToListAsync();
-                        }
-                        else
-                        {
-                            lstModel = await sorted.ToListAsync();
-                        }
-                        break;
-                }
-
-                lstModel.ForEach(model => context.Entry(model).State = EntityState.Detached);
-
-                var lstViewResult = ParseView(lstModel, _context, _transaction);
-
-                result.Items = lstViewResult;
+                var result = await ParsePagingQueryAsync(query
+                    , orderByPropertyName, direction
+                    , pageSize, pageIndex
+                    , context, transaction);
                 return new RepositoryResponse<PaginationModel<TView>>()
                 {
                     IsSucceed = true,
@@ -834,60 +880,12 @@ namespace Swastika.Infrastructure.Data.Repository
             var transaction = _transaction ?? context.Database.BeginTransaction();
 
             try
-            {
-                dynamic orderBy = GetLambda(orderByPropertyName);
-                List<TModel> lstModel = new List<TModel>();
-                var query = context.Set<TModel>().Where(predicate);
-                IQueryable<TModel> sorted = null;
-                PaginationModel<TView> result = new PaginationModel<TView>()
-                {
-                    TotalItems = query.Count(),
-                    PageIndex = pageIndex ?? 0
-                };
-                result.PageSize = pageSize ?? result.TotalItems;
-
-                if (pageSize.HasValue)
-                {
-                    result.TotalPage = result.TotalItems / pageSize.Value + (result.TotalItems % pageSize.Value > 0 ? 1 : 0);
-                }
-
-                switch (direction)
-                {
-                    case OrderByDirection.Descending:
-                        sorted = Queryable.OrderByDescending(query, orderBy);
-                        if (pageSize.HasValue)
-                        {
-
-
-                            lstModel = sorted.Skip(pageIndex.Value * pageSize.Value)
-                                .Take(pageSize.Value)
-                                .ToList();
-                        }
-                        else
-                        {
-                            lstModel = sorted.ToList();
-                        }
-                        break;
-
-                    default:
-                        sorted = Queryable.OrderBy(query, orderBy);
-                        if (pageSize.HasValue)
-                        {
-                            lstModel = sorted
-                                .Skip(pageIndex.Value * pageSize.Value)
-                                .Take(pageSize.Value)
-                                .ToList();
-                        }
-                        else
-                        {
-                            lstModel = sorted.ToList();
-                        }
-                        break;
-                }
-
-                lstModel.ForEach(model => context.Entry(model).State = EntityState.Detached);
-                var lstViewResult = ParseView(lstModel, _context, _transaction);
-                result.Items = lstViewResult;
+            {                
+                var query = context.Set<TModel>().Where(predicate);                
+                var result = ParsePagingQuery(query
+                    , orderByPropertyName, direction
+                    , pageSize, pageIndex
+                    , context, transaction);
                 return new RepositoryResponse<PaginationModel<TView>>()
                 {
                     IsSucceed = true,
@@ -992,59 +990,12 @@ namespace Swastika.Infrastructure.Data.Repository
 
             try
             {
-                dynamic orderBy = GetLambda(orderByPropertyName);
-                IQueryable<TModel> sorted = null;
-                List<TModel> lstModel = new List<TModel>();
                 var query = context.Set<TModel>().Where(predicate);
 
-                PaginationModel<TView> result = new PaginationModel<TView>()
-                {
-                    TotalItems = query.Count(),
-                    PageIndex = pageIndex ?? 0
-                };
-                result.PageSize = pageSize ?? result.TotalItems;
-
-                if (pageSize.HasValue)
-                {
-                    result.TotalPage = result.TotalItems / pageSize.Value + (result.TotalItems % pageSize.Value > 0 ? 1 : 0);
-                }
-                switch (direction)
-                {
-                    case OrderByDirection.Descending:
-                        sorted = Queryable.OrderByDescending(query, orderBy);
-                        if (pageSize.HasValue)
-                        {
-                            lstModel = await sorted
-                                .Skip(pageIndex.Value * pageSize.Value)
-                                .Take(pageSize.Value)
-                                .ToListAsync();
-                        }
-                        else
-                        {
-                            lstModel = await sorted.ToListAsync();
-                        }
-                        break;
-
-                    default:
-                        sorted = Queryable.OrderBy(query, orderBy);
-                        if (pageSize.HasValue)
-                        {
-                            lstModel = await sorted
-                                .Skip(pageIndex.Value * pageSize.Value)
-                                .Take(pageSize.Value)
-                                .ToListAsync();
-                        }
-                        else
-                        {
-                            lstModel = await sorted.ToListAsync();
-                        }
-                        break;
-                }
-
-                lstModel.ForEach(model => context.Entry(model).State = EntityState.Detached);
-                var lstViewResult = ParseView(lstModel, _context, _transaction);
-
-                result.Items = lstViewResult;
+                var result = await ParsePagingQueryAsync(query
+                    , orderByPropertyName, direction
+                    , pageSize, pageIndex
+                    , context, transaction);
                 return new RepositoryResponse<PaginationModel<TView>>()
                 {
                     IsSucceed = true,
@@ -1734,6 +1685,12 @@ namespace Swastika.Infrastructure.Data.Repository
         protected LambdaExpression GetLambda(string propName)
         {
             var parameter = Expression.Parameter(typeof(TModel));
+            var type = typeof(TModel);
+            var prop = type.GetProperties().FirstOrDefault(p=>p.Name== propName);
+            if (prop==null)
+            {
+                propName = type.GetProperties().FirstOrDefault().Name;
+            }
             var memberExpression = Expression.Property(parameter, propName);
             return Expression.Lambda(memberExpression, parameter);
         }

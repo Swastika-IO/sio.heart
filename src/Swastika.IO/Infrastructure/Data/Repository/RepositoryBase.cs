@@ -32,7 +32,7 @@ namespace Swastika.Infrastructure.Data.Repository
         /// </summary>
         public RepositoryBase()
         {
-            RegisterAutoMapper();
+            //RegisterAutoMapper();
         }
 
         /// <summary>

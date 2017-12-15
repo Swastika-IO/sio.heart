@@ -17,7 +17,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="Common\Constants.cs" />
     <Compile Remove="Common\Helper\ImageHelper.cs" />
+    <Compile Remove="Domain\Core\Interfaces\IRepository.cs" />
+    <Compile Remove="Domain\Core\Interfaces\IRepositoryBase.cs" />
+    <Compile Remove="Domain\Core\ViewModels\ViewModelBase.cs" />
+    <Compile Remove="Infrastructure\Data\Repository\RepositoryBase.cs" />
   </ItemGroup>
 
   <ItemGroup>
