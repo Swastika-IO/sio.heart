@@ -3,6 +3,7 @@ using Swastika.Infrastructure.Data.Repository;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Swastika.Infrastructure.Data.Repository
 {
@@ -59,6 +60,6 @@ namespace Swastika.Infrastructure.Data.Repository
 
                 return instance;
             }
-        }
+        }        
     }
 }

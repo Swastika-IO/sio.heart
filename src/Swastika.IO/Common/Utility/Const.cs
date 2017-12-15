@@ -8,6 +8,10 @@
         /// </summary>
         public const string CONST_DEFAULT_CONNECTION = "DefaultConnection";
         /// <summary>
+        /// The constant Chat connection
+        /// </summary>
+        public const string CONST_CHAT_CONNECTION = "ChatConnection";
+        /// <summary>
         /// The constant file appsetting
         /// </summary>
         public const string CONST_FILE_APPSETTING = "appsettings.json";

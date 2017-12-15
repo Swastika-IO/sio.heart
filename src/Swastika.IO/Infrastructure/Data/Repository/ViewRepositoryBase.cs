@@ -1075,7 +1075,7 @@ namespace Swastika.Infrastructure.Data.Repository
 
                 return new RepositoryResponse<TView>()
                 {
-                    IsSucceed = true,
+                    IsSucceed = false,
                     Data = default(TView)
                 };
             }
@@ -1135,7 +1135,7 @@ namespace Swastika.Infrastructure.Data.Repository
 
                 return new RepositoryResponse<TView>()
                 {
-                    IsSucceed = true,
+                    IsSucceed = false,
                     Data = default(TView)
                 };
             }
@@ -1681,6 +1681,104 @@ namespace Swastika.Infrastructure.Data.Repository
             throw new NotImplementedException();
         }
 
+
+        #region Count
+        /// <summary>
+        /// Gets the model list by.
+        /// </summary>
+        /// <param name="predicate">The predicate.</param>
+        /// <param name="isGetSubModels">if set to <c>true</c> [is get sub Items].</param>
+        /// <returns></returns>
+        public virtual RepositoryResponse<int> Count(Expression<Func<TModel, bool>> predicate
+            , TDbContext _context = null, IDbContextTransaction _transaction = null)
+        {
+            var context = _context ?? InitContext();
+            var transaction = _transaction ?? context.Database.BeginTransaction();
+            int total = 0;
+            try
+            {
+                total = context.Set<TModel>().Count(predicate);
+                return new RepositoryResponse<int>()
+                {
+                    IsSucceed = true,
+                    Data = total
+                };
+            }
+            // TODO: Add more specific exeption types instead of Exception only
+            catch (Exception ex)
+            {
+                LogErrorMessage(ex);
+                if (_transaction == null)
+                {
+                    //if current transaction is root transaction
+                    transaction.Rollback();
+                }
+
+                return new RepositoryResponse<int>()
+                {
+                    IsSucceed = false,
+                    Data = 0,
+                    Ex = ex
+                };
+            }
+            finally
+            {
+                if (_context == null)
+                {
+                    //if current Context is Root
+                    context.Dispose();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets the model list by.
+        /// </summary>
+        /// <param name="predicate">The predicate.</param>
+        /// <param name="isGetSubModels">if set to <c>true</c> [is get sub Items].</param>
+        /// <returns></returns>
+        public virtual async Task<RepositoryResponse<int>> CountAsync(Expression<Func<TModel, bool>> predicate
+            , TDbContext _context = null, IDbContextTransaction _transaction = null)
+        {
+            var context = _context ?? InitContext();
+            var transaction = _transaction ?? context.Database.BeginTransaction();
+            int total = 0;
+            try
+            {
+                total = await context.Set<TModel>().CountAsync(predicate);
+                return new RepositoryResponse<int>()
+                {
+                    IsSucceed = true,
+                    Data = total
+                };
+            }
+            // TODO: Add more specific exeption types instead of Exception only
+            catch (Exception ex)
+            {
+                LogErrorMessage(ex);
+                if (_transaction == null)
+                {
+                    //if current transaction is root transaction
+                    transaction.Rollback();
+                }
+
+                return new RepositoryResponse<int>()
+                {
+                    IsSucceed = false,
+                    Data = 0,
+                    Ex = ex
+                };
+            }
+            finally
+            {
+                if (_context == null)
+                {
+                    //if current Context is Root
+                    context.Dispose();
+                }
+            }
+        }
+        #endregion
 
         protected LambdaExpression GetLambda(string propName)
         {

@@ -1178,7 +1178,7 @@ namespace Swastika.Infrastructure.Data.Repository
 
                 return new RepositoryResponse<TView>()
                 {
-                    IsSucceed = true,
+                    IsSucceed = false,
                     Data = default(TView)
                 };
             }
@@ -1238,7 +1238,7 @@ namespace Swastika.Infrastructure.Data.Repository
 
                 return new RepositoryResponse<TView>()
                 {
-                    IsSucceed = true,
+                    IsSucceed = false,
                     Data = default(TView)
                 };
             }
