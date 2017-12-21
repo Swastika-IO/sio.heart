@@ -6,23 +6,46 @@
 
   <ItemGroup>
     <Compile Remove="Application\**" />
-    <Compile Remove="Infrastructure\CrossCutting\Identity\**" />
+    <Compile Remove="Domain\Core\Bus\**" />
+    <Compile Remove="Domain\Core\CommandHandlers\**" />
+    <Compile Remove="Domain\Core\Commands\**" />
+    <Compile Remove="Domain\Core\Events\**" />
+    <Compile Remove="Domain\Core\Notifications\**" />
+    <Compile Remove="Domain\Core\Repository\EventSourcing\**" />
+    <Compile Remove="Infrastructure\**" />
     <Compile Remove="Repository\**" />
+    <Compile Remove="UI\Core\Extensions\**" />
     <EmbeddedResource Remove="Application\**" />
-    <EmbeddedResource Remove="Infrastructure\CrossCutting\Identity\**" />
+    <EmbeddedResource Remove="Domain\Core\Bus\**" />
+    <EmbeddedResource Remove="Domain\Core\CommandHandlers\**" />
+    <EmbeddedResource Remove="Domain\Core\Commands\**" />
+    <EmbeddedResource Remove="Domain\Core\Events\**" />
+    <EmbeddedResource Remove="Domain\Core\Notifications\**" />
+    <EmbeddedResource Remove="Domain\Core\Repository\EventSourcing\**" />
+    <EmbeddedResource Remove="Infrastructure\**" />
     <EmbeddedResource Remove="Repository\**" />
+    <EmbeddedResource Remove="UI\Core\Extensions\**" />
     <None Remove="Application\**" />
-    <None Remove="Infrastructure\CrossCutting\Identity\**" />
+    <None Remove="Domain\Core\Bus\**" />
+    <None Remove="Domain\Core\CommandHandlers\**" />
+    <None Remove="Domain\Core\Commands\**" />
+    <None Remove="Domain\Core\Events\**" />
+    <None Remove="Domain\Core\Notifications\**" />
+    <None Remove="Domain\Core\Repository\EventSourcing\**" />
+    <None Remove="Infrastructure\**" />
     <None Remove="Repository\**" />
+    <None Remove="UI\Core\Extensions\**" />
   </ItemGroup>
 
   <ItemGroup>
     <Compile Remove="Common\Constants.cs" />
     <Compile Remove="Common\Helper\ImageHelper.cs" />
     <Compile Remove="Domain\Core\Interfaces\IRepository.cs" />
-    <Compile Remove="Domain\Core\Interfaces\IRepositoryBase.cs" />
-    <Compile Remove="Domain\Core\ViewModels\ViewModelBase.cs" />
-    <Compile Remove="Infrastructure\Data\Repository\RepositoryBase.cs" />
+    <Compile Remove="Domain\Core\Interfaces\IUnitOfWork.cs" />
+    <Compile Remove="Domain\Core\Repository\SWRepositoryBase.cs" />
+    <Compile Remove="Domain\Core\ViewModels\SWViewModelBase.cs" />
+    <Compile Remove="UI\Core\CommonModels.cs" />
+    <Compile Remove="UI\Core\Helper.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -32,6 +55,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="2.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.0.0-alpha2-final" />
     <PackageReference Include="Microsoft.Data.OData" Version="5.8.3" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.0.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.0.1" />
