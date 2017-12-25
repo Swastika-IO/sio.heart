@@ -10,7 +10,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Threading.Tasks;
 
-namespace Swastika.Infrastructure.Data.Repository
+namespace Swastika.Domain.Data.Repository
 {
 
     /// <summary>
@@ -240,7 +240,7 @@ namespace Swastika.Infrastructure.Data.Repository
                 {
                     IsSucceed = false,
                     Data = null,
-                    Ex = ex
+                    Exception = ex
                 };
             }
             finally
@@ -398,7 +398,7 @@ namespace Swastika.Infrastructure.Data.Repository
                 {
                     IsSucceed = false,
                     Data = null,
-                    Ex = ex
+                    Exception = ex
                 };
             }
             finally
@@ -474,7 +474,7 @@ namespace Swastika.Infrastructure.Data.Repository
                 {
                     IsSucceed = false,
                     Data = null,
-                    Ex = ex
+                    Exception = ex
                 };
             }
             finally
@@ -1740,7 +1740,7 @@ namespace Swastika.Infrastructure.Data.Repository
                 {
                     IsSucceed = false,
                     Data = false,
-                    Ex = ex
+                    Exception = ex
                 };
             }
             finally
@@ -1832,7 +1832,7 @@ namespace Swastika.Infrastructure.Data.Repository
                 {
                     IsSucceed = false,
                     Data = false,
-                    Ex = ex
+                    Exception = ex
                 };
             }
             finally
@@ -1908,7 +1908,7 @@ namespace Swastika.Infrastructure.Data.Repository
                 {
                     IsSucceed = false,
                     Data = false,
-                    Ex = ex
+                    Exception = ex
                 };
             }
             finally
@@ -1983,7 +1983,7 @@ namespace Swastika.Infrastructure.Data.Repository
                 {
                     IsSucceed = false,
                     Data = false,
-                    Ex = ex
+                    Exception = ex
                 };
             }
             finally
@@ -2059,7 +2059,7 @@ namespace Swastika.Infrastructure.Data.Repository
                 {
                     IsSucceed = false,
                     Data = false,
-                    Ex = ex
+                    Exception = ex
                 };
             }
             finally
@@ -2134,7 +2134,7 @@ namespace Swastika.Infrastructure.Data.Repository
                 {
                     IsSucceed = false,
                     Data = false,
-                    Ex = ex
+                    Exception = ex
                 };
             }
             finally

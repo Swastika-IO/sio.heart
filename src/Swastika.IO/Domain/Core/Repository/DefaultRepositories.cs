@@ -1,11 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Swastika.Infrastructure.Data.Repository;
+using Swastika.Domain.Data.Repository;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.EntityFrameworkCore.Storage;
 
-namespace Swastika.Infrastructure.Data.Repository
+namespace Swastika.Domain.Data.Repository
 {
     public class DefaultRepository<TContext, TModel>: ModelRepositoryBase<TContext, TModel>         
         where TContext: DbContext
@@ -35,10 +35,10 @@ namespace Swastika.Infrastructure.Data.Repository
     }
 
     public class DefaultRepository<TDbContext, TModel, TView> : 
-        Swastika.Infrastructure.Data.Repository.ViewRepositoryBase<TDbContext, TModel, TView>
+        Swastika.Domain.Data.Repository.ViewRepositoryBase<TDbContext, TModel, TView>
         where TDbContext : DbContext
         where TModel : class
-        where TView : Swastika.Infrastructure.Data.ViewModels.ViewModelBase<TDbContext, TModel, TView>
+        where TView : Swastika.Domain.Data.ViewModels.ViewModelBase<TDbContext, TModel, TView>
     {
         private static volatile DefaultRepository<TDbContext, TModel, TView> instance;
         private static object syncRoot = new Object();

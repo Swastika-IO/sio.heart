@@ -14,12 +14,8 @@ namespace Swastika.IO.Domain.Core.ViewModels
         public string ResponseKey { get; set; }
         [JsonProperty("data")]
         public T Data { get; set; }
-        //public T extraData { get; set; }
-        //public string message { get; set; }
-        //public string error { get; set; }
         [JsonProperty("errors")]
         public List<string> Errors { get; set; } = new List<string>();
-
         [JsonProperty("exception")]
         public Exception Exception { get; set; }
 
@@ -45,11 +41,20 @@ namespace Swastika.IO.Domain.Core.ViewModels
     }
     public class RepositoryResponse<TResult>
     {
+        [JsonProperty("isSucceed")]
         public bool IsSucceed { get; set; }
+        [JsonProperty("status")]
+        public int Status { get; set; }
+        [JsonProperty("responseKey")]
+        public string ResponseKey { get; set; }
+        [JsonProperty("data")]
         public TResult Data { get; set; }
-        public Exception Ex { get; set; }
+        [JsonProperty("errors")]
         public List<string> Errors { get; set; } = new List<string>();
+        [JsonProperty("exception")]
+        public Exception Exception { get; set; }
     }
+
     public class PaginationModel<T>
     {
 

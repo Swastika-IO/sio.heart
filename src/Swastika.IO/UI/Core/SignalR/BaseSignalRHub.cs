@@ -9,7 +9,7 @@ namespace Swastika.IO.UI.Core.SignalR
 {
     public abstract class BaseSignalRHub : Hub
     {
-        private static readonly List<SignalRClient> Users = new List<SignalRClient>();
+        protected static readonly List<SignalRClient> Users = new List<SignalRClient>();
 
         /// <summary>
         /// Fails the result.

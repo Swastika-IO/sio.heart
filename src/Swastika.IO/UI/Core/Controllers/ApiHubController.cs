@@ -27,7 +27,7 @@ namespace Swastika.IO.UI.Core.Controllers
         : BaseApiController<TDbContext, TModel, TView>
         where TDbContext : DbContext
         where TModel : class
-        where TView : Swastika.Infrastructure.Data.ViewModels.ViewModelBase<TDbContext, TModel, TView>
+        where TView : Swastika.Domain.Data.ViewModels.ViewModelBase<TDbContext, TModel, TView>
         where THub : BaseSignalRHub
     {
         private readonly IHubContext<THub> _hub;

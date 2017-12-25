@@ -3,17 +3,16 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using Newtonsoft.Json;
 using Swastika.Domain.Core.Models;
-using Swastika.Infrastructure.Data.Repository;
+using Swastika.Domain.Data.Repository;
 using Swastika.IO.Domain.Core.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Reflection;
 using System.Threading.Tasks;
 
-namespace Swastika.Infrastructure.Data.ViewModels
+namespace Swastika.Domain.Data.ViewModels
 {
 
 
@@ -23,13 +22,21 @@ namespace Swastika.Infrastructure.Data.ViewModels
         where TView : ViewModelBase<TDbContext, TModel, TView> // instance of inherited
     {
         #region Properties
+        [JsonIgnore]
         public List<SupportedCulture> ListSupportedCulture { get; set; }
+        [JsonIgnore]
         public string Specificulture { get; set; }
+
         private static DefaultRepository<TDbContext, TModel, TView> _repo;
+        [JsonIgnore]
         public bool IsLazyLoad { get; set; } = true;
+        [JsonIgnore]
         public bool IsClone { get; set; }
+        [JsonIgnore]
         public int PageSize { get; set; } = 1000;
+        [JsonIgnore]
         public int PageIndex { get; set; } = 0;
+        [JsonIgnore]
         public int Priority { get; set; }
         [JsonIgnore]
         public static DefaultRepository<TDbContext, TModel, TView> Repository
@@ -272,7 +279,7 @@ namespace Swastika.Infrastructure.Data.ViewModels
                     {
                         result.IsSucceed = result.IsSucceed && removeRelatedResult.IsSucceed;
                         result.Errors.AddRange(removeRelatedResult.Errors);
-                        result.Ex = removeRelatedResult.Ex;
+                        result.Exception = removeRelatedResult.Exception;
                     }
                 }
                 
@@ -305,7 +312,7 @@ namespace Swastika.Infrastructure.Data.ViewModels
                     transaction.Rollback();
                 }
                 result.IsSucceed = false;
-                result.Ex = ex;
+                result.Exception = ex;
                 return result;
             }
             finally
@@ -340,7 +347,7 @@ namespace Swastika.Infrastructure.Data.ViewModels
                         if (!saveResult.IsSucceed)
                         {
                             result.Errors.AddRange(saveResult.Errors);
-                            result.Ex = saveResult.Ex;
+                            result.Exception = saveResult.Exception;
                         }
                         result.IsSucceed = result.IsSucceed && saveResult.IsSucceed;
 
@@ -354,7 +361,7 @@ namespace Swastika.Infrastructure.Data.ViewModels
                         if (!cloneResult.IsSucceed)
                         {
                             result.Errors.AddRange(cloneResult.Errors);
-                            result.Ex = cloneResult.Ex;
+                            result.Exception = cloneResult.Exception;
                         }
                         result.IsSucceed = result.IsSucceed && cloneResult.IsSucceed;
                     }
@@ -391,7 +398,7 @@ namespace Swastika.Infrastructure.Data.ViewModels
                         transaction.Rollback();
                     }
                     result.IsSucceed = false;
-                    result.Ex = ex;
+                    result.Exception = ex;
                     return result;
                 }
                 finally
@@ -457,7 +464,7 @@ namespace Swastika.Infrastructure.Data.ViewModels
                                 if (!cloneSubResult.IsSucceed)
                                 {
                                     cloneResult.Errors.AddRange(cloneSubResult.Errors);
-                                    cloneResult.Ex = cloneSubResult.Ex;
+                                    cloneResult.Exception = cloneSubResult.Exception;
                                 }
 
                                 result.IsSucceed = result.IsSucceed && cloneResult.IsSucceed && cloneSubResult.IsSucceed;
@@ -467,7 +474,7 @@ namespace Swastika.Infrastructure.Data.ViewModels
                             {
                                 result.IsSucceed = result.IsSucceed && cloneResult.IsSucceed;
                                 result.Errors.AddRange(cloneResult.Errors);
-                                result.Ex = cloneResult.Ex;
+                                result.Exception = cloneResult.Exception;
                             }
 
                         }
@@ -503,7 +510,7 @@ namespace Swastika.Infrastructure.Data.ViewModels
             catch (Exception ex)
             {
                 result.IsSucceed = false;
-                result.Ex = ex;
+                result.Exception = ex;
                 return result;
             }
             finally
@@ -564,7 +571,7 @@ namespace Swastika.Infrastructure.Data.ViewModels
                     {
                         result.IsSucceed = result.IsSucceed && removeRelatedResult.IsSucceed;
                         result.Errors.AddRange(removeRelatedResult.Errors);
-                        result.Ex = removeRelatedResult.Ex;
+                        result.Exception = removeRelatedResult.Exception;
                     }
                 }
 
@@ -597,7 +604,7 @@ namespace Swastika.Infrastructure.Data.ViewModels
                     transaction.Rollback();
                 }
                 result.IsSucceed = false;
-                result.Ex = ex;
+                result.Exception = ex;
                 return result;
             }
             finally
@@ -632,7 +639,7 @@ namespace Swastika.Infrastructure.Data.ViewModels
                         if (!saveResult.IsSucceed)
                         {
                             result.Errors.AddRange(saveResult.Errors);
-                            result.Ex = saveResult.Ex;
+                            result.Exception = saveResult.Exception;
                         }
                         result.IsSucceed = result.IsSucceed && saveResult.IsSucceed;
 
@@ -646,7 +653,7 @@ namespace Swastika.Infrastructure.Data.ViewModels
                         if (!cloneResult.IsSucceed)
                         {
                             result.Errors.AddRange(cloneResult.Errors);
-                            result.Ex = cloneResult.Ex;
+                            result.Exception = cloneResult.Exception;
                         }
                         result.IsSucceed = result.IsSucceed && cloneResult.IsSucceed;
                     }
@@ -683,7 +690,7 @@ namespace Swastika.Infrastructure.Data.ViewModels
                         transaction.Rollback();
                     }
                     result.IsSucceed = false;
-                    result.Ex = ex;
+                    result.Exception = ex;
                     return result;
                 }
                 finally
@@ -749,7 +756,7 @@ namespace Swastika.Infrastructure.Data.ViewModels
                                 if (!cloneSubResult.IsSucceed)
                                 {
                                     cloneResult.Errors.AddRange(cloneSubResult.Errors);
-                                    cloneResult.Ex = cloneSubResult.Ex;
+                                    cloneResult.Exception = cloneSubResult.Exception;
                                 }
 
                                 result.IsSucceed = result.IsSucceed && cloneResult.IsSucceed && cloneSubResult.IsSucceed;
@@ -759,7 +766,7 @@ namespace Swastika.Infrastructure.Data.ViewModels
                             {
                                 result.IsSucceed = result.IsSucceed && cloneResult.IsSucceed;
                                 result.Errors.AddRange(cloneResult.Errors);
-                                result.Ex = cloneResult.Ex;
+                                result.Exception = cloneResult.Exception;
                             }
 
                         }
@@ -795,7 +802,7 @@ namespace Swastika.Infrastructure.Data.ViewModels
             catch (Exception ex)
             {
                 result.IsSucceed = false;
-                result.Ex = ex;
+                result.Exception = ex;
                 return result;
             }
             finally

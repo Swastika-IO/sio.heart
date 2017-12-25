@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
-using Swastika.Infrastructure.Data.Repository;
+using Swastika.Domain.Data.Repository;
 using Swastika.IO.Domain.Core.Models;
 using Swastika.UI.Base;
 using System.Collections.Generic;
@@ -89,7 +89,7 @@ namespace Swastika.Extension.Blog.Api.Controllers
     public class BaseApiController<TDbContext, TModel, TView> : Controller
         where TDbContext : DbContext
         where TModel : class
-        where TView : Swastika.Infrastructure.Data.ViewModels.ViewModelBase<TDbContext, TModel, TView>
+        where TView : Swastika.Domain.Data.ViewModels.ViewModelBase<TDbContext, TModel, TView>
     {
         protected string _lang;
         protected readonly DefaultRepository<TDbContext, TModel, TView> _repo;

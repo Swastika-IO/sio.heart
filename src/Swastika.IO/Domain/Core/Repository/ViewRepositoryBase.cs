@@ -10,7 +10,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Threading.Tasks;
 
-namespace Swastika.Infrastructure.Data.Repository
+namespace Swastika.Domain.Data.Repository
 {
     /// <summary>
     /// Base Repository
@@ -21,7 +21,7 @@ namespace Swastika.Infrastructure.Data.Repository
     /// <seealso cref="Swastika.Extension.Blog.Interfaces.IRepository{TModel, TView}" />
     public abstract class ViewRepositoryBase<TDbContext, TModel, TView>
        where TModel : class
-        where TView : Swastika.Infrastructure.Data.ViewModels.ViewModelBase<TDbContext, TModel, TView>
+        where TView : Swastika.Domain.Data.ViewModels.ViewModelBase<TDbContext, TModel, TView>
         where TDbContext : DbContext
     {
 
@@ -358,7 +358,7 @@ namespace Swastika.Infrastructure.Data.Repository
             catch (Exception ex)
             {
                 result.IsSucceed = false;
-                result.Ex = ex;
+                result.Exception = ex;
                 LogErrorMessage(ex);
                 if (_transaction == null)
                 {
@@ -429,7 +429,7 @@ namespace Swastika.Infrastructure.Data.Repository
             catch (Exception ex)
             {
                 result.IsSucceed = false;
-                result.Ex = ex;
+                result.Exception = ex;
                 LogErrorMessage(ex);
                 if (_transaction == null)
                 {
@@ -501,7 +501,7 @@ namespace Swastika.Infrastructure.Data.Repository
             catch (Exception ex)
             {
                 LogErrorMessage(ex);
-                result.Ex = ex;
+                result.Exception = ex;
                 if (_transaction == null)
                 {
                     //if current transaction is root transaction
@@ -568,7 +568,7 @@ namespace Swastika.Infrastructure.Data.Repository
             catch (Exception ex)
             {
                 result.IsSucceed = false;
-                result.Ex = ex;
+                result.Exception = ex;
                 LogErrorMessage(ex);
                 if (_transaction == null)
                 {
@@ -628,7 +628,7 @@ namespace Swastika.Infrastructure.Data.Repository
                 {
                     IsSucceed = false,
                     Data = null,
-                    Ex = ex
+                    Exception = ex
                 };
             }
             finally
@@ -684,7 +684,7 @@ namespace Swastika.Infrastructure.Data.Repository
                 {
                     IsSucceed = false,
                     Data = null,
-                    Ex = ex
+                    Exception = ex
                 };
             }
             finally
@@ -735,7 +735,7 @@ namespace Swastika.Infrastructure.Data.Repository
                 {
                     IsSucceed = false,
                     Data = null,
-                    Ex = ex
+                    Exception = ex
                 };
             }
             finally
@@ -793,7 +793,7 @@ namespace Swastika.Infrastructure.Data.Repository
                 {
                     IsSucceed = false,
                     Data = null,
-                    Ex = ex
+                    Exception = ex
                 };
             }
             finally
@@ -848,7 +848,7 @@ namespace Swastika.Infrastructure.Data.Repository
                 {
                     IsSucceed = false,
                     Data = null,
-                    Ex = ex
+                    Exception = ex
                 };
             }
             finally
@@ -905,7 +905,7 @@ namespace Swastika.Infrastructure.Data.Repository
                 {
                     IsSucceed = false,
                     Data = null,
-                    Ex = ex
+                    Exception = ex
                 };
             }
             finally
@@ -956,7 +956,7 @@ namespace Swastika.Infrastructure.Data.Repository
                 {
                     IsSucceed = false,
                     Data = null,
-                    Ex = ex
+                    Exception = ex
                 };
             }
             finally
@@ -1014,7 +1014,7 @@ namespace Swastika.Infrastructure.Data.Repository
                 {
                     IsSucceed = false,
                     Data = null,
-                    Ex = ex
+                    Exception = ex
                 };
             }
             finally
@@ -1227,7 +1227,7 @@ namespace Swastika.Infrastructure.Data.Repository
                 {
                     IsSucceed = false,
                     Data = false,
-                    Ex = ex
+                    Exception = ex
                 };
             }
             finally
@@ -1319,7 +1319,7 @@ namespace Swastika.Infrastructure.Data.Repository
                 {
                     IsSucceed = false,
                     Data = false,
-                    Ex = ex
+                    Exception = ex
                 };
             }
             finally
@@ -1395,7 +1395,7 @@ namespace Swastika.Infrastructure.Data.Repository
                 {
                     IsSucceed = false,
                     Data = false,
-                    Ex = ex
+                    Exception = ex
                 };
             }
             finally
@@ -1470,7 +1470,7 @@ namespace Swastika.Infrastructure.Data.Repository
                 {
                     IsSucceed = false,
                     Data = false,
-                    Ex = ex
+                    Exception = ex
                 };
             }
             finally
@@ -1546,7 +1546,7 @@ namespace Swastika.Infrastructure.Data.Repository
                 {
                     IsSucceed = false,
                     Data = false,
-                    Ex = ex
+                    Exception = ex
                 };
             }
             finally
@@ -1621,7 +1621,7 @@ namespace Swastika.Infrastructure.Data.Repository
                 {
                     IsSucceed = false,
                     Data = false,
-                    Ex = ex
+                    Exception = ex
                 };
             }
             finally
@@ -1717,7 +1717,7 @@ namespace Swastika.Infrastructure.Data.Repository
                 {
                     IsSucceed = false,
                     Data = 0,
-                    Ex = ex
+                    Exception = ex
                 };
             }
             finally
@@ -1765,7 +1765,7 @@ namespace Swastika.Infrastructure.Data.Repository
                 {
                     IsSucceed = false,
                     Data = 0,
-                    Ex = ex
+                    Exception = ex
                 };
             }
             finally
