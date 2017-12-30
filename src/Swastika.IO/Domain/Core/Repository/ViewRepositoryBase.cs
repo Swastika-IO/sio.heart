@@ -1779,6 +1779,102 @@ namespace Swastika.Domain.Data.Repository
         }
         #endregion
 
+        #region Count
+        /// <summary>
+        /// Gets the model list by.
+        /// </summary>
+        /// <param name="predicate">The predicate.</param>
+        /// <param name="isGetSubModels">if set to <c>true</c> [is get sub Items].</param>
+        /// <returns></returns>
+        public virtual RepositoryResponse<int> Count(TDbContext _context = null, IDbContextTransaction _transaction = null)
+        {
+            var context = _context ?? InitContext();
+            var transaction = _transaction ?? context.Database.BeginTransaction();
+            int total = 0;
+            try
+            {
+                total = context.Set<TModel>().Count();
+                return new RepositoryResponse<int>()
+                {
+                    IsSucceed = true,
+                    Data = total
+                };
+            }
+            // TODO: Add more specific exeption types instead of Exception only
+            catch (Exception ex)
+            {
+                LogErrorMessage(ex);
+                if (_transaction == null)
+                {
+                    //if current transaction is root transaction
+                    transaction.Rollback();
+                }
+
+                return new RepositoryResponse<int>()
+                {
+                    IsSucceed = false,
+                    Data = 0,
+                    Exception = ex
+                };
+            }
+            finally
+            {
+                if (_context == null)
+                {
+                    //if current Context is Root
+                    context.Dispose();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets the model list by.
+        /// </summary>
+        /// <param name="predicate">The predicate.</param>
+        /// <param name="isGetSubModels">if set to <c>true</c> [is get sub Items].</param>
+        /// <returns></returns>
+        public virtual async Task<RepositoryResponse<int>> CountAsync(TDbContext _context = null, IDbContextTransaction _transaction = null)
+        {
+            var context = _context ?? InitContext();
+            var transaction = _transaction ?? context.Database.BeginTransaction();
+            int total = 0;
+            try
+            {
+                total = await context.Set<TModel>().CountAsync();
+                return new RepositoryResponse<int>()
+                {
+                    IsSucceed = true,
+                    Data = total
+                };
+            }
+            // TODO: Add more specific exeption types instead of Exception only
+            catch (Exception ex)
+            {
+                LogErrorMessage(ex);
+                if (_transaction == null)
+                {
+                    //if current transaction is root transaction
+                    transaction.Rollback();
+                }
+
+                return new RepositoryResponse<int>()
+                {
+                    IsSucceed = false,
+                    Data = 0,
+                    Exception = ex
+                };
+            }
+            finally
+            {
+                if (_context == null)
+                {
+                    //if current Context is Root
+                    context.Dispose();
+                }
+            }
+        }
+        #endregion
+
         protected LambdaExpression GetLambda(string propName)
         {
             var parameter = Expression.Parameter(typeof(TModel));
