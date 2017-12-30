@@ -7,8 +7,77 @@ using Swastika.IO.Domain.Core.Models;
 using Swastika.UI.Base;
 using System.Collections.Generic;
 
-namespace Swastika.Extension.Blog.Api.Controllers
+namespace Swastika.Api.Controllers
 {
+    public class BaseApiController: Controller
+    {
+        protected string _domain;
+        protected string _lang;
+
+        public override void OnActionExecuting(ActionExecutingContext context)
+        {
+            GetLanguage();
+            base.OnActionExecuting(context);
+        }
+        protected void GetLanguage()
+        {
+
+            _lang = RouteData != null && RouteData.Values["culture"] != null
+                ? RouteData.Values["culture"].ToString() : "vi-vn";
+            ViewBag.culture = _lang;
+
+            _domain = string.Format("{0}://{1}", Request.Scheme, Request.Host);
+
+            //ViewBag.currentCulture = listCultures.FirstOrDefault(c => c.Specificulture == _lang);
+            //ViewBag.cultures = listCultures;
+        }
+
+        public BaseApiController()
+        {
+        }
+
+        public override NotFoundObjectResult NotFound(object value)
+        {
+            return base.NotFound(value);
+        }
+
+        public override BadRequestObjectResult BadRequest(ModelStateDictionary modelState)
+        {
+            List<string> errors = new List<string>();
+            foreach (ModelStateEntry state in ViewData.ModelState.Values)
+            {
+                foreach (ModelError error in state.Errors)
+                {
+                    errors.Add(error.ErrorMessage);
+                }
+            }
+            return base.BadRequest(modelState);
+        }
+
+        public override BadRequestObjectResult BadRequest(object error)
+        {
+            return base.BadRequest(error);
+        }
+
+        protected IActionResult GetErrorResult(string responseKey, string errorMsg)
+        {
+            var result = ApiHelper<string>.GetResult(0, string.Empty, responseKey, null);
+            return BadRequest(result);
+        }
+
+        //protected IActionResult GetResult<TResult>(int status, TResult data, string responseKey, string error, string message)
+        //{
+        //    var result = ApiHelper<TResult>.GetResult(status, data, responseKey, null);
+        //    return Ok(result);
+        //}
+
+        protected IActionResult GetSuccessResult<TResult>(TResult data)
+        {
+            var result = ApiHelper<TResult>.GetResult(1, data, Enums.ResponseKey.OK.ToString(), null);
+            return Ok(result);
+        }
+
+    }
     public class BaseApiController<TDbContext, TModel> : Controller
         where TDbContext : DbContext
         where TModel : class

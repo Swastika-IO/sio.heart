@@ -6,3 +6,12 @@ E:\_Workspace\Github\Swastika-Heart\src\Swastika.IO\obj\Release\netstandard2.0\S
 E:\_Workspace\Github\Swastika-Heart\src\Swastika.IO\obj\Release\netstandard2.0\Swastika.IO.AssemblyInfo.cs
 E:\_Workspace\Github\Swastika-Heart\src\Swastika.IO\obj\Release\netstandard2.0\Swastika.IO.dll
 E:\_Workspace\Github\Swastika-Heart\src\Swastika.IO\obj\Release\netstandard2.0\Swastika.IO.pdb
+D:\NhatHoang\Git\GitHub\Swastikas\Swastika-Heart\src\Swastika.IO\bin\Release\netstandard2.0\Swastika.IO.deps.json
+D:\NhatHoang\Git\GitHub\Swastikas\Swastika-Heart\src\Swastika.IO\bin\Release\netstandard2.0\Swastika.IO.dll
+D:\NhatHoang\Git\GitHub\Swastikas\Swastika-Heart\src\Swastika.IO\bin\Release\netstandard2.0\Swastika.IO.pdb
+D:\NhatHoang\Git\GitHub\Swastikas\Swastika-Heart\src\Swastika.IO\obj\Release\netstandard2.0\Swastika.IO.csprojResolveAssemblyReference.cache
+D:\NhatHoang\Git\GitHub\Swastikas\Swastika-Heart\src\Swastika.IO\obj\Release\netstandard2.0\Swastika.IO.csproj.CoreCompileInputs.cache
+D:\NhatHoang\Git\GitHub\Swastikas\Swastika-Heart\src\Swastika.IO\obj\Release\netstandard2.0\Swastika.IO.AssemblyInfoInputs.cache
+D:\NhatHoang\Git\GitHub\Swastikas\Swastika-Heart\src\Swastika.IO\obj\Release\netstandard2.0\Swastika.IO.AssemblyInfo.cs
+D:\NhatHoang\Git\GitHub\Swastikas\Swastika-Heart\src\Swastika.IO\obj\Release\netstandard2.0\Swastika.IO.dll
+D:\NhatHoang\Git\GitHub\Swastikas\Swastika-Heart\src\Swastika.IO\obj\Release\netstandard2.0\Swastika.IO.pdb

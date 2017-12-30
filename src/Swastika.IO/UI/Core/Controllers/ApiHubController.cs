@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
-using Swastika.Extension.Blog.Api.Controllers;
+using Swastika.Api.Controllers;
 using Swastika.IO.UI.Core.SignalR;
 
 namespace Swastika.IO.UI.Core.Controllers
