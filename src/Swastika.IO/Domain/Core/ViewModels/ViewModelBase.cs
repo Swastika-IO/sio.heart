@@ -100,7 +100,7 @@ namespace Swastika.Domain.Data.ViewModels
         [JsonIgnore]
         public List<string> Errors = new List<string>();
         [JsonIgnore]
-        public Exception Ex { get; set; }
+        public Exception Exception { get; set; }
 
         /// <summary>
         /// The model
