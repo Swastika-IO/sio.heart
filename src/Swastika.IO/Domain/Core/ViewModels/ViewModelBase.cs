@@ -536,7 +536,7 @@ namespace Swastika.Domain.Data.ViewModels
 #pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         {
             var taskSource = new TaskCompletionSource<RepositoryResponse<bool>>();
-            taskSource.SetResult(new RepositoryResponse<bool>());
+            taskSource.SetResult(new RepositoryResponse<bool>() { IsSucceed = true });
             return taskSource.Task.Result;
         }
 
