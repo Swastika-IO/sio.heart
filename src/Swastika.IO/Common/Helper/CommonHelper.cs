@@ -26,7 +26,7 @@ namespace Swastika.IO.Common.Helper
             {
                 strFormat += @"{" + i + "}" + (i < subPaths.Length - 1 ? "/" : string.Empty);
             }
-            return string.Format(strFormat, subPaths);
+            return string.Format(strFormat, subPaths).Replace("//", "/");
         }
 
         public static string GetRandomName(string filename)

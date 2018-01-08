@@ -1,11 +1,14 @@
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
 using Swastika.Domain.Data.Repository;
+using Swastika.IO.Common.Helper;
 using Swastika.IO.Domain.Core.Models;
 using Swastika.UI.Base;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Swastika.Api.Controllers
 {
@@ -77,6 +80,41 @@ namespace Swastika.Api.Controllers
             return Ok(result);
         }
 
+        protected async Task<List<string>> UploadListFileAsync(string folderPath)
+        {
+            List<string> result = new List<string>();
+            var files = HttpContext.Request.Form.Files;
+            foreach (var file in files)
+            {
+                string fileName = await UploadFileAsync(file, folderPath);
+                if (!string.IsNullOrEmpty(fileName))
+                {
+                    result.Add(fileName);
+                }
+
+            }
+            return result;
+        }
+        protected async Task<string> UploadFileAsync(IFormFile file, string folderPath)
+        {
+            if (file != null && file.Length > 0)
+            {
+                string fileName = await CommonHelper.UploadFileAsync(folderPath, file);
+                if (!string.IsNullOrEmpty(fileName))
+                {
+                    string filePath = string.Format("{0}/{1}", folderPath, fileName);
+                    return filePath;
+                }
+                else
+                {
+                    return string.Empty;
+                }
+            }
+            else
+            {
+                return string.Empty;
+            }
+        }
     }
     public class BaseApiController<TDbContext, TModel> : Controller
         where TDbContext : DbContext
