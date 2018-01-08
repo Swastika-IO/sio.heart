@@ -80,7 +80,7 @@ namespace Swastika.Common
         //    return string.Empty;
         //}
 
-        public static async System.Threading.Tasks.Task<string> UploadFileAsync(
+        public static string UploadFile(
             string fullPath, FileInfo file)
         {
 
