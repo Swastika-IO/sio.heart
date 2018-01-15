@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using Swastika.Domain.Core.ViewModels;
-using Swastika.Domain.Core.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
