@@ -24,7 +24,6 @@ namespace Swastika.Domain.Data.ViewModels
         #region Properties
         [JsonIgnore]
         public List<SupportedCulture> ListSupportedCulture { get; set; }
-        [JsonIgnore]
         public string Specificulture { get; set; }
 
         private static DefaultRepository<TDbContext, TModel, TView> _repo;

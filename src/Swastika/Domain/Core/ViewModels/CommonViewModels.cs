@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.Data.OData.Query;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -36,8 +37,10 @@ namespace Swastika.Domain.Core.ViewModels
         public string UserId { get; set; }
         public string UserAgent { get; set; }
         public int CountryId { get; set; }
-        public int PageIndex { get; set; }
-        public int? PageSize { get; set; }
+        public int PageIndex { get; set; } = 0;
+        public int? PageSize { get; set; } = 10;
+        public string OrderBy { get; set; } = "Id";
+        public Microsoft.Data.OData.Query.OrderByDirection Direction { get; set; } = OrderByDirection.Ascending;
     }
     public class RepositoryResponse<TResult>
     {
