@@ -36,7 +36,7 @@ namespace Swastika.Domain.Data.ViewModels
         [JsonIgnore]
         public int PageIndex { get; set; } = 0;
         [JsonIgnore]
-        public int Priority { get; set; }
+        public int? Priority { get; set; }
         [JsonIgnore]
         public static DefaultRepository<TDbContext, TModel, TView> Repository
         {
