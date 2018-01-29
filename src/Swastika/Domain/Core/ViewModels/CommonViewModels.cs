@@ -57,7 +57,11 @@ namespace Swastika.Domain.Core.ViewModels
         [JsonProperty("exception")]
         public Exception Exception { get; set; }
     }
-
+    public class EntityField
+    {
+        public string PropertyName { get; set; }
+        public string PropertyValue { get; set; }
+    }
     public class PaginationModel<T>
     {
 

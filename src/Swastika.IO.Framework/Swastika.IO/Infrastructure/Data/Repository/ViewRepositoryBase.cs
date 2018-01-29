@@ -1784,7 +1784,205 @@ namespace Swastika.Infrastructure.Data.Repository
         {
             throw new NotImplementedException();
         }
+        #region Update Fields
 
+        public RepositoryResponse<bool> UpdateFields(Expression<Func<TModel, bool>> predicate
+            , List<EntityField> fields
+            , TDbContext _context = null, IDbContextTransaction _transaction = null)
+        {
+            TDbContext context = _context ?? InitContext();
+            var transaction = _transaction ?? context.Database.BeginTransaction();
+            try
+            {
+                bool result = false;
+                TModel model = context.Set<TModel>().FirstOrDefault(predicate);
+                if (model != null)
+                {
+                    foreach (var field in fields)
+                    {
+
+                        var lamda = GetLambda(field.PropertyName, false);
+                        if (lamda != null)
+                        {
+                            var prop = context.Entry(model).Property(field.PropertyName);
+                            if (DateTime.TryParse(field.PropertyValue, out DateTime dateValue))
+                            {
+                                prop.CurrentValue = dateValue;
+
+                            }
+                            else if (int.TryParse(field.PropertyValue, out int integerValue))
+                            {
+                                prop.CurrentValue = integerValue;
+                            }
+                            else
+                            {
+                                prop.CurrentValue = field.PropertyValue;
+                            }
+
+                            context.SaveChanges();
+                            result = true;
+                        }
+                        else
+                        {
+                            result = false;
+                            break;
+                        }
+                    }
+
+                }
+
+                if (result)
+                {
+                    if (_transaction == null)
+                    {
+                        //if current transaction is root transaction
+                        transaction.Commit();
+                    }
+                    return new RepositoryResponse<bool>()
+                    {
+                        IsSucceed = true,
+                        Data = true
+                    };
+                }
+                else
+                {
+                    if (_transaction == null)
+                    {
+                        //if current transaction is root transaction
+                        transaction.Rollback();
+                    }
+                    return new RepositoryResponse<bool>()
+                    {
+                        IsSucceed = false,
+                        Data = false
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                LogErrorMessage(ex);
+                if (_transaction == null)
+                {
+                    //if current transaction is root transaction
+                    transaction.Rollback();
+                }
+
+                return new RepositoryResponse<bool>()
+                {
+                    IsSucceed = false,
+                    Data = false,
+                    Exception = ex
+                };
+            }
+            finally
+            {
+                if (_context == null)
+                {
+                    //if current Context is Root
+                    context.Dispose();
+                }
+            }
+        }
+
+        public async Task<RepositoryResponse<bool>> UpdateFieldsAsync(Expression<Func<TModel, bool>> predicate
+           , List<EntityField> fields
+           , TDbContext _context = null, IDbContextTransaction _transaction = null)
+        {
+            TDbContext context = _context ?? InitContext();
+            var transaction = _transaction ?? context.Database.BeginTransaction();
+            try
+            {
+                bool result = false;
+                TModel model = await context.Set<TModel>().FirstOrDefaultAsync(predicate);
+                if (model != null)
+                {
+                    foreach (var field in fields)
+                    {
+
+                        var lamda = GetLambda(field.PropertyName, false);
+                        if (lamda != null)
+                        {
+                            var prop = context.Entry(model).Property(field.PropertyName);
+                            if (DateTime.TryParse(field.PropertyValue, out DateTime dateValue))
+                            {
+                                prop.CurrentValue = dateValue;
+
+                            }
+                            else if (int.TryParse(field.PropertyValue, out int integerValue))
+                            {
+                                prop.CurrentValue = integerValue;
+                            }
+                            else
+                            {
+                                prop.CurrentValue = field.PropertyValue;
+                            }
+
+                            await context.SaveChangesAsync();
+                            result = true;
+                        }
+                        else
+                        {
+                            result = false;
+                            break;
+                        }
+                    }
+
+                }
+
+                if (result)
+                {
+                    if (_transaction == null)
+                    {
+                        //if current transaction is root transaction
+                        transaction.Commit();
+                    }
+                    return new RepositoryResponse<bool>()
+                    {
+                        IsSucceed = true,
+                        Data = true
+                    };
+                }
+                else
+                {
+                    if (_transaction == null)
+                    {
+                        //if current transaction is root transaction
+                        transaction.Rollback();
+                    }
+                    return new RepositoryResponse<bool>()
+                    {
+                        IsSucceed = false,
+                        Data = false
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                LogErrorMessage(ex);
+                if (_transaction == null)
+                {
+                    //if current transaction is root transaction
+                    transaction.Rollback();
+                }
+
+                return new RepositoryResponse<bool>()
+                {
+                    IsSucceed = false,
+                    Data = false,
+                    Exception = ex
+                };
+            }
+            finally
+            {
+                if (_context == null)
+                {
+                    //if current Context is Root
+                    context.Dispose();
+                }
+            }
+        }
+
+        #endregion
 
         protected LambdaExpression GetLambda(string propName)
         {

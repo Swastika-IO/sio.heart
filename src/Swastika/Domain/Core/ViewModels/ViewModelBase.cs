@@ -30,13 +30,12 @@ namespace Swastika.Domain.Data.ViewModels
         [JsonIgnore]
         public bool IsLazyLoad { get; set; } = true;
         [JsonIgnore]
-        public bool IsClone { get; set; }
+        public bool IsClone { get; set; } = true;
         [JsonIgnore]
         public int PageSize { get; set; } = 1000;
         [JsonIgnore]
         public int PageIndex { get; set; } = 0;
-        [JsonIgnore]
-        public int Priority { get; set; }
+        public int? Priority { get; set; } = 0;
         [JsonIgnore]
         public static DefaultRepository<TDbContext, TModel, TView> Repository
         {

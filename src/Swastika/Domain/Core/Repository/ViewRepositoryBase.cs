@@ -1095,7 +1095,8 @@ namespace Swastika.Domain.Data.Repository
         /// <param name="predicate">The predicate.</param>
         /// <param name="isGetSubModels">if set to <c>true</c> [is get sub Items].</param>
         /// <returns></returns>
-        public virtual async Task<RepositoryResponse<TView>> GetSingleModelAsync(Expression<Func<TModel, bool>> predicate
+        public virtual async Task<RepositoryResponse<TView>> GetSingleModelAsync(
+            Expression<Func<TModel, bool>> predicate
             , TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
             var context = _context ?? InitContext();
@@ -1972,13 +1973,212 @@ namespace Swastika.Domain.Data.Repository
             }
         }
         #endregion
+        #region Update Fields
 
-        protected LambdaExpression GetLambda(string propName)
+        public RepositoryResponse<bool> UpdateFields(Expression<Func<TModel, bool>> predicate
+            , List<EntityField> fields
+            , TDbContext _context = null, IDbContextTransaction _transaction = null)
+        {
+            TDbContext context = _context ?? InitContext();
+            var transaction = _transaction ?? context.Database.BeginTransaction();
+            try
+            {
+                bool result = false;
+                TModel model = context.Set<TModel>().FirstOrDefault(predicate);
+                if (model != null)
+                {
+                    foreach (var field in fields)
+                    {
+                        
+                        var lamda = GetLambda(field.PropertyName, false);
+                        if (lamda != null)
+                        {
+                            var prop = context.Entry(model).Property(field.PropertyName);
+                            if (DateTime.TryParse(field.PropertyValue, out DateTime dateValue))
+                            {
+                                prop.CurrentValue = dateValue;
+
+                            }
+                            else if (int.TryParse(field.PropertyValue, out int integerValue))
+                            {
+                                prop.CurrentValue = integerValue;
+                            }
+                            else
+                            {
+                                prop.CurrentValue = field.PropertyValue;
+                            }
+
+                            context.SaveChanges();
+                            result = true;
+                        }
+                        else
+                        {
+                            result = false;
+                            break;
+                        }
+                    }
+
+                }                
+
+                if (result)
+                {
+                    if (_transaction == null)
+                    {
+                        //if current transaction is root transaction
+                        transaction.Commit();
+                    }
+                    return new RepositoryResponse<bool>()
+                    {
+                        IsSucceed = true,
+                        Data = true
+                    };
+                }
+                else
+                {
+                    if (_transaction == null)
+                    {
+                        //if current transaction is root transaction
+                        transaction.Rollback();
+                    }
+                    return new RepositoryResponse<bool>()
+                    {
+                        IsSucceed = false,
+                        Data = false
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                LogErrorMessage(ex);
+                if (_transaction == null)
+                {
+                    //if current transaction is root transaction
+                    transaction.Rollback();
+                }
+
+                return new RepositoryResponse<bool>()
+                {
+                    IsSucceed = false,
+                    Data = false,
+                    Exception = ex
+                };
+            }
+            finally
+            {
+                if (_context == null)
+                {
+                    //if current Context is Root
+                    context.Dispose();
+                }
+            }
+        }
+
+        public async Task<RepositoryResponse<bool>> UpdateFieldsAsync(Expression<Func<TModel, bool>> predicate
+           , List<EntityField> fields
+           , TDbContext _context = null, IDbContextTransaction _transaction = null)
+        {
+            TDbContext context = _context ?? InitContext();
+            var transaction = _transaction ?? context.Database.BeginTransaction();
+            try
+            {
+                bool result = false;
+                TModel model = await context.Set<TModel>().FirstOrDefaultAsync(predicate);
+                if (model != null)
+                {
+                    foreach (var field in fields)
+                    {
+
+                        var lamda = GetLambda(field.PropertyName, false);
+                        if (lamda != null)
+                        {
+                            var prop = context.Entry(model).Property(field.PropertyName);
+                            if (DateTime.TryParse(field.PropertyValue, out DateTime dateValue))
+                            {
+                                prop.CurrentValue = dateValue;
+
+                            }
+                            else if (int.TryParse(field.PropertyValue, out int integerValue))
+                            {
+                                prop.CurrentValue = integerValue;
+                            }
+                            else
+                            {
+                                prop.CurrentValue = field.PropertyValue;
+                            }
+
+                            await context.SaveChangesAsync();
+                            result = true;
+                        }
+                        else
+                        {
+                            result = false;
+                            break;
+                        }
+                    }
+
+                }
+
+                if (result)
+                {
+                    if (_transaction == null)
+                    {
+                        //if current transaction is root transaction
+                        transaction.Commit();
+                    }
+                    return new RepositoryResponse<bool>()
+                    {
+                        IsSucceed = true,
+                        Data = true
+                    };
+                }
+                else
+                {
+                    if (_transaction == null)
+                    {
+                        //if current transaction is root transaction
+                        transaction.Rollback();
+                    }
+                    return new RepositoryResponse<bool>()
+                    {
+                        IsSucceed = false,
+                        Data = false
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                LogErrorMessage(ex);
+                if (_transaction == null)
+                {
+                    //if current transaction is root transaction
+                    transaction.Rollback();
+                }
+
+                return new RepositoryResponse<bool>()
+                {
+                    IsSucceed = false,
+                    Data = false,
+                    Exception = ex
+                };
+            }
+            finally
+            {
+                if (_context == null)
+                {
+                    //if current Context is Root
+                    context.Dispose();
+                }
+            }
+        }
+
+        #endregion
+
+        protected LambdaExpression GetLambda(string propName, bool isGetDefault = true)
         {
             var parameter = Expression.Parameter(typeof(TModel));
             var type = typeof(TModel);
             var prop = type.GetProperties().FirstOrDefault(p=>p.Name== propName);
-            if (prop==null)
+            if (prop==null && isGetDefault)
             {
                 propName = type.GetProperties().FirstOrDefault().Name;
             }
