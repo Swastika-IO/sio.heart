@@ -1,18 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Text.RegularExpressions;
 
 namespace Swastika.Common.Helper
 {
+    /// <summary>
+    /// SEO Helper
+    /// </summary>
     public class SEOHelper
     {
-        public static string GetSEOString(string s)
-        {
-            return WhiteSpaceToHyphen(ConvertToUnSign(DeleteSpecialCharaters(s)));
-        }
-
         //delete special charaters
+        /// <summary>
+        /// Deletes the special charaters.
+        /// </summary>
+        /// <param name="str">The string.</param>
+        /// <returns></returns>
         public static string DeleteSpecialCharaters(string str)
         {
             string replaceChar = "";
@@ -25,45 +26,46 @@ namespace Swastika.Common.Helper
             return str;
         }
 
+        /// <summary>
+        /// Gets the seo string.
+        /// </summary>
+        /// <param name="s">The s.</param>
+        /// <returns></returns>
+        public static string GetSEOString(string s)
+        {
+            return WhiteSpaceToHyphen(ConvertToUnSign(DeleteSpecialCharaters(s)));
+        }
         // Chuyển tiếng việt có dấu thành không dấu
 
-
         #region convert tieng viet ko dau
+
+        /// <summary>
+        /// Converts to un sign.
+        /// </summary>
+        /// <param name="text">The text.</param>
+        /// <returns></returns>
         public static string ConvertToUnSign(string text)
         {
             if (text != null)
             {
-
                 for (int i = 33; i < 48; i++)
                 {
-
                     text = text.Replace(((char)i).ToString(), "");
-
                 }
-
-
 
                 for (int i = 58; i < 65; i++)
                 {
-
                     text = text.Replace(((char)i).ToString(), "");
-
                 }
-
-
 
                 for (int i = 91; i < 97; i++)
                 {
-
                     text = text.Replace(((char)i).ToString(), "");
-
                 }
 
                 for (int i = 123; i < 127; i++)
                 {
-
                     text = text.Replace(((char)i).ToString(), "");
-
                 }
             }
             else
@@ -77,10 +79,16 @@ namespace Swastika.Common.Helper
             string strFormD = text.Normalize(System.Text.NormalizationForm.FormD);
 
             return regex.Replace(strFormD, String.Empty).Replace('\u0111', 'd').Replace('\u0110', 'D');
-
         }
-        #endregion
+
+        #endregion convert tieng viet ko dau
+
         //change white-space to hyphen
+        /// <summary>
+        /// Whites the space to hyphen.
+        /// </summary>
+        /// <param name="str">The string.</param>
+        /// <returns></returns>
         public static string WhiteSpaceToHyphen(string str)
         {
             char replaceChar = '-';

@@ -1,43 +1,23 @@
 ﻿namespace Swastika.Domain.Core.Models
 {
+    /// <summary>
+    /// ValueObject
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public abstract class ValueObject<T> where T : ValueObject<T>
     {
         /// <summary>
-        /// Determines whether the specified <see cref="System.Object" />, is equal to this instance.
+        /// Implements the operator !=.
         /// </summary>
-        /// <param name="obj">The <see cref="System.Object" /> to compare with this instance.</param>
+        /// <param name="a">a.</param>
+        /// <param name="b">The b.</param>
         /// <returns>
-        ///   <c>true</c> if the specified <see cref="System.Object" /> is equal to this instance; otherwise, <c>false</c>.
+        /// The result of the operator.
         /// </returns>
-        public override bool Equals(object obj)
+        public static bool operator !=(ValueObject<T> a, ValueObject<T> b)
         {
-            var valueObject = obj as T;
-            return !ReferenceEquals(valueObject, null) && EqualsCore(valueObject);
+            return !(a == b);
         }
-
-        /// <summary>
-        /// Equalses the core.
-        /// </summary>
-        /// <param name="other">The other.</param>
-        /// <returns></returns>
-        protected abstract bool EqualsCore(T other);
-
-        /// <summary>
-        /// Returns a hash code for this instance.
-        /// </summary>
-        /// <returns>
-        /// A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table. 
-        /// </returns>
-        public override int GetHashCode()
-        {
-            return GetHashCodeCore();
-        }
-
-        /// <summary>
-        /// Gets the hash code core.
-        /// </summary>
-        /// <returns></returns>
-        protected abstract int GetHashCodeCore();
 
         /// <summary>
         /// Implements the operator ==.
@@ -59,16 +39,40 @@
         }
 
         /// <summary>
-        /// Implements the operator !=.
+        /// Determines whether the specified <see cref="System.Object" />, is equal to this instance.
         /// </summary>
-        /// <param name="a">a.</param>
-        /// <param name="b">The b.</param>
+        /// <param name="obj">The <see cref="System.Object" /> to compare with this instance.</param>
         /// <returns>
-        /// The result of the operator.
+        ///   <c>true</c> if the specified <see cref="System.Object" /> is equal to this instance; otherwise, <c>false</c>.
         /// </returns>
-        public static bool operator !=(ValueObject<T> a, ValueObject<T> b)
+        public override bool Equals(object obj)
         {
-            return !(a == b);
+            var valueObject = obj as T;
+            return !ReferenceEquals(valueObject, null) && EqualsCore(valueObject);
         }
+
+        /// <summary>
+        /// Returns a hash code for this instance.
+        /// </summary>
+        /// <returns>
+        /// A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.
+        /// </returns>
+        public override int GetHashCode()
+        {
+            return GetHashCodeCore();
+        }
+
+        /// <summary>
+        /// Equalses the core.
+        /// </summary>
+        /// <param name="other">The other.</param>
+        /// <returns></returns>
+        protected abstract bool EqualsCore(T other);
+
+        /// <summary>
+        /// Gets the hash code core.
+        /// </summary>
+        /// <returns></returns>
+        protected abstract int GetHashCodeCore();
     }
 }

@@ -1,11 +1,11 @@
-﻿namespace Swastika.Domain.Core.Models {
-
+﻿namespace Swastika.Domain.Core.Models
+{
     /// <summary>
     /// History Data class
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class HistoryData<T> where T : class {
-
+    public class HistoryData<T> where T : class
+    {
         /// <summary>
         /// Gets or sets the action.
         /// </summary>
