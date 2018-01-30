@@ -24,6 +24,7 @@ namespace Swastika.Domain.Data.ViewModels
         #region Properties
         [JsonIgnore]
         public List<SupportedCulture> ListSupportedCulture { get; set; }
+        [JsonProperty("specificulture")]
         public string Specificulture { get; set; }
 
         private static DefaultRepository<TDbContext, TModel, TView> _repo;
@@ -35,6 +36,7 @@ namespace Swastika.Domain.Data.ViewModels
         public int PageSize { get; set; } = 1000;
         [JsonIgnore]
         public int PageIndex { get; set; } = 0;
+        [JsonProperty("priority")]
         public int? Priority { get; set; } = 0;
         [JsonIgnore]
         public static DefaultRepository<TDbContext, TModel, TView> Repository

@@ -64,12 +64,17 @@ namespace Swastika.Domain.Core.ViewModels
     }
     public class PaginationModel<T>
     {
-
+        [JsonProperty("pageIndex")]
         public int PageIndex { get; set; }
+        [JsonProperty("pageSize")]
         public int PageSize { get; set; }
+        [JsonProperty("totalPage")]
         public int TotalPage { get; set; }
+        [JsonProperty("totalItems")]
         public int TotalItems { get; set; }
+        [JsonProperty("items")]
         public List<T> Items { get; set; }
+        [JsonProperty("jsonItems")]
         public List<JObject> JsonItems { get; set; } = new List<JObject>();
         public PaginationModel()
         {
