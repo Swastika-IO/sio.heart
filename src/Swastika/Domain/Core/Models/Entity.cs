@@ -2,6 +2,9 @@
 
 namespace Swastika.Domain.Core.Models
 {
+    /// <summary>
+    /// Entity class
+    /// </summary>
     public abstract class Entity
     {
         /// <summary>
@@ -13,20 +16,16 @@ namespace Swastika.Domain.Core.Models
         public Guid Id { get; set; }
 
         /// <summary>
-        /// Determines whether the specified <see cref="System.Object" />, is equal to this instance.
+        /// Implements the operator !=.
         /// </summary>
-        /// <param name="obj">The <see cref="System.Object" /> to compare with this instance.</param>
+        /// <param name="a">a.</param>
+        /// <param name="b">The b.</param>
         /// <returns>
-        ///   <c>true</c> if the specified <see cref="System.Object" /> is equal to this instance; otherwise, <c>false</c>.
+        /// The result of the operator.
         /// </returns>
-        public override bool Equals(object obj)
+        public static bool operator !=(Entity a, Entity b)
         {
-            var compareTo = obj as Entity;
-
-            if (ReferenceEquals(this, compareTo)) return true;
-            if (ReferenceEquals(null, compareTo)) return false;
-
-            return Id.Equals(compareTo.Id);
+            return !(a == b);
         }
 
         /// <summary>
@@ -49,23 +48,27 @@ namespace Swastika.Domain.Core.Models
         }
 
         /// <summary>
-        /// Implements the operator !=.
+        /// Determines whether the specified <see cref="System.Object" />, is equal to this instance.
         /// </summary>
-        /// <param name="a">a.</param>
-        /// <param name="b">The b.</param>
+        /// <param name="obj">The <see cref="System.Object" /> to compare with this instance.</param>
         /// <returns>
-        /// The result of the operator.
+        ///   <c>true</c> if the specified <see cref="System.Object" /> is equal to this instance; otherwise, <c>false</c>.
         /// </returns>
-        public static bool operator !=(Entity a, Entity b)
+        public override bool Equals(object obj)
         {
-            return !(a == b);
+            var compareTo = obj as Entity;
+
+            if (ReferenceEquals(this, compareTo)) return true;
+            if (ReferenceEquals(null, compareTo)) return false;
+
+            return Id.Equals(compareTo.Id);
         }
 
         /// <summary>
         /// Returns a hash code for this instance.
         /// </summary>
         /// <returns>
-        /// A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table. 
+        /// A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.
         /// </returns>
         public override int GetHashCode()
         {

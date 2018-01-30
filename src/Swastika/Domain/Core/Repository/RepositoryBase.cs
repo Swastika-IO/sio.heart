@@ -11,20 +11,17 @@ using System.Threading.Tasks;
 
 namespace Swastika.Domain.Data.Repository
 {
-
     /// <summary>
-    /// Base Repository
+    /// Repository Base
     /// </summary>
     /// <typeparam name="TModel">The type of the model.</typeparam>
     /// <typeparam name="TView">The type of the view.</typeparam>
     /// <typeparam name="TContext">The type of the context.</typeparam>
-    /// <seealso cref="Swastika.Extension.Blog.Interfaces.IRepository{TModel, TView}" />
-    public abstract class RepositoryBase<TModel, TView, TContext>         
-        where TModel : class 
-        where TView : ViewModelBase<TModel, TView> 
+    public abstract class RepositoryBase<TModel, TView, TContext>
+        where TModel : class
+        where TView : ViewModelBase<TModel, TView>
         where TContext : DbContext
     {
-
         /// <summary>
         /// Initializes a new instance of the <see cref="RepositoryBase{TModel, TView, TContext}"/> class.
         /// </summary>
@@ -34,75 +31,12 @@ namespace Swastika.Domain.Data.Repository
         }
 
         /// <summary>
-        /// Initializes the context.
-        /// </summary>
-        /// <returns></returns>
-        public virtual TContext InitContext()
-        {
-            Type classType = typeof(TContext);
-            ConstructorInfo classConstructor = classType.GetConstructor(new Type[] { });
-            TContext context = (TContext)classConstructor.Invoke(new object[] { });
-
-            return context;
-        }
-
-        /// <summary>
-        /// Registers the automatic mapper.
-        /// </summary>
-        public virtual void RegisterAutoMapper()
-        {
-            Mapper.Initialize(cfg =>
-            {
-                cfg.CreateMap<TModel, TView>();
-                cfg.CreateMap<TView, TModel>();
-            });
-        }
-
-        /// <summary>
-        /// Parses the view.
-        /// </summary>
-        /// <param name="lstModels">The LST models.</param>
-        /// <returns></returns>
-        public virtual List<TView> ParseView(List<TModel> lstModels)
-        {
-            List<TView> lstView = new List<TView>();
-            foreach (var model in lstModels)
-            {
-                lstView.Add(ParseView(model));
-            }
-
-            return lstView;
-        }
-
-        /// <summary>
-        /// Parses the view.
-        /// </summary>
-        /// <param name="model">The model.</param>
-        /// <returns></returns>
-        public virtual TView ParseView(TModel model)
-        {
-            Type classType = typeof(TView);
-            ConstructorInfo classConstructor = classType.GetConstructor(new Type[] { model.GetType().GetType() });
-            TView vm = null;
-            if (classConstructor != null)
-            {
-                vm = (TView)classConstructor.Invoke(new object[] { model });
-            }
-            else
-            {
-                classConstructor = classType.GetConstructor(new Type[] { model.GetType() });
-                vm = (TView)classConstructor.Invoke(new object[] { model });
-            }
-            return vm;
-        }
-
-        /// <summary>
-        /// Determines whether the specified entity is exists.
+        /// Checks the is exists.
         /// </summary>
         /// <param name="entity">The entity.</param>
-        /// <returns>
-        ///   <c>true</c> if the specified entity is exists; otherwise, <c>false</c>.
-        /// </returns>
+        /// <param name="_context">The context.</param>
+        /// <param name="_transaction">The transaction.</param>
+        /// <returns></returns>
         public virtual bool CheckIsExists(TView entity, TContext _context = null, IDbContextTransaction _transaction = null)
         {
             TContext context = _context ?? InitContext();
@@ -137,12 +71,12 @@ namespace Swastika.Domain.Data.Repository
         }
 
         /// <summary>
-        /// Determines whether the specified predicate is exists.
+        /// Checks the is exists.
         /// </summary>
         /// <param name="predicate">The predicate.</param>
-        /// <returns>
-        ///   <c>true</c> if the specified predicate is exists; otherwise, <c>false</c>.
-        /// </returns>
+        /// <param name="_context">The context.</param>
+        /// <param name="_transaction">The transaction.</param>
+        /// <returns></returns>
         public bool CheckIsExists(System.Func<TModel, bool> predicate, TContext _context = null, IDbContextTransaction _transaction = null)
         {
             TContext context = _context ?? InitContext();
@@ -179,7 +113,10 @@ namespace Swastika.Domain.Data.Repository
         /// <summary>
         /// Creates the model.
         /// </summary>
-        /// <param name="model">The model.</param>
+        /// <param name="view">The view.</param>
+        /// <param name="isSaveSubModels">if set to <c>true</c> [is save sub models].</param>
+        /// <param name="_context">The context.</param>
+        /// <param name="_transaction">The transaction.</param>
         /// <returns></returns>
         public virtual RepositoryResponse<TView> CreateModel(TView view, bool isSaveSubModels = false
             , TContext _context = null, IDbContextTransaction _transaction = null)
@@ -188,9 +125,7 @@ namespace Swastika.Domain.Data.Repository
             var transaction = _transaction ?? context.Database.BeginTransaction();
             try
             {
-
                 var model = view.ParseModel();
-
 
                 context.Entry(model).State = EntityState.Added;
                 bool result = context.SaveChanges() > 0;
@@ -225,7 +160,6 @@ namespace Swastika.Domain.Data.Repository
                         Data = null
                     };
                 }
-
             }
             // TODO: Add more specific exeption types instead of Exception only
             catch (Exception ex)
@@ -256,7 +190,10 @@ namespace Swastika.Domain.Data.Repository
         /// <summary>
         /// Creates the model asynchronous.
         /// </summary>
-        /// <param name="model">The model.</param>
+        /// <param name="view">The view.</param>
+        /// <param name="isSaveSubModels">if set to <c>true</c> [is save sub models].</param>
+        /// <param name="_context">The context.</param>
+        /// <param name="_transaction">The transaction.</param>
         /// <returns></returns>
         public virtual async Task<RepositoryResponse<TView>> CreateModelAsync(TView view, bool isSaveSubModels = false
             , TContext _context = null, IDbContextTransaction _transaction = null)
@@ -266,7 +203,6 @@ namespace Swastika.Domain.Data.Repository
             try
             {
                 var model = view.ParseModel();
-
 
                 context.Entry(model).State = EntityState.Added;
                 bool result = await context.SaveChangesAsync() > 0;
@@ -302,8 +238,6 @@ namespace Swastika.Domain.Data.Repository
                         Data = null
                     };
                 }
-
-
             }
             // TODO: Add more specific exeption types instead of Exception only
             catch (Exception ex)
@@ -335,7 +269,10 @@ namespace Swastika.Domain.Data.Repository
         /// <summary>
         /// Edits the model.
         /// </summary>
-        /// <param name="model">The model.</param>
+        /// <param name="view">The view.</param>
+        /// <param name="isSaveSubModels">if set to <c>true</c> [is save sub models].</param>
+        /// <param name="_context">The context.</param>
+        /// <param name="_transaction">The transaction.</param>
         /// <returns></returns>
         public virtual RepositoryResponse<TView> EditModel(TView view, bool isSaveSubModels = false
             , TContext _context = null, IDbContextTransaction _transaction = null)
@@ -345,7 +282,6 @@ namespace Swastika.Domain.Data.Repository
             try
             {
                 var model = view.ParseModel();
-
 
                 context.Entry(model).State = EntityState.Modified;
                 bool result = context.SaveChanges() > 0;
@@ -381,8 +317,6 @@ namespace Swastika.Domain.Data.Repository
                         Data = null
                     };
                 }
-
-
             }
             // TODO: Add more specific exeption types instead of Exception only
             catch (Exception ex)
@@ -414,7 +348,10 @@ namespace Swastika.Domain.Data.Repository
         /// <summary>
         /// Edits the model asynchronous.
         /// </summary>
-        /// <param name="model">The model.</param>
+        /// <param name="view">The view.</param>
+        /// <param name="isSaveSubModels">if set to <c>true</c> [is save sub models].</param>
+        /// <param name="_context">The context.</param>
+        /// <param name="_transaction">The transaction.</param>
         /// <returns></returns>
         public virtual async Task<RepositoryResponse<TView>> EditModelAsync(TView view, bool isSaveSubModels = false
             , TContext _context = null, IDbContextTransaction _transaction = null)
@@ -486,38 +423,130 @@ namespace Swastika.Domain.Data.Repository
             }
         }
 
-        #region GetModelList
-
         /// <summary>
-        /// Gets the view model list asynchronous.
+        /// Gets the single model.
         /// </summary>
-        /// <param name="isGetSubModels">if set to <c>true</c> [is get sub models].</param>
+        /// <param name="predicate">The predicate.</param>
         /// <returns></returns>
-        public virtual async Task<List<TView>> GetViewModelListAsync()
+        public virtual TView GetSingleModel(Expression<Func<TModel, bool>> predicate)
         {
             using (TContext context = InitContext())
             {
-                try
+                TModel model = context.Set<TModel>().FirstOrDefault(predicate);
+                if (model != null)
                 {
-                    List<TView> lstViewResult = new List<TView>();
-                    var lstModel = await context.Set<TModel>().ToListAsync();
-                    lstModel.ForEach(model => context.Entry(model).State = EntityState.Detached);
-                    lstViewResult = ParseView(lstModel);
-                    return lstViewResult;
+                    context.Entry(model).State = EntityState.Detached;
+                    var viewResult = ParseView(model);
+
+                    return viewResult;
                 }
-                // TODO: Add more specific exeption types instead of Exception only
-                catch (Exception ex)
+                else
                 {
-                    LogErrorMessage(ex);
                     return null;
                 }
             }
         }
 
         /// <summary>
+        /// Gets the single model asynchronous.
+        /// </summary>
+        /// <param name="predicate">The predicate.</param>
+        /// <returns></returns>
+        public virtual async Task<TView> GetSingleModelAsync(Expression<Func<TModel, bool>> predicate)
+        {
+            using (TContext context = InitContext())
+            {
+                TModel model = await context.Set<TModel>().FirstOrDefaultAsync(predicate);
+                if (model != null)
+                {
+                    context.Entry(model).State = EntityState.Detached;
+
+                    var viewResult = ParseView(model);
+                    return viewResult;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Initializes the context.
+        /// </summary>
+        /// <returns></returns>
+        public virtual TContext InitContext()
+        {
+            Type classType = typeof(TContext);
+            ConstructorInfo classConstructor = classType.GetConstructor(new Type[] { });
+            TContext context = (TContext)classConstructor.Invoke(new object[] { });
+
+            return context;
+        }
+
+        /// <summary>
+        /// Logs the error message.
+        /// </summary>
+        /// <param name="ex">The ex.</param>
+        public virtual void LogErrorMessage(Exception ex)
+        {
+        }
+
+        /// <summary>
+        /// Parses the view.
+        /// </summary>
+        /// <param name="lstModels">The LST models.</param>
+        /// <returns></returns>
+        public virtual List<TView> ParseView(List<TModel> lstModels)
+        {
+            List<TView> lstView = new List<TView>();
+            foreach (var model in lstModels)
+            {
+                lstView.Add(ParseView(model));
+            }
+
+            return lstView;
+        }
+
+        /// <summary>
+        /// Parses the view.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns></returns>
+        public virtual TView ParseView(TModel model)
+        {
+            Type classType = typeof(TView);
+            ConstructorInfo classConstructor = classType.GetConstructor(new Type[] { model.GetType().GetType() });
+            TView vm = null;
+            if (classConstructor != null)
+            {
+                vm = (TView)classConstructor.Invoke(new object[] { model });
+            }
+            else
+            {
+                classConstructor = classType.GetConstructor(new Type[] { model.GetType() });
+                vm = (TView)classConstructor.Invoke(new object[] { model });
+            }
+            return vm;
+        }
+
+        /// <summary>
+        /// Registers the automatic mapper.
+        /// </summary>
+        public virtual void RegisterAutoMapper()
+        {
+            Mapper.Initialize(cfg =>
+            {
+                cfg.CreateMap<TModel, TView>();
+                cfg.CreateMap<TView, TModel>();
+            });
+        }
+
+        #region GetModelList
+
+        /// <summary>
         /// Gets the model list.
         /// </summary>
-        /// <param name="isGetSubModels">if set to <c>true</c> [is get sub models].</param>
         /// <returns></returns>
         public virtual List<TView> GetModelList()
         {
@@ -548,7 +577,6 @@ namespace Swastika.Domain.Data.Repository
         /// <param name="direction">The direction.</param>
         /// <param name="pageIndex">Index of the page.</param>
         /// <param name="pageSize">Size of the page.</param>
-        /// <param name="isGetSubModels">if set to <c>true</c> [is get sub models].</param>
         /// <returns></returns>
         public virtual PaginationModel<TView> GetModelList(
             Expression<Func<TModel, int>> orderBy, string direction, int? pageIndex, int? pageSize)
@@ -632,7 +660,6 @@ namespace Swastika.Domain.Data.Repository
         /// <param name="direction">The direction.</param>
         /// <param name="pageIndex">Index of the page.</param>
         /// <param name="pageSize">Size of the page.</param>
-        /// <param name="isGetSubModels">if set to <c>true</c> [is get sub models].</param>
         /// <returns></returns>
         public virtual PaginationModel<TView> GetModelList(
             Expression<Func<TModel, string>> orderBy, string direction, int? pageIndex, int? pageSize)
@@ -717,7 +744,6 @@ namespace Swastika.Domain.Data.Repository
         /// <param name="direction">The direction.</param>
         /// <param name="pageIndex">Index of the page.</param>
         /// <param name="pageSize">Size of the page.</param>
-        /// <param name="isGetSubModels">if set to <c>true</c> [is get sub models].</param>
         /// <returns></returns>
         public virtual PaginationModel<TView> GetModelList(
             Expression<Func<TModel, DateTime>> orderBy, string direction, int? pageIndex, int? pageSize)
@@ -799,7 +825,6 @@ namespace Swastika.Domain.Data.Repository
         /// <param name="direction">The direction.</param>
         /// <param name="pageIndex">Index of the page.</param>
         /// <param name="pageSize">Size of the page.</param>
-        /// <param name="isGetSubModels">if set to <c>true</c> [is get sub models].</param>
         /// <returns></returns>
         public virtual async Task<PaginationModel<TView>> GetModelListAsync(
             Expression<Func<TModel, string>> orderBy, string direction, int? pageIndex, int? pageSize)
@@ -876,7 +901,6 @@ namespace Swastika.Domain.Data.Repository
         /// <summary>
         /// Gets the model list asynchronous.
         /// </summary>
-        /// <param name="isGetSubModels">if set to <c>true</c> [is get sub models].</param>
         /// <returns></returns>
         public virtual async Task<List<TView>> GetModelListAsync()
         {
@@ -905,7 +929,6 @@ namespace Swastika.Domain.Data.Repository
         /// <param name="direction">The direction.</param>
         /// <param name="pageIndex">Index of the page.</param>
         /// <param name="pageSize">Size of the page.</param>
-        /// <param name="isGetSubModels">if set to <c>true</c> [is get sub models].</param>
         /// <returns></returns>
         public virtual async Task<PaginationModel<TView>> GetModelListAsync(
             Expression<Func<TModel, DateTime>> orderBy, string direction, int? pageIndex, int? pageSize)
@@ -986,7 +1009,6 @@ namespace Swastika.Domain.Data.Repository
         /// <param name="direction">The direction.</param>
         /// <param name="pageIndex">Index of the page.</param>
         /// <param name="pageSize">Size of the page.</param>
-        /// <param name="isGetSubModels">if set to <c>true</c> [is get sub models].</param>
         /// <returns></returns>
         public virtual async Task<PaginationModel<TView>> GetModelListAsync(
             Expression<Func<TModel, int>> orderBy, string direction, int? pageIndex, int? pageSize)
@@ -1062,6 +1084,31 @@ namespace Swastika.Domain.Data.Repository
             }
         }
 
+        /// <summary>
+        /// Gets the view model list asynchronous.
+        /// </summary>
+        /// <returns></returns>
+        public virtual async Task<List<TView>> GetViewModelListAsync()
+        {
+            using (TContext context = InitContext())
+            {
+                try
+                {
+                    List<TView> lstViewResult = new List<TView>();
+                    var lstModel = await context.Set<TModel>().ToListAsync();
+                    lstModel.ForEach(model => context.Entry(model).State = EntityState.Detached);
+                    lstViewResult = ParseView(lstModel);
+                    return lstViewResult;
+                }
+                // TODO: Add more specific exeption types instead of Exception only
+                catch (Exception ex)
+                {
+                    LogErrorMessage(ex);
+                    return null;
+                }
+            }
+        }
+
         #endregion GetModelList
 
         #region GetModelListBy
@@ -1070,7 +1117,6 @@ namespace Swastika.Domain.Data.Repository
         /// Gets the model list by.
         /// </summary>
         /// <param name="predicate">The predicate.</param>
-        /// <param name="isGetSubModels">if set to <c>true</c> [is get sub models].</param>
         /// <returns></returns>
         public virtual List<TView> GetModelListBy(Expression<Func<TModel, bool>> predicate)
         {
@@ -1099,7 +1145,6 @@ namespace Swastika.Domain.Data.Repository
         /// <param name="direction">The direction.</param>
         /// <param name="pageIndex">Index of the page.</param>
         /// <param name="pageSize">Size of the page.</param>
-        /// <param name="isGetSubModels">if set to <c>true</c> [is get sub models].</param>
         /// <returns></returns>
         public virtual PaginationModel<TView> GetModelListBy(
             Expression<Func<TModel, bool>> predicate, Expression<Func<TModel, string>> orderBy, string direction, int? pageIndex, int? pageSize)
@@ -1181,7 +1226,6 @@ namespace Swastika.Domain.Data.Repository
         /// <param name="direction">The direction.</param>
         /// <param name="pageIndex">Index of the page.</param>
         /// <param name="pageSize">Size of the page.</param>
-        /// <param name="isGetSubModels">if set to <c>true</c> [is get sub models].</param>
         /// <returns></returns>
         public virtual PaginationModel<TView> GetModelListBy(
             Expression<Func<TModel, bool>> predicate, Expression<Func<TModel, int>> orderBy, string direction, int? pageIndex, int? pageSize)
@@ -1264,7 +1308,6 @@ namespace Swastika.Domain.Data.Repository
         /// <param name="direction">The direction.</param>
         /// <param name="pageIndex">Index of the page.</param>
         /// <param name="pageSize">Size of the page.</param>
-        /// <param name="isGetSubModels">if set to <c>true</c> [is get sub models].</param>
         /// <returns></returns>
         public virtual PaginationModel<TView> GetModelListBy(
             Expression<Func<TModel, bool>> predicate, Expression<Func<TModel, DateTime>> orderBy, string direction, int? pageIndex, int? pageSize)
@@ -1342,7 +1385,6 @@ namespace Swastika.Domain.Data.Repository
         /// Gets the model list by asynchronous.
         /// </summary>
         /// <param name="predicate">The predicate.</param>
-        /// <param name="isGetSubModels">if set to <c>true</c> [is get sub models].</param>
         /// <returns></returns>
         public virtual async Task<List<TView>> GetModelListByAsync(Expression<Func<TModel, bool>> predicate)
         {
@@ -1371,7 +1413,6 @@ namespace Swastika.Domain.Data.Repository
         /// <param name="direction">The direction.</param>
         /// <param name="pageIndex">Index of the page.</param>
         /// <param name="pageSize">Size of the page.</param>
-        /// <param name="isGetSubModels">if set to <c>true</c> [is get sub models].</param>
         /// <returns></returns>
         public virtual async Task<PaginationModel<TView>> GetModelListByAsync(
             Expression<Func<TModel, bool>> predicate, Expression<Func<TModel, int>> orderBy, string direction,
@@ -1454,7 +1495,6 @@ namespace Swastika.Domain.Data.Repository
         /// <param name="direction">The direction.</param>
         /// <param name="pageIndex">Index of the page.</param>
         /// <param name="pageSize">Size of the page.</param>
-        /// <param name="isGetSubModels">if set to <c>true</c> [is get sub models].</param>
         /// <returns></returns>
         public virtual async Task<PaginationModel<TView>> GetModelListByAsync(
             Expression<Func<TModel, bool>> predicate, Expression<Func<TModel, string>> orderBy, string direction, int? pageIndex, int? pageSize)
@@ -1536,7 +1576,6 @@ namespace Swastika.Domain.Data.Repository
         /// <param name="direction">The direction.</param>
         /// <param name="pageIndex">Index of the page.</param>
         /// <param name="pageSize">Size of the page.</param>
-        /// <param name="isGetSubModels">if set to <c>true</c> [is get sub models].</param>
         /// <returns></returns>
         public virtual async Task<PaginationModel<TView>> GetModelListByAsync(
             Expression<Func<TModel, bool>> predicate, Expression<Func<TModel, DateTime>> orderBy, string direction, int? pageIndex, int? pageSize)
@@ -1610,61 +1649,13 @@ namespace Swastika.Domain.Data.Repository
 
         #endregion GetModelListBy
 
-        /// <summary>
-        /// Gets the single model.
-        /// </summary>
-        /// <param name="predicate">The predicate.</param>
-        /// <param name="isGetSubModels">if set to <c>true</c> [is get sub models].</param>
-        /// <returns></returns>
-        public virtual TView GetSingleModel(Expression<Func<TModel, bool>> predicate)
-        {
-            using (TContext context = InitContext())
-            {
-                TModel model = context.Set<TModel>().FirstOrDefault(predicate);
-                if (model != null)
-                {
-                    context.Entry(model).State = EntityState.Detached;
-                    var viewResult = ParseView(model);
-
-                    return viewResult;
-                }
-                else
-                {
-                    return null;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Gets the single model asynchronous.
-        /// </summary>
-        /// <param name="predicate">The predicate.</param>
-        /// <param name="isGetSubModels">if set to <c>true</c> [is get sub models].</param>
-        /// <returns></returns>
-        public virtual async Task<TView> GetSingleModelAsync(Expression<Func<TModel, bool>> predicate)
-        {
-            using (TContext context = InitContext())
-            {
-                TModel model = await context.Set<TModel>().FirstOrDefaultAsync(predicate);
-                if (model != null)
-                {
-                    context.Entry(model).State = EntityState.Detached;
-
-                    var viewResult = ParseView(model);
-                    return viewResult;
-                }
-                else
-                {
-                    return null;
-                }
-            }
-        }
-
         // TODO: Should return return enum status code instead
         /// <summary>
         /// Removes the list model.
         /// </summary>
         /// <param name="predicate">The predicate.</param>
+        /// <param name="_context">The context.</param>
+        /// <param name="_transaction">The transaction.</param>
         /// <returns></returns>
         public virtual RepositoryResponse<bool> RemoveListModel(Expression<Func<TModel, bool>> predicate
             , TContext _context = null, IDbContextTransaction _transaction = null)
@@ -1757,6 +1748,8 @@ namespace Swastika.Domain.Data.Repository
         /// Removes the list model asynchronous.
         /// </summary>
         /// <param name="predicate">The predicate.</param>
+        /// <param name="_context">The context.</param>
+        /// <param name="_transaction">The transaction.</param>
         /// <returns></returns>
         public virtual async Task<RepositoryResponse<bool>> RemoveListModelAsync(Expression<Func<TModel, bool>> predicate
             , TContext _context = null, IDbContextTransaction _transaction = null)
@@ -1849,6 +1842,8 @@ namespace Swastika.Domain.Data.Repository
         /// Removes the model.
         /// </summary>
         /// <param name="predicate">The predicate.</param>
+        /// <param name="_context">The context.</param>
+        /// <param name="_transaction">The transaction.</param>
         /// <returns></returns>
         public virtual RepositoryResponse<bool> RemoveModel(Expression<Func<TModel, bool>> predicate
             , TContext _context = null, IDbContextTransaction _transaction = null)
@@ -1892,7 +1887,6 @@ namespace Swastika.Domain.Data.Repository
                         Data = false
                     };
                 }
-
             }
             catch (Exception ex)
             {
@@ -1925,6 +1919,8 @@ namespace Swastika.Domain.Data.Repository
         /// Removes the model.
         /// </summary>
         /// <param name="model">The model.</param>
+        /// <param name="_context">The context.</param>
+        /// <param name="_transaction">The transaction.</param>
         /// <returns></returns>
         public virtual RepositoryResponse<bool> RemoveModel(TModel model
             , TContext _context = null, IDbContextTransaction _transaction = null)
@@ -1967,7 +1963,6 @@ namespace Swastika.Domain.Data.Repository
                         Data = false
                     };
                 }
-
             }
             catch (Exception ex)
             {
@@ -2000,6 +1995,8 @@ namespace Swastika.Domain.Data.Repository
         /// Removes the model asynchronous.
         /// </summary>
         /// <param name="predicate">The predicate.</param>
+        /// <param name="_context">The context.</param>
+        /// <param name="_transaction">The transaction.</param>
         /// <returns></returns>
         public virtual async Task<RepositoryResponse<bool>> RemoveModelAsync(Expression<Func<TModel, bool>> predicate
             , TContext _context = null, IDbContextTransaction _transaction = null)
@@ -2043,7 +2040,6 @@ namespace Swastika.Domain.Data.Repository
                         Data = false
                     };
                 }
-
             }
             catch (Exception ex)
             {
@@ -2076,6 +2072,8 @@ namespace Swastika.Domain.Data.Repository
         /// Removes the model asynchronous.
         /// </summary>
         /// <param name="model">The model.</param>
+        /// <param name="_context">The context.</param>
+        /// <param name="_transaction">The transaction.</param>
         /// <returns></returns>
         public virtual async Task<RepositoryResponse<bool>> RemoveModelAsync(TModel model
             , TContext _context = null, IDbContextTransaction _transaction = null)
@@ -2118,7 +2116,6 @@ namespace Swastika.Domain.Data.Repository
                         Data = false
                     };
                 }
-
             }
             catch (Exception ex)
             {
@@ -2149,7 +2146,10 @@ namespace Swastika.Domain.Data.Repository
         /// <summary>
         /// Saves the model.
         /// </summary>
-        /// <param name="model">The model.</param>
+        /// <param name="view">The view.</param>
+        /// <param name="isSaveSubModels">if set to <c>true</c> [is save sub models].</param>
+        /// <param name="_context">The context.</param>
+        /// <param name="_transaction">The transaction.</param>
         /// <returns></returns>
         public virtual RepositoryResponse<TView> SaveModel(TView view, bool isSaveSubModels = false
             , TContext _context = null, IDbContextTransaction _transaction = null)
@@ -2167,7 +2167,10 @@ namespace Swastika.Domain.Data.Repository
         /// <summary>
         /// Saves the model asynchronous.
         /// </summary>
-        /// <param name="model">The model.</param>
+        /// <param name="view">The view.</param>
+        /// <param name="isSaveSubModels">if set to <c>true</c> [is save sub models].</param>
+        /// <param name="_context">The context.</param>
+        /// <param name="_transaction">The transaction.</param>
         /// <returns></returns>
         public virtual Task<RepositoryResponse<TView>> SaveModelAsync(TView view, bool isSaveSubModels = false
             , TContext _context = null, IDbContextTransaction _transaction = null)
@@ -2182,29 +2185,29 @@ namespace Swastika.Domain.Data.Repository
             }
         }
 
+        /// <summary>
+        /// Saves the sub model.
+        /// </summary>
+        /// <param name="view">The view.</param>
+        /// <param name="context">The context.</param>
+        /// <param name="_transaction">The transaction.</param>
+        /// <returns></returns>
         public virtual bool SaveSubModel(TView view, TContext context, IDbContextTransaction _transaction)
         {
             return false;
         }
 
         /// <summary>
-        /// Saves the model asynchronous.
+        /// Saves the sub model asynchronous.
         /// </summary>
-        /// <param name="model">The model.</param>
+        /// <param name="view">The view.</param>
+        /// <param name="context">The context.</param>
+        /// <param name="_transaction">The transaction.</param>
         /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
         public virtual Task<bool> SaveSubModelAsync(TView view, TContext context, IDbContextTransaction _transaction)
         {
             throw new NotImplementedException();
         }
-
-        /// <summary>
-        /// Logs the error message.
-        /// </summary>
-        /// <param name="ex">The ex.</param>
-        public virtual void LogErrorMessage(Exception ex)
-        {
-        }
     }
-
-
 }

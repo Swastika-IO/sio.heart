@@ -3,47 +3,46 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
-using Swastika.Domain.Data.Repository;
 using Swastika.Common.Helper;
 using Swastika.Domain.Core.Models;
+using Swastika.Domain.Data.Repository;
 using Swastika.UI.Base;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Swastika.Api.Controllers
 {
-    public class BaseApiController: Controller
+    /// <summary>
+    /// Base Api Controller
+    /// </summary>
+    /// <seealso cref="Microsoft.AspNetCore.Mvc.Controller"/>
+    public class BaseApiController : Controller
     {
+        /// <summary>
+        /// The domain
+        /// </summary>
         protected string _domain;
+
+        /// <summary>
+        /// The language
+        /// </summary>
         protected string _lang;
 
-        public override void OnActionExecuting(ActionExecutingContext context)
-        {
-            GetLanguage();
-            base.OnActionExecuting(context);
-        }
-        protected void GetLanguage()
-        {
-
-            _lang = RouteData != null && RouteData.Values["culture"] != null
-                ? RouteData.Values["culture"].ToString() : "vi-vn";
-            ViewBag.culture = _lang;
-
-            _domain = string.Format("{0}://{1}", Request.Scheme, Request.Host);
-
-            //ViewBag.currentCulture = listCultures.FirstOrDefault(c => c.Specificulture == _lang);
-            //ViewBag.cultures = listCultures;
-        }
-
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BaseApiController"/> class.
+        /// </summary>
         public BaseApiController()
         {
         }
 
-        public override NotFoundObjectResult NotFound(object value)
-        {
-            return base.NotFound(value);
-        }
-
+        /// <summary>
+        /// Creates an <see cref="T:Microsoft.AspNetCore.Mvc.BadRequestObjectResult"/> that produces
+        /// a <see cref="F:Microsoft.AspNetCore.Http.StatusCodes.Status400BadRequest"/> response.
+        /// </summary>
+        /// <param name="modelState"></param>
+        /// <returns>
+        /// The created <see cref="T:Microsoft.AspNetCore.Mvc.BadRequestObjectResult"/> for the response.
+        /// </returns>
         public override BadRequestObjectResult BadRequest(ModelStateDictionary modelState)
         {
             List<string> errors = new List<string>();
@@ -57,44 +56,94 @@ namespace Swastika.Api.Controllers
             return base.BadRequest(modelState);
         }
 
+        /// <summary>
+        /// Creates an <see cref="T:Microsoft.AspNetCore.Mvc.BadRequestObjectResult"/> that produces
+        /// a <see cref="F:Microsoft.AspNetCore.Http.StatusCodes.Status400BadRequest"/> response.
+        /// </summary>
+        /// <param name="error"></param>
+        /// <returns>
+        /// The created <see cref="T:Microsoft.AspNetCore.Mvc.BadRequestObjectResult"/> for the response.
+        /// </returns>
         public override BadRequestObjectResult BadRequest(object error)
         {
             return base.BadRequest(error);
         }
 
+        /// <summary>
+        /// Creates an <see cref="T:Microsoft.AspNetCore.Mvc.NotFoundObjectResult"/> that produces a
+        /// <see cref="F:Microsoft.AspNetCore.Http.StatusCodes.Status404NotFound"/> response.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns>
+        /// The created <see cref="T:Microsoft.AspNetCore.Mvc.NotFoundObjectResult"/> for the response.
+        /// </returns>
+        public override NotFoundObjectResult NotFound(object value)
+        {
+            return base.NotFound(value);
+        }
+
+        /// <summary>
+        /// Called before the action method is invoked.
+        /// </summary>
+        /// <param name="context">The action executing context.</param>
+        public override void OnActionExecuting(ActionExecutingContext context)
+        {
+            GetLanguage();
+            base.OnActionExecuting(context);
+        }
+
+        /// <summary>
+        /// Gets the error result.
+        /// </summary>
+        /// <param name="responseKey">The response key.</param>
+        /// <param name="errorMsg">The error MSG.</param>
+        /// <returns></returns>
         protected IActionResult GetErrorResult(string responseKey, string errorMsg)
         {
             var result = ApiHelper<string>.GetResult(0, string.Empty, responseKey, null);
             return BadRequest(result);
         }
 
+        /// <summary>
+        /// Gets the language.
+        /// </summary>
+        protected void GetLanguage()
+        {
+            _lang = RouteData != null && RouteData.Values["culture"] != null
+                ? RouteData.Values["culture"].ToString() : "vi-vn";
+            ViewBag.culture = _lang;
+
+            _domain = string.Format("{0}://{1}", Request.Scheme, Request.Host);
+
+            //ViewBag.currentCulture = listCultures.FirstOrDefault(c => c.Specificulture == _lang);
+            //ViewBag.cultures = listCultures;
+        }
+        
+        // TODO: Still need?
         //protected IActionResult GetResult<TResult>(int status, TResult data, string responseKey, string error, string message)
         //{
         //    var result = ApiHelper<TResult>.GetResult(status, data, responseKey, null);
         //    return Ok(result);
         //}
 
+        /// <summary>
+        /// Gets the success result.
+        /// </summary>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
+        /// <param name="data">The data.</param>
+        /// <returns></returns>
         protected IActionResult GetSuccessResult<TResult>(TResult data)
         {
             var result = ApiHelper<TResult>.GetResult(1, data, Enums.ResponseKey.OK.ToString(), null);
             return Ok(result);
         }
 
-        protected async Task<List<string>> UploadListFileAsync(string folderPath)
-        {
-            List<string> result = new List<string>();
-            var files = HttpContext.Request.Form.Files;
-            foreach (var file in files)
-            {
-                string fileName = await UploadFileAsync(file, folderPath);
-                if (!string.IsNullOrEmpty(fileName))
-                {
-                    result.Add(fileName);
-                }
-
-            }
-            return result;
-        }
+        /// <summary>
+        /// Uploads the file asynchronous.
+        /// </summary>
+        /// <param name="file">The file.</param>
+        /// <param name="folderPath">The folder path.</param>
+        /// <returns></returns>
         protected async Task<string> UploadFileAsync(IFormFile file, string folderPath)
         {
             if (file != null && file.Length > 0)
@@ -115,44 +164,68 @@ namespace Swastika.Api.Controllers
                 return string.Empty;
             }
         }
+
+        /// <summary>
+        /// Uploads the list file asynchronous.
+        /// </summary>
+        /// <param name="folderPath">The folder path.</param>
+        /// <returns></returns>
+        protected async Task<List<string>> UploadListFileAsync(string folderPath)
+        {
+            List<string> result = new List<string>();
+            var files = HttpContext.Request.Form.Files;
+            foreach (var file in files)
+            {
+                string fileName = await UploadFileAsync(file, folderPath);
+                if (!string.IsNullOrEmpty(fileName))
+                {
+                    result.Add(fileName);
+                }
+            }
+            return result;
+        }
     }
+
+    /// <summary>
+    /// </summary>
+    /// <typeparam name="TDbContext">The type of the database context.</typeparam>
+    /// <typeparam name="TModel">The type of the model.</typeparam>
+    /// <seealso cref="Microsoft.AspNetCore.Mvc.Controller"/>
     public class BaseApiController<TDbContext, TModel> : Controller
         where TDbContext : DbContext
         where TModel : class
     {
+        /// <summary>
+        /// The repo
+        /// </summary>
+        protected readonly DefaultRepository<TDbContext, TModel> _repo;
+
+        /// <summary>
+        /// The domain
+        /// </summary>
         protected string _domain;
+
+        /// <summary>
+        /// The language
+        /// </summary>
         protected string _lang;
 
-        public override void OnActionExecuting(ActionExecutingContext context)
-        {
-            GetLanguage();
-            base.OnActionExecuting(context);
-        }
-        protected void GetLanguage()
-        {
-
-            _lang = RouteData != null && RouteData.Values["culture"] != null
-                ? RouteData.Values["culture"].ToString() : "vi-vn";
-            ViewBag.culture = _lang;
-
-            _domain = string.Format("{0}://{1}", Request.Scheme, Request.Host);
-
-            //ViewBag.currentCulture = listCultures.FirstOrDefault(c => c.Specificulture == _lang);
-            //ViewBag.cultures = listCultures;
-        }
-
-        protected readonly DefaultRepository<TDbContext, TModel> _repo;
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BaseApiController{TDbContext, TModel}"/> class.
+        /// </summary>
         public BaseApiController()
         {
             _repo = DefaultRepository<TDbContext, TModel>.Instance;
         }
 
-        public override NotFoundObjectResult NotFound(object value)
-        {
-            var result = ApiHelper<TModel>.GetResult(0, default(TModel), Enums.ResponseKey.NotFound.ToString(), null);
-            return base.NotFound(result);
-        }
-
+        /// <summary>
+        /// Creates an <see cref="T:Microsoft.AspNetCore.Mvc.BadRequestObjectResult"/> that produces
+        /// a <see cref="F:Microsoft.AspNetCore.Http.StatusCodes.Status400BadRequest"/> response.
+        /// </summary>
+        /// <param name="modelState"></param>
+        /// <returns>
+        /// The created <see cref="T:Microsoft.AspNetCore.Mvc.BadRequestObjectResult"/> for the response.
+        /// </returns>
         public override BadRequestObjectResult BadRequest(ModelStateDictionary modelState)
         {
             List<string> errors = new List<string>();
@@ -167,16 +240,69 @@ namespace Swastika.Api.Controllers
             return base.BadRequest(result);
         }
 
+        /// <summary>
+        /// Creates an <see cref="T:Microsoft.AspNetCore.Mvc.BadRequestObjectResult"/> that produces
+        /// a <see cref="F:Microsoft.AspNetCore.Http.StatusCodes.Status400BadRequest"/> response.
+        /// </summary>
+        /// <param name="error"></param>
+        /// <returns>
+        /// The created <see cref="T:Microsoft.AspNetCore.Mvc.BadRequestObjectResult"/> for the response.
+        /// </returns>
         public override BadRequestObjectResult BadRequest(object error)
         {
             var result = ApiHelper<TModel>.GetResult(0, default(TModel), Enums.ResponseKey.BadRequest.ToString(), null);
             return base.BadRequest(result);
         }
 
+        /// <summary>
+        /// Creates an <see cref="T:Microsoft.AspNetCore.Mvc.NotFoundObjectResult"/> that produces a
+        /// <see cref="F:Microsoft.AspNetCore.Http.StatusCodes.Status404NotFound"/> response.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns>
+        /// The created <see cref="T:Microsoft.AspNetCore.Mvc.NotFoundObjectResult"/> for the response.
+        /// </returns>
+        public override NotFoundObjectResult NotFound(object value)
+        {
+            var result = ApiHelper<TModel>.GetResult(0, default(TModel), Enums.ResponseKey.NotFound.ToString(), null);
+            return base.NotFound(result);
+        }
+
+        /// <summary>
+        /// Called before the action method is invoked.
+        /// </summary>
+        /// <param name="context">The action executing context.</param>
+        public override void OnActionExecuting(ActionExecutingContext context)
+        {
+            GetLanguage();
+            base.OnActionExecuting(context);
+        }
+
+        /// <summary>
+        /// Gets the error result.
+        /// </summary>
+        /// <param name="responseKey">The response key.</param>
+        /// <param name="errorMsg">The error MSG.</param>
+        /// <returns></returns>
         protected IActionResult GetErrorResult(string responseKey, string errorMsg)
         {
             var result = ApiHelper<TModel>.GetResult(0, default(TModel), responseKey, null);
             return BadRequest(result);
+        }
+
+        /// <summary>
+        /// Gets the language.
+        /// </summary>
+        protected void GetLanguage()
+        {
+            _lang = RouteData != null && RouteData.Values["culture"] != null
+                ? RouteData.Values["culture"].ToString() : "vi-vn";
+            ViewBag.culture = _lang;
+
+            _domain = string.Format("{0}://{1}", Request.Scheme, Request.Host);
+
+            //ViewBag.currentCulture = listCultures.FirstOrDefault(c => c.Specificulture == _lang);
+            //ViewBag.cultures = listCultures;
         }
 
         //protected IActionResult GetResult<TResult>(int status, TResult data, string responseKey, string error, string message)
@@ -185,47 +311,57 @@ namespace Swastika.Api.Controllers
         //    return Ok(result);
         //}
 
+        /// <summary>
+        /// Gets the success result.
+        /// </summary>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
+        /// <param name="data">The data.</param>
+        /// <returns></returns>
         protected IActionResult GetSuccessResult<TResult>(TResult data)
         {
             var result = ApiHelper<TResult>.GetResult(1, data, Enums.ResponseKey.OK.ToString(), null);
             return Ok(result);
         }
-
     }
 
+    /// <summary>
+    /// </summary>
+    /// <typeparam name="TDbContext">The type of the database context.</typeparam>
+    /// <typeparam name="TModel">The type of the model.</typeparam>
+    /// <typeparam name="TView">The type of the view.</typeparam>
+    /// <seealso cref="Microsoft.AspNetCore.Mvc.Controller"/>
     public class BaseApiController<TDbContext, TModel, TView> : Controller
         where TDbContext : DbContext
         where TModel : class
         where TView : Swastika.Domain.Data.ViewModels.ViewModelBase<TDbContext, TModel, TView>
     {
-        protected string _lang;
+        /// <summary>
+        /// The repo
+        /// </summary>
         protected readonly DefaultRepository<TDbContext, TModel, TView> _repo;
 
-        public override void OnActionExecuting(ActionExecutingContext context)
-        {
-            GetLanguage();
-            base.OnActionExecuting(context);
-        }
-        protected void GetLanguage()
-        {
+        /// <summary>
+        /// The language
+        /// </summary>
+        protected string _lang;
 
-            _lang = RouteData != null && RouteData.Values["culture"] != null
-                ? RouteData.Values["culture"].ToString() : "vi-vn";
-            ViewBag.culture = _lang;
-        }
-
-
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BaseApiController{TDbContext, TModel,
+        /// TView}"/> class.
+        /// </summary>
         public BaseApiController()
         {
             _repo = DefaultRepository<TDbContext, TModel, TView>.Instance;
         }
 
-        public override NotFoundObjectResult NotFound(object value)
-        {
-            var result = ApiHelper<TView>.GetResult(0, default(TView), Enums.ResponseKey.NotFound.ToString(), null);
-            return base.NotFound(result);
-        }
-
+        /// <summary>
+        /// Creates an <see cref="T:Microsoft.AspNetCore.Mvc.BadRequestObjectResult"/> that produces
+        /// a <see cref="F:Microsoft.AspNetCore.Http.StatusCodes.Status400BadRequest"/> response.
+        /// </summary>
+        /// <param name="modelState"></param>
+        /// <returns>
+        /// The created <see cref="T:Microsoft.AspNetCore.Mvc.BadRequestObjectResult"/> for the response.
+        /// </returns>
         public override BadRequestObjectResult BadRequest(ModelStateDictionary modelState)
         {
             List<string> errors = new List<string>();
@@ -240,16 +376,64 @@ namespace Swastika.Api.Controllers
             return base.BadRequest(result);
         }
 
+        /// <summary>
+        /// Creates an <see cref="T:Microsoft.AspNetCore.Mvc.BadRequestObjectResult"/> that produces
+        /// a <see cref="F:Microsoft.AspNetCore.Http.StatusCodes.Status400BadRequest"/> response.
+        /// </summary>
+        /// <param name="error"></param>
+        /// <returns>
+        /// The created <see cref="T:Microsoft.AspNetCore.Mvc.BadRequestObjectResult"/> for the response.
+        /// </returns>
         public override BadRequestObjectResult BadRequest(object error)
         {
             var result = ApiHelper<TView>.GetResult(0, default(TView), Enums.ResponseKey.BadRequest.ToString(), null);
             return base.BadRequest(result);
         }
 
+        /// <summary>
+        /// Creates an <see cref="T:Microsoft.AspNetCore.Mvc.NotFoundObjectResult"/> that produces a
+        /// <see cref="F:Microsoft.AspNetCore.Http.StatusCodes.Status404NotFound"/> response.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns>
+        /// The created <see cref="T:Microsoft.AspNetCore.Mvc.NotFoundObjectResult"/> for the response.
+        /// </returns>
+        public override NotFoundObjectResult NotFound(object value)
+        {
+            var result = ApiHelper<TView>.GetResult(0, default(TView), Enums.ResponseKey.NotFound.ToString(), null);
+            return base.NotFound(result);
+        }
+
+        /// <summary>
+        /// Called before the action method is invoked.
+        /// </summary>
+        /// <param name="context">The action executing context.</param>
+        public override void OnActionExecuting(ActionExecutingContext context)
+        {
+            GetLanguage();
+            base.OnActionExecuting(context);
+        }
+
+        /// <summary>
+        /// Gets the error result.
+        /// </summary>
+        /// <param name="responseKey">The response key.</param>
+        /// <param name="errorMsg">The error MSG.</param>
+        /// <returns></returns>
         protected IActionResult GetErrorResult(string responseKey, string errorMsg)
         {
             var result = ApiHelper<TView>.GetResult(0, default(TView), responseKey, null);
             return BadRequest(result);
+        }
+
+        /// <summary>
+        /// Gets the language.
+        /// </summary>
+        protected void GetLanguage()
+        {
+            _lang = RouteData != null && RouteData.Values["culture"] != null
+                ? RouteData.Values["culture"].ToString() : "vi-vn";
+            ViewBag.culture = _lang;
         }
 
         //protected IActionResult GetResult<TResult>(int status, TResult data, string responseKey, string error, string message)
@@ -258,6 +442,12 @@ namespace Swastika.Api.Controllers
         //    return Ok(result);
         //}
 
+        /// <summary>
+        /// Gets the success result.
+        /// </summary>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
+        /// <param name="data">The data.</param>
+        /// <returns></returns>
         protected IActionResult GetSuccessResult<TResult>(TResult data)
         {
             var result = ApiHelper<TResult>.GetResult(1, data, Enums.ResponseKey.OK.ToString(), null);

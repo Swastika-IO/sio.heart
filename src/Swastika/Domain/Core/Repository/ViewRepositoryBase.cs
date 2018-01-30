@@ -13,20 +13,18 @@ using System.Threading.Tasks;
 namespace Swastika.Domain.Data.Repository
 {
     /// <summary>
-    /// Base Repository
+    /// View Repository Base
     /// </summary>
+    /// <typeparam name="TDbContext">The type of the database context.</typeparam>
     /// <typeparam name="TModel">The type of the model.</typeparam>
     /// <typeparam name="TView">The type of the view.</typeparam>
-    /// <typeparam name="TDbContext">The type of the context.</typeparam>
-    /// <seealso cref="Swastika.Extension.Blog.Interfaces.IRepository{TModel, TView}" />
     public abstract class ViewRepositoryBase<TDbContext, TModel, TView>
        where TModel : class
         where TView : Swastika.Domain.Data.ViewModels.ViewModelBase<TDbContext, TModel, TView>
         where TDbContext : DbContext
     {
-
         /// <summary>
-        /// Initializes a new instance of the <see cref="SWBaseRepository{TModel, TView, TContext}"/> class.
+        /// Initializes a new instance of the <see cref="ViewRepositoryBase{TDbContext, TModel, TView}"/> class.
         /// </summary>
         public ViewRepositoryBase()
         {
@@ -34,217 +32,12 @@ namespace Swastika.Domain.Data.Repository
         }
 
         /// <summary>
-        /// Initializes the context.
-        /// </summary>
-        /// <returns></returns>
-        public virtual TDbContext InitContext()
-        {
-            Type classType = typeof(TDbContext);
-            ConstructorInfo classConstructor = classType.GetConstructor(new Type[] { });
-            TDbContext context = (TDbContext)classConstructor.Invoke(new object[] { });
-
-            return context;
-        }
-
-        /// <summary>
-        /// Registers the automatic mapper.
-        /// </summary>
-        public virtual void RegisterAutoMapper()
-        {            
-            Mapper.Initialize(cfg =>
-            {
-                cfg.CreateMap<TModel, TView>();
-                cfg.CreateMap<TView, TModel>();
-            });
-        }
-
-        /// <summary>
-        /// Parses the view.
-        /// </summary>
-        /// <param name="lstModels">The LST Items.</param>
-        /// <returns></returns>
-        public virtual List<TView> ParseView(List<TModel> lstModels, TDbContext _context = null, IDbContextTransaction _transaction = null)
-        {
-            List<TView> lstView = new List<TView>();
-            foreach (var model in lstModels)
-            {
-                lstView.Add(ParseView(model, _context, _transaction));
-            }
-
-            return lstView;
-        }
-
-        /// <summary>
-        /// Parses the view.
-        /// </summary>
-        /// <param name="model">The model.</param>
-        /// <returns></returns>
-        public virtual TView ParseView(TModel model, TDbContext _context = null, IDbContextTransaction _transaction = null)
-        {
-            Type classType = typeof(TView);
-            ConstructorInfo classConstructor = classType.GetConstructor(new Type[] { model.GetType(), typeof(TDbContext), typeof(IDbContextTransaction) });
-            TView vm = default(TView);
-            if (classConstructor != null)
-            {
-                vm = (TView)classConstructor.Invoke(new object[] { model, _context, _transaction });
-
-            }
-            else
-            {
-                classConstructor = classType.GetConstructor(new Type[] { model.GetType() });
-                vm = (TView)classConstructor.Invoke(new object[] { model });
-            }
-
-            return vm;
-        }
-
-        public virtual PaginationModel<TView> ParsePagingQuery(IQueryable<TModel> query
-           , string orderByPropertyName, OrderByDirection direction
-           , int? pageSize, int? pageIndex
-           , TDbContext context, IDbContextTransaction transaction)
-        {
-            List<TModel> lstModel = new List<TModel>();
-
-            PaginationModel<TView> result = new PaginationModel<TView>()
-            {
-                TotalItems = query.Count(),
-                PageIndex = pageIndex ?? 0
-            };
-            dynamic orderBy = GetLambda(orderByPropertyName);
-            IQueryable<TModel> sorted = null;
-            try
-            {
-                result.PageSize = pageSize ?? result.TotalItems;
-
-                if (pageSize.HasValue)
-                {
-                    result.TotalPage = result.TotalItems / pageSize.Value + (result.TotalItems % pageSize.Value > 0 ? 1 : 0);
-                }
-
-                switch (direction)
-                {
-                    case OrderByDirection.Descending:
-                        sorted = Queryable.OrderByDescending(query, orderBy);
-                        if (pageSize.HasValue)
-                        {
-
-
-                            lstModel = sorted.Skip(pageIndex.Value * pageSize.Value)
-                                .Take(pageSize.Value)
-                                .ToList();
-                        }
-                        else
-                        {
-                            lstModel = sorted.ToList();
-                        }
-                        break;
-
-                    default:
-                        sorted = Queryable.OrderBy(query, orderBy);
-                        if (pageSize.HasValue)
-                        {
-                            lstModel = sorted
-                                .Skip(pageIndex.Value * pageSize.Value)
-                                .Take(pageSize.Value)
-                                .ToList();
-                        }
-                        else
-                        {
-                            lstModel = sorted.ToList();
-                        }
-                        break;
-                }
-                lstModel.ForEach(model => context.Entry(model).State = EntityState.Detached);
-                var lstView = ParseView(lstModel, context, transaction);
-                result.Items = lstView;
-                return result;
-            }
-            // TODO: Add more specific exeption types instead of Exception only
-            catch (Exception ex)
-            {
-                LogErrorMessage(ex);
-                return null;
-            }
-
-        }
-
-        public virtual async Task<PaginationModel<TView>> ParsePagingQueryAsync(IQueryable<TModel> query
-           , string orderByPropertyName, OrderByDirection direction
-           , int? pageSize, int? pageIndex
-           , TDbContext context, IDbContextTransaction transaction)
-        {
-            List<TModel> lstModel = new List<TModel>();
-
-            PaginationModel<TView> result = new PaginationModel<TView>()
-            {
-                TotalItems = query.Count(),
-                PageIndex = pageIndex ?? 0
-            };
-            dynamic orderBy = GetLambda(orderByPropertyName);
-            IQueryable<TModel> sorted = null;
-            try
-            {
-                result.PageSize = pageSize ?? result.TotalItems;
-
-                if (pageSize.HasValue)
-                {
-                    result.TotalPage = result.TotalItems / pageSize.Value + (result.TotalItems % pageSize.Value > 0 ? 1 : 0);
-                }
-
-                switch (direction)
-                {
-                    case OrderByDirection.Descending:
-                        sorted = Queryable.OrderByDescending(query, orderBy);
-                        if (pageSize.HasValue)
-                        {
-
-
-                            lstModel = await sorted.Skip(pageIndex.Value * pageSize.Value)
-                                .Take(pageSize.Value)
-                                .ToListAsync();
-                        }
-                        else
-                        {
-                            lstModel = sorted.ToList();
-                        }
-                        break;
-
-                    default:
-                        sorted = Queryable.OrderBy(query, orderBy);
-                        if (pageSize.HasValue)
-                        {
-                            lstModel = await sorted
-                                .Skip(pageIndex.Value * pageSize.Value)
-                                .Take(pageSize.Value)
-                                .ToListAsync();
-                        }
-                        else
-                        {
-                            lstModel = await sorted.ToListAsync();
-                        }
-                        break;
-                }
-                lstModel.ForEach(model => context.Entry(model).State = EntityState.Detached);
-                var lstView = ParseView(lstModel, context, transaction);
-                result.Items = lstView;
-                return result;
-            }
-            // TODO: Add more specific exeption types instead of Exception only
-            catch (Exception ex)
-            {
-                LogErrorMessage(ex);
-                return null;
-            }
-
-        }
-
-        /// <summary>
-        /// Determines whether the specified entity is exists.
+        /// Checks the is exists.
         /// </summary>
         /// <param name="entity">The entity.</param>
-        /// <returns>
-        ///   <c>true</c> if the specified entity is exists; otherwise, <c>false</c>.
-        /// </returns>
+        /// <param name="_context">The context.</param>
+        /// <param name="_transaction">The transaction.</param>
+        /// <returns></returns>
         public virtual bool CheckIsExists(TModel entity, TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
             TDbContext context = _context ?? InitContext();
@@ -278,12 +71,12 @@ namespace Swastika.Domain.Data.Repository
         }
 
         /// <summary>
-        /// Determines whether the specified predicate is exists.
+        /// Checks the is exists.
         /// </summary>
         /// <param name="predicate">The predicate.</param>
-        /// <returns>
-        ///   <c>true</c> if the specified predicate is exists; otherwise, <c>false</c>.
-        /// </returns>
+        /// <param name="_context">The context.</param>
+        /// <param name="_transaction">The transaction.</param>
+        /// <returns></returns>
         public bool CheckIsExists(System.Func<TModel, bool> predicate, TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
             TDbContext context = _context ?? InitContext();
@@ -320,7 +113,9 @@ namespace Swastika.Domain.Data.Repository
         /// <summary>
         /// Creates the model.
         /// </summary>
-        /// <param name="model">The model.</param>
+        /// <param name="view">The view.</param>
+        /// <param name="_context">The context.</param>
+        /// <param name="_transaction">The transaction.</param>
         /// <returns></returns>
         public virtual RepositoryResponse<TView> CreateModel(TView view
             , TDbContext _context = null, IDbContextTransaction _transaction = null)
@@ -330,7 +125,6 @@ namespace Swastika.Domain.Data.Repository
             RepositoryResponse<TView> result = new RepositoryResponse<TView>() { IsSucceed = true };
             try
             {
-
                 context.Entry(view.Model).State = EntityState.Added;
                 context.SaveChanges();
                 if (result.IsSucceed)
@@ -352,7 +146,6 @@ namespace Swastika.Domain.Data.Repository
 
                     return result;
                 }
-
             }
             // TODO: Add more specific exeption types instead of Exception only
             catch (Exception ex)
@@ -380,7 +173,9 @@ namespace Swastika.Domain.Data.Repository
         /// <summary>
         /// Creates the model asynchronous.
         /// </summary>
-        /// <param name="model">The model.</param>
+        /// <param name="view">The view.</param>
+        /// <param name="_context">The context.</param>
+        /// <param name="_transaction">The transaction.</param>
         /// <returns></returns>
         public virtual async Task<RepositoryResponse<TView>> CreateModelAsync(TView view
             , TDbContext _context = null, IDbContextTransaction _transaction = null)
@@ -422,8 +217,6 @@ namespace Swastika.Domain.Data.Repository
                     }
                     return result;
                 }
-
-
             }
             // TODO: Add more specific exeption types instead of Exception only
             catch (Exception ex)
@@ -453,7 +246,9 @@ namespace Swastika.Domain.Data.Repository
         /// <summary>
         /// Edits the model.
         /// </summary>
-        /// <param name="model">The model.</param>
+        /// <param name="view">The view.</param>
+        /// <param name="_context">The context.</param>
+        /// <param name="_transaction">The transaction.</param>
         /// <returns></returns>
         public virtual RepositoryResponse<TView> EditModel(TView view
             , TDbContext _context = null, IDbContextTransaction _transaction = null)
@@ -494,8 +289,6 @@ namespace Swastika.Domain.Data.Repository
                     }
                     return result;
                 }
-
-
             }
             // TODO: Add more specific exeption types instead of Exception only
             catch (Exception ex)
@@ -523,7 +316,9 @@ namespace Swastika.Domain.Data.Repository
         /// <summary>
         /// Edits the model asynchronous.
         /// </summary>
-        /// <param name="model">The model.</param>
+        /// <param name="view">The view.</param>
+        /// <param name="_context">The context.</param>
+        /// <param name="_transaction">The transaction.</param>
         /// <returns></returns>
         public virtual async Task<RepositoryResponse<TView>> EditModelAsync(TView view, TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
@@ -575,7 +370,7 @@ namespace Swastika.Domain.Data.Repository
                     //if current transaction is root transaction
                     transaction.Rollback();
                 }
-                
+
                 return result;
             }
             finally
@@ -588,453 +383,12 @@ namespace Swastika.Domain.Data.Repository
             }
         }
 
-        #region GetModelList
-
-
-
-        /// <summary>
-        /// Gets the model list.
-        /// </summary>
-        /// <param name="isGetSubModels">if set to <c>true</c> [is get sub Items].</param>
-        /// <returns></returns>
-        public virtual RepositoryResponse<List<TView>> GetModelList(TDbContext _context = null, IDbContextTransaction _transaction = null)
-        {
-            var context = _context ?? InitContext();
-            var transaction = _transaction ?? context.Database.BeginTransaction();
-            List<TView> result = new List<TView>();
-            try
-            {
-                var lstModel = context.Set<TModel>().ToList();
-
-                lstModel.ForEach(model => context.Entry(model).State = EntityState.Detached);
-                result = ParseView(lstModel, context, transaction);
-                return new RepositoryResponse<List<TView>>()
-                {
-                    IsSucceed = true,
-                    Data = result
-                };
-            }
-            // TODO: Add more specific exeption types instead of Exception only
-            catch (Exception ex)
-            {
-                LogErrorMessage(ex);
-                if (_transaction == null)
-                {
-                    //if current transaction is root transaction
-                    transaction.Rollback();
-                }
-
-                return new RepositoryResponse<List<TView>>()
-                {
-                    IsSucceed = false,
-                    Data = null,
-                    Exception = ex
-                };
-            }
-            finally
-            {
-                if (_context == null)
-                {
-                    //if current Context is Root
-                    context.Dispose();
-                }
-            }
-        }
-
-        /// <summary>
-        /// Gets the model list.
-        /// </summary>
-        /// <param name="orderBy">The order by.</param>
-        /// <param name="direction">The direction.</param>
-        /// <param name="pageIndex">Index of the page.</param>
-        /// <param name="pageSize">Size of the page.</param>
-        /// <param name="isGetSubModels">if set to <c>true</c> [is get sub Items].</param>
-        /// <returns></returns>
-        public virtual RepositoryResponse<PaginationModel<TView>> GetModelList(
-            string orderByPropertyName, OrderByDirection direction, int? pageSize, int? pageIndex
-            , TDbContext _context = null, IDbContextTransaction _transaction = null)
-        {
-            var context = _context ?? InitContext();
-            var transaction = _transaction ?? context.Database.BeginTransaction();
-
-            try
-            {
-                var query = context.Set<TModel>();
-
-                var result = ParsePagingQuery(query, orderByPropertyName, direction, pageSize, pageIndex
-                    , context, transaction);
-
-                return new RepositoryResponse<PaginationModel<TView>>()
-                {
-                    IsSucceed = true,
-                    Data = result
-                };
-            }
-            // TODO: Add more specific exeption types instead of Exception only
-            catch (Exception ex)
-            {
-                LogErrorMessage(ex);
-                if (_transaction == null)
-                {
-                    //if current transaction is root transaction
-                    transaction.Rollback();
-                }
-
-                return new RepositoryResponse<PaginationModel<TView>>()
-                {
-                    IsSucceed = false,
-                    Data = null,
-                    Exception = ex
-                };
-            }
-            finally
-            {
-                if (_context == null)
-                {
-                    //if current Context is Root
-                    context.Dispose();
-                }
-            }
-        }
-
-
-
-        /// <summary>
-        /// Gets the model list.
-        /// </summary>
-        /// <param name="isGetSubModels">if set to <c>true</c> [is get sub Items].</param>
-        /// <returns></returns>
-        public virtual async Task<RepositoryResponse<List<TView>>> GetModelListAsync(TDbContext _context = null, IDbContextTransaction _transaction = null)
-        {
-            var context = _context ?? InitContext();
-            var transaction = _transaction ?? context.Database.BeginTransaction();
-            List<TView> result = new List<TView>();
-            try
-            {
-                var lstModel = await context.Set<TModel>().ToListAsync();
-
-                lstModel.ForEach(model => context.Entry(model).State = EntityState.Detached);
-                result = ParseView(lstModel, _context, _transaction);
-                return new RepositoryResponse<List<TView>>()
-                {
-                    IsSucceed = true,
-                    Data = result
-                };
-            }
-            // TODO: Add more specific exeption types instead of Exception only
-            catch (Exception ex)
-            {
-                LogErrorMessage(ex);
-                if (_transaction == null)
-                {
-                    //if current transaction is root transaction
-                    transaction.Rollback();
-                }
-
-                return new RepositoryResponse<List<TView>>()
-                {
-                    IsSucceed = false,
-                    Data = null,
-                    Exception = ex
-                };
-            }
-            finally
-            {
-                if (_context == null)
-                {
-                    //if current Context is Root
-                    context.Dispose();
-                }
-            }
-        }
-
-
-        /// <summary>
-        /// Gets the model list asynchronous.
-        /// </summary>
-        /// <param name="orderBy">The order by.</param>
-        /// <param name="direction">The direction.</param>
-        /// <param name="pageIndex">Index of the page.</param>
-        /// <param name="pageSize">Size of the page.</param>
-        /// <param name="isGetSubModels">if set to <c>true</c> [is get sub Items].</param>
-        /// <returns></returns>
-        public virtual async Task<RepositoryResponse<PaginationModel<TView>>> GetModelListAsync(
-            string orderByPropertyName, OrderByDirection direction, int? pageSize, int? pageIndex
-            , TDbContext _context = null, IDbContextTransaction _transaction = null)
-        {
-            var context = _context ?? InitContext();
-            var transaction = _transaction ?? context.Database.BeginTransaction();
-
-            try
-            {
-                var query = context.Set<TModel>();
-
-                var result = await ParsePagingQueryAsync(query
-                    , orderByPropertyName, direction
-                    , pageSize, pageIndex
-                    , context, transaction);
-                return new RepositoryResponse<PaginationModel<TView>>()
-                {
-                    IsSucceed = true,
-                    Data = result
-                };
-            }
-            // TODO: Add more specific exeption types instead of Exception only
-            catch (Exception ex)
-            {
-                LogErrorMessage(ex);
-                if (_transaction == null)
-                {
-                    //if current transaction is root transaction
-                    transaction.Rollback();
-                }
-
-                return new RepositoryResponse<PaginationModel<TView>>()
-                {
-                    IsSucceed = false,
-                    Data = null,
-                    Exception = ex
-                };
-            }
-            finally
-            {
-                if (_context == null)
-                {
-                    //if current Context is Root
-                    context.Dispose();
-                }
-            }
-        }
-
-
-        #endregion GetModelList
-
-        #region GetModelListBy
-
-        /// <summary>
-        /// Gets the model list by.
-        /// </summary>
-        /// <param name="predicate">The predicate.</param>
-        /// <param name="isGetSubModels">if set to <c>true</c> [is get sub Items].</param>
-        /// <returns></returns>
-        public virtual RepositoryResponse<List<TView>> GetModelListBy(Expression<Func<TModel, bool>> predicate
-            , TDbContext _context = null, IDbContextTransaction _transaction = null)
-        {
-            var context = _context ?? InitContext();
-            var transaction = _transaction ?? context.Database.BeginTransaction();
-
-            try
-            {
-                var lstModel = context.Set<TModel>().Where(predicate).ToList();
-                lstModel.ForEach(model => context.Entry(model).State = EntityState.Detached);
-                var lstViewResult = ParseView(lstModel, _context, _transaction);
-                return new RepositoryResponse<List<TView>>()
-                {
-                    IsSucceed = true,
-                    Data = lstViewResult
-                };
-            }
-            // TODO: Add more specific exeption types instead of Exception only
-            catch (Exception ex)
-            {
-                LogErrorMessage(ex);
-                if (_transaction == null)
-                {
-                    //if current transaction is root transaction
-                    transaction.Rollback();
-                }
-
-                return new RepositoryResponse<List<TView>>()
-                {
-                    IsSucceed = false,
-                    Data = null,
-                    Exception = ex
-                };
-            }
-            finally
-            {
-                if (_context == null)
-                {
-                    //if current Context is Root
-                    context.Dispose();
-                }
-            }
-        }
-
-        /// <summary>
-        /// Gets the model list by.
-        /// </summary>
-        /// <param name="predicate">The predicate.</param>
-        /// <param name="orderBy">The order by.</param>
-        /// <param name="direction">The direction.</param>
-        /// <param name="pageIndex">Index of the page.</param>
-        /// <param name="pageSize">Size of the page.</param>
-        /// <param name="isGetSubModels">if set to <c>true</c> [is get sub Items].</param>
-        /// <returns></returns>
-        public virtual RepositoryResponse<PaginationModel<TView>> GetModelListBy(
-            Expression<Func<TModel, bool>> predicate, string orderByPropertyName, OrderByDirection direction, int? pageSize, int? pageIndex
-            , TDbContext _context = null, IDbContextTransaction _transaction = null)
-        {
-            var context = _context ?? InitContext();
-            var transaction = _transaction ?? context.Database.BeginTransaction();
-
-            try
-            {                
-                var query = context.Set<TModel>().Where(predicate);                
-                var result = ParsePagingQuery(query
-                    , orderByPropertyName, direction
-                    , pageSize, pageIndex
-                    , context, transaction);
-                return new RepositoryResponse<PaginationModel<TView>>()
-                {
-                    IsSucceed = true,
-                    Data = result
-                };
-            }
-            // TODO: Add more specific exeption types instead of Exception only
-            catch (Exception ex)
-            {
-                LogErrorMessage(ex);
-                if (_transaction == null)
-                {
-                    //if current transaction is root transaction
-                    transaction.Rollback();
-                }
-
-                return new RepositoryResponse<PaginationModel<TView>>()
-                {
-                    IsSucceed = false,
-                    Data = null,
-                    Exception = ex
-                };
-            }
-            finally
-            {
-                if (_context == null)
-                {
-                    //if current Context is Root
-                    context.Dispose();
-                }
-            }
-        }
-
-
-        /// <summary>
-        /// Gets the model list by asynchronous.
-        /// </summary>
-        /// <param name="predicate">The predicate.</param>
-        /// <param name="isGetSubModels">if set to <c>true</c> [is get sub Items].</param>
-        /// <returns></returns>
-        public virtual async Task<RepositoryResponse<List<TView>>> GetModelListByAsync(Expression<Func<TModel, bool>> predicate
-            , TDbContext _context = null, IDbContextTransaction _transaction = null)
-        {
-            var context = _context ?? InitContext();
-            var transaction = _transaction ?? context.Database.BeginTransaction();
-
-            try
-            {
-                var query = context.Set<TModel>().Where(predicate);
-                var lstModel = await query.ToListAsync();
-                lstModel.ForEach(model => context.Entry(model).State = EntityState.Detached);
-                var result = ParseView(lstModel, _context, _transaction);
-                return new RepositoryResponse<List<TView>>()
-                {
-                    IsSucceed = true,
-                    Data = result
-                };
-            }
-            catch (Exception ex)
-            {
-                LogErrorMessage(ex);
-                if (_transaction == null)
-                {
-                    //if current transaction is root transaction
-                    transaction.Rollback();
-                }
-
-                return new RepositoryResponse<List<TView>>()
-                {
-                    IsSucceed = false,
-                    Data = null,
-                    Exception = ex
-                };
-            }
-            finally
-            {
-                if (_context == null)
-                {
-                    //if current Context is Root
-                    context.Dispose();
-                }
-            }
-        }
-
-        /// <summary>
-        /// Gets the model list by asynchronous.
-        /// </summary>
-        /// <param name="predicate">The predicate.</param>
-        /// <param name="orderBy">The order by.</param>
-        /// <param name="direction">The direction.</param>
-        /// <param name="pageIndex">Index of the page.</param>
-        /// <param name="pageSize">Size of the page.</param>
-        /// <param name="isGetSubModels">if set to <c>true</c> [is get sub Items].</param>
-        /// <returns></returns>
-        public virtual async Task<RepositoryResponse<PaginationModel<TView>>> GetModelListByAsync(
-            Expression<Func<TModel, bool>> predicate, string orderByPropertyName
-            , OrderByDirection direction, int? pageSize, int? pageIndex
-            , TDbContext _context = null, IDbContextTransaction _transaction = null)
-        {
-            var context = _context ?? InitContext();
-            var transaction = _transaction ?? context.Database.BeginTransaction();
-
-            try
-            {
-                var query = context.Set<TModel>().Where(predicate);
-
-                var result = await ParsePagingQueryAsync(query
-                    , orderByPropertyName, direction
-                    , pageSize, pageIndex
-                    , context, transaction);
-                return new RepositoryResponse<PaginationModel<TView>>()
-                {
-                    IsSucceed = true,
-                    Data = result
-                };
-            }
-            catch (Exception ex)
-            {
-                LogErrorMessage(ex);
-                if (_transaction == null)
-                {
-                    //if current transaction is root transaction
-                    transaction.Rollback();
-                }
-
-                return new RepositoryResponse<PaginationModel<TView>>()
-                {
-                    IsSucceed = false,
-                    Data = null,
-                    Exception = ex
-                };
-            }
-            finally
-            {
-                if (_context == null)
-                {
-                    //if current Context is Root
-                    context.Dispose();
-                }
-            }
-        }
-
-
-        #endregion GetModelListBy
-
         /// <summary>
         /// Gets the single model.
         /// </summary>
         /// <param name="predicate">The predicate.</param>
-        /// <param name="isGetSubModels">if set to <c>true</c> [is get sub Items].</param>
+        /// <param name="_context">The context.</param>
+        /// <param name="_transaction">The transaction.</param>
         /// <returns></returns>
         public virtual RepositoryResponse<TView> GetSingleModel(
             Expression<Func<TModel, bool>> predicate
@@ -1093,7 +447,8 @@ namespace Swastika.Domain.Data.Repository
         /// Gets the single model asynchronous.
         /// </summary>
         /// <param name="predicate">The predicate.</param>
-        /// <param name="isGetSubModels">if set to <c>true</c> [is get sub Items].</param>
+        /// <param name="_context">The context.</param>
+        /// <param name="_transaction">The transaction.</param>
         /// <returns></returns>
         public virtual async Task<RepositoryResponse<TView>> GetSingleModelAsync(
             Expression<Func<TModel, bool>> predicate
@@ -1150,11 +505,685 @@ namespace Swastika.Domain.Data.Repository
             }
         }
 
+        /// <summary>
+        /// Initializes the context.
+        /// </summary>
+        /// <returns></returns>
+        public virtual TDbContext InitContext()
+        {
+            Type classType = typeof(TDbContext);
+            ConstructorInfo classConstructor = classType.GetConstructor(new Type[] { });
+            TDbContext context = (TDbContext)classConstructor.Invoke(new object[] { });
+
+            return context;
+        }
+
+        /// <summary>
+        /// Logs the error message.
+        /// </summary>
+        /// <param name="ex">The ex.</param>
+        public virtual void LogErrorMessage(Exception ex)
+        {
+        }
+
+        /// <summary>
+        /// Parses the paging query.
+        /// </summary>
+        /// <param name="query">The query.</param>
+        /// <param name="orderByPropertyName">Name of the order by property.</param>
+        /// <param name="direction">The direction.</param>
+        /// <param name="pageSize">Size of the page.</param>
+        /// <param name="pageIndex">Index of the page.</param>
+        /// <param name="context">The context.</param>
+        /// <param name="transaction">The transaction.</param>
+        /// <returns></returns>
+        public virtual PaginationModel<TView> ParsePagingQuery(IQueryable<TModel> query
+           , string orderByPropertyName, OrderByDirection direction
+           , int? pageSize, int? pageIndex
+           , TDbContext context, IDbContextTransaction transaction)
+        {
+            List<TModel> lstModel = new List<TModel>();
+
+            PaginationModel<TView> result = new PaginationModel<TView>()
+            {
+                TotalItems = query.Count(),
+                PageIndex = pageIndex ?? 0
+            };
+            dynamic orderBy = GetLambda(orderByPropertyName);
+            IQueryable<TModel> sorted = null;
+            try
+            {
+                result.PageSize = pageSize ?? result.TotalItems;
+
+                if (pageSize.HasValue)
+                {
+                    result.TotalPage = result.TotalItems / pageSize.Value + (result.TotalItems % pageSize.Value > 0 ? 1 : 0);
+                }
+
+                switch (direction)
+                {
+                    case OrderByDirection.Descending:
+                        sorted = Queryable.OrderByDescending(query, orderBy);
+                        if (pageSize.HasValue)
+                        {
+                            lstModel = sorted.Skip(pageIndex.Value * pageSize.Value)
+                                .Take(pageSize.Value)
+                                .ToList();
+                        }
+                        else
+                        {
+                            lstModel = sorted.ToList();
+                        }
+                        break;
+
+                    default:
+                        sorted = Queryable.OrderBy(query, orderBy);
+                        if (pageSize.HasValue)
+                        {
+                            lstModel = sorted
+                                .Skip(pageIndex.Value * pageSize.Value)
+                                .Take(pageSize.Value)
+                                .ToList();
+                        }
+                        else
+                        {
+                            lstModel = sorted.ToList();
+                        }
+                        break;
+                }
+                lstModel.ForEach(model => context.Entry(model).State = EntityState.Detached);
+                var lstView = ParseView(lstModel, context, transaction);
+                result.Items = lstView;
+                return result;
+            }
+            // TODO: Add more specific exeption types instead of Exception only
+            catch (Exception ex)
+            {
+                LogErrorMessage(ex);
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Parses the paging query asynchronous.
+        /// </summary>
+        /// <param name="query">The query.</param>
+        /// <param name="orderByPropertyName">Name of the order by property.</param>
+        /// <param name="direction">The direction.</param>
+        /// <param name="pageSize">Size of the page.</param>
+        /// <param name="pageIndex">Index of the page.</param>
+        /// <param name="context">The context.</param>
+        /// <param name="transaction">The transaction.</param>
+        /// <returns></returns>
+        public virtual async Task<PaginationModel<TView>> ParsePagingQueryAsync(IQueryable<TModel> query
+           , string orderByPropertyName, OrderByDirection direction
+           , int? pageSize, int? pageIndex
+           , TDbContext context, IDbContextTransaction transaction)
+        {
+            List<TModel> lstModel = new List<TModel>();
+
+            PaginationModel<TView> result = new PaginationModel<TView>()
+            {
+                TotalItems = query.Count(),
+                PageIndex = pageIndex ?? 0
+            };
+            dynamic orderBy = GetLambda(orderByPropertyName);
+            IQueryable<TModel> sorted = null;
+            try
+            {
+                result.PageSize = pageSize ?? result.TotalItems;
+
+                if (pageSize.HasValue)
+                {
+                    result.TotalPage = result.TotalItems / pageSize.Value + (result.TotalItems % pageSize.Value > 0 ? 1 : 0);
+                }
+
+                switch (direction)
+                {
+                    case OrderByDirection.Descending:
+                        sorted = Queryable.OrderByDescending(query, orderBy);
+                        if (pageSize.HasValue)
+                        {
+                            lstModel = await sorted.Skip(pageIndex.Value * pageSize.Value)
+                                .Take(pageSize.Value)
+                                .ToListAsync();
+                        }
+                        else
+                        {
+                            lstModel = sorted.ToList();
+                        }
+                        break;
+
+                    default:
+                        sorted = Queryable.OrderBy(query, orderBy);
+                        if (pageSize.HasValue)
+                        {
+                            lstModel = await sorted
+                                .Skip(pageIndex.Value * pageSize.Value)
+                                .Take(pageSize.Value)
+                                .ToListAsync();
+                        }
+                        else
+                        {
+                            lstModel = await sorted.ToListAsync();
+                        }
+                        break;
+                }
+                lstModel.ForEach(model => context.Entry(model).State = EntityState.Detached);
+                var lstView = ParseView(lstModel, context, transaction);
+                result.Items = lstView;
+                return result;
+            }
+            // TODO: Add more specific exeption types instead of Exception only
+            catch (Exception ex)
+            {
+                LogErrorMessage(ex);
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Parses the view.
+        /// </summary>
+        /// <param name="lstModels">The LST models.</param>
+        /// <param name="_context">The context.</param>
+        /// <param name="_transaction">The transaction.</param>
+        /// <returns></returns>
+        public virtual List<TView> ParseView(List<TModel> lstModels, TDbContext _context = null, IDbContextTransaction _transaction = null)
+        {
+            List<TView> lstView = new List<TView>();
+            foreach (var model in lstModels)
+            {
+                lstView.Add(ParseView(model, _context, _transaction));
+            }
+
+            return lstView;
+        }
+
+        /// <summary>
+        /// Parses the view.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <param name="_context">The context.</param>
+        /// <param name="_transaction">The transaction.</param>
+        /// <returns></returns>
+        public virtual TView ParseView(TModel model, TDbContext _context = null, IDbContextTransaction _transaction = null)
+        {
+            Type classType = typeof(TView);
+            ConstructorInfo classConstructor = classType.GetConstructor(new Type[] { model.GetType(), typeof(TDbContext), typeof(IDbContextTransaction) });
+            TView vm = default(TView);
+            if (classConstructor != null)
+            {
+                vm = (TView)classConstructor.Invoke(new object[] { model, _context, _transaction });
+            }
+            else
+            {
+                classConstructor = classType.GetConstructor(new Type[] { model.GetType() });
+                vm = (TView)classConstructor.Invoke(new object[] { model });
+            }
+
+            return vm;
+        }
+
+        /// <summary>
+        /// Registers the automatic mapper.
+        /// </summary>
+        public virtual void RegisterAutoMapper()
+        {
+            Mapper.Initialize(cfg =>
+            {
+                cfg.CreateMap<TModel, TView>();
+                cfg.CreateMap<TView, TModel>();
+            });
+        }
+        #region GetModelList
+
+        /// <summary>
+        /// Gets the model list.
+        /// </summary>
+        /// <param name="_context">The context.</param>
+        /// <param name="_transaction">The transaction.</param>
+        /// <returns></returns>
+        public virtual RepositoryResponse<List<TView>> GetModelList(TDbContext _context = null, IDbContextTransaction _transaction = null)
+        {
+            var context = _context ?? InitContext();
+            var transaction = _transaction ?? context.Database.BeginTransaction();
+            List<TView> result = new List<TView>();
+            try
+            {
+                var lstModel = context.Set<TModel>().ToList();
+
+                lstModel.ForEach(model => context.Entry(model).State = EntityState.Detached);
+                result = ParseView(lstModel, context, transaction);
+                return new RepositoryResponse<List<TView>>()
+                {
+                    IsSucceed = true,
+                    Data = result
+                };
+            }
+            // TODO: Add more specific exeption types instead of Exception only
+            catch (Exception ex)
+            {
+                LogErrorMessage(ex);
+                if (_transaction == null)
+                {
+                    //if current transaction is root transaction
+                    transaction.Rollback();
+                }
+
+                return new RepositoryResponse<List<TView>>()
+                {
+                    IsSucceed = false,
+                    Data = null,
+                    Exception = ex
+                };
+            }
+            finally
+            {
+                if (_context == null)
+                {
+                    //if current Context is Root
+                    context.Dispose();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets the model list.
+        /// </summary>
+        /// <param name="orderByPropertyName">Name of the order by property.</param>
+        /// <param name="direction">The direction.</param>
+        /// <param name="pageSize">Size of the page.</param>
+        /// <param name="pageIndex">Index of the page.</param>
+        /// <param name="_context">The context.</param>
+        /// <param name="_transaction">The transaction.</param>
+        /// <returns></returns>
+        public virtual RepositoryResponse<PaginationModel<TView>> GetModelList(
+            string orderByPropertyName, OrderByDirection direction, int? pageSize, int? pageIndex
+            , TDbContext _context = null, IDbContextTransaction _transaction = null)
+        {
+            var context = _context ?? InitContext();
+            var transaction = _transaction ?? context.Database.BeginTransaction();
+
+            try
+            {
+                var query = context.Set<TModel>();
+
+                var result = ParsePagingQuery(query, orderByPropertyName, direction, pageSize, pageIndex
+                    , context, transaction);
+
+                return new RepositoryResponse<PaginationModel<TView>>()
+                {
+                    IsSucceed = true,
+                    Data = result
+                };
+            }
+            // TODO: Add more specific exeption types instead of Exception only
+            catch (Exception ex)
+            {
+                LogErrorMessage(ex);
+                if (_transaction == null)
+                {
+                    //if current transaction is root transaction
+                    transaction.Rollback();
+                }
+
+                return new RepositoryResponse<PaginationModel<TView>>()
+                {
+                    IsSucceed = false,
+                    Data = null,
+                    Exception = ex
+                };
+            }
+            finally
+            {
+                if (_context == null)
+                {
+                    //if current Context is Root
+                    context.Dispose();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets the model list asynchronous.
+        /// </summary>
+        /// <param name="_context">The context.</param>
+        /// <param name="_transaction">The transaction.</param>
+        /// <returns></returns>
+        public virtual async Task<RepositoryResponse<List<TView>>> GetModelListAsync(TDbContext _context = null, IDbContextTransaction _transaction = null)
+        {
+            var context = _context ?? InitContext();
+            var transaction = _transaction ?? context.Database.BeginTransaction();
+            List<TView> result = new List<TView>();
+            try
+            {
+                var lstModel = await context.Set<TModel>().ToListAsync();
+
+                lstModel.ForEach(model => context.Entry(model).State = EntityState.Detached);
+                result = ParseView(lstModel, _context, _transaction);
+                return new RepositoryResponse<List<TView>>()
+                {
+                    IsSucceed = true,
+                    Data = result
+                };
+            }
+            // TODO: Add more specific exeption types instead of Exception only
+            catch (Exception ex)
+            {
+                LogErrorMessage(ex);
+                if (_transaction == null)
+                {
+                    //if current transaction is root transaction
+                    transaction.Rollback();
+                }
+
+                return new RepositoryResponse<List<TView>>()
+                {
+                    IsSucceed = false,
+                    Data = null,
+                    Exception = ex
+                };
+            }
+            finally
+            {
+                if (_context == null)
+                {
+                    //if current Context is Root
+                    context.Dispose();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets the model list asynchronous.
+        /// </summary>
+        /// <param name="orderByPropertyName">Name of the order by property.</param>
+        /// <param name="direction">The direction.</param>
+        /// <param name="pageSize">Size of the page.</param>
+        /// <param name="pageIndex">Index of the page.</param>
+        /// <param name="_context">The context.</param>
+        /// <param name="_transaction">The transaction.</param>
+        /// <returns></returns>
+        public virtual async Task<RepositoryResponse<PaginationModel<TView>>> GetModelListAsync(
+            string orderByPropertyName, OrderByDirection direction, int? pageSize, int? pageIndex
+            , TDbContext _context = null, IDbContextTransaction _transaction = null)
+        {
+            var context = _context ?? InitContext();
+            var transaction = _transaction ?? context.Database.BeginTransaction();
+
+            try
+            {
+                var query = context.Set<TModel>();
+
+                var result = await ParsePagingQueryAsync(query
+                    , orderByPropertyName, direction
+                    , pageSize, pageIndex
+                    , context, transaction);
+                return new RepositoryResponse<PaginationModel<TView>>()
+                {
+                    IsSucceed = true,
+                    Data = result
+                };
+            }
+            // TODO: Add more specific exeption types instead of Exception only
+            catch (Exception ex)
+            {
+                LogErrorMessage(ex);
+                if (_transaction == null)
+                {
+                    //if current transaction is root transaction
+                    transaction.Rollback();
+                }
+
+                return new RepositoryResponse<PaginationModel<TView>>()
+                {
+                    IsSucceed = false,
+                    Data = null,
+                    Exception = ex
+                };
+            }
+            finally
+            {
+                if (_context == null)
+                {
+                    //if current Context is Root
+                    context.Dispose();
+                }
+            }
+        }
+
+        #endregion GetModelList
+
+        #region GetModelListBy
+
+        /// <summary>
+        /// Gets the model list by.
+        /// </summary>
+        /// <param name="predicate">The predicate.</param>
+        /// <param name="_context">The context.</param>
+        /// <param name="_transaction">The transaction.</param>
+        /// <returns></returns>
+        public virtual RepositoryResponse<List<TView>> GetModelListBy(Expression<Func<TModel, bool>> predicate
+            , TDbContext _context = null, IDbContextTransaction _transaction = null)
+        {
+            var context = _context ?? InitContext();
+            var transaction = _transaction ?? context.Database.BeginTransaction();
+
+            try
+            {
+                var lstModel = context.Set<TModel>().Where(predicate).ToList();
+                lstModel.ForEach(model => context.Entry(model).State = EntityState.Detached);
+                var lstViewResult = ParseView(lstModel, _context, _transaction);
+                return new RepositoryResponse<List<TView>>()
+                {
+                    IsSucceed = true,
+                    Data = lstViewResult
+                };
+            }
+            // TODO: Add more specific exeption types instead of Exception only
+            catch (Exception ex)
+            {
+                LogErrorMessage(ex);
+                if (_transaction == null)
+                {
+                    //if current transaction is root transaction
+                    transaction.Rollback();
+                }
+
+                return new RepositoryResponse<List<TView>>()
+                {
+                    IsSucceed = false,
+                    Data = null,
+                    Exception = ex
+                };
+            }
+            finally
+            {
+                if (_context == null)
+                {
+                    //if current Context is Root
+                    context.Dispose();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets the model list by.
+        /// </summary>
+        /// <param name="predicate">The predicate.</param>
+        /// <param name="orderByPropertyName">Name of the order by property.</param>
+        /// <param name="direction">The direction.</param>
+        /// <param name="pageSize">Size of the page.</param>
+        /// <param name="pageIndex">Index of the page.</param>
+        /// <param name="_context">The context.</param>
+        /// <param name="_transaction">The transaction.</param>
+        /// <returns></returns>
+        public virtual RepositoryResponse<PaginationModel<TView>> GetModelListBy(
+            Expression<Func<TModel, bool>> predicate, string orderByPropertyName, OrderByDirection direction, int? pageSize, int? pageIndex
+            , TDbContext _context = null, IDbContextTransaction _transaction = null)
+        {
+            var context = _context ?? InitContext();
+            var transaction = _transaction ?? context.Database.BeginTransaction();
+
+            try
+            {
+                var query = context.Set<TModel>().Where(predicate);
+                var result = ParsePagingQuery(query
+                    , orderByPropertyName, direction
+                    , pageSize, pageIndex
+                    , context, transaction);
+                return new RepositoryResponse<PaginationModel<TView>>()
+                {
+                    IsSucceed = true,
+                    Data = result
+                };
+            }
+            // TODO: Add more specific exeption types instead of Exception only
+            catch (Exception ex)
+            {
+                LogErrorMessage(ex);
+                if (_transaction == null)
+                {
+                    //if current transaction is root transaction
+                    transaction.Rollback();
+                }
+
+                return new RepositoryResponse<PaginationModel<TView>>()
+                {
+                    IsSucceed = false,
+                    Data = null,
+                    Exception = ex
+                };
+            }
+            finally
+            {
+                if (_context == null)
+                {
+                    //if current Context is Root
+                    context.Dispose();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets the model list by asynchronous.
+        /// </summary>
+        /// <param name="predicate">The predicate.</param>
+        /// <param name="_context">The context.</param>
+        /// <param name="_transaction">The transaction.</param>
+        /// <returns></returns>
+        public virtual async Task<RepositoryResponse<List<TView>>> GetModelListByAsync(Expression<Func<TModel, bool>> predicate
+            , TDbContext _context = null, IDbContextTransaction _transaction = null)
+        {
+            var context = _context ?? InitContext();
+            var transaction = _transaction ?? context.Database.BeginTransaction();
+
+            try
+            {
+                var query = context.Set<TModel>().Where(predicate);
+                var lstModel = await query.ToListAsync();
+                lstModel.ForEach(model => context.Entry(model).State = EntityState.Detached);
+                var result = ParseView(lstModel, _context, _transaction);
+                return new RepositoryResponse<List<TView>>()
+                {
+                    IsSucceed = true,
+                    Data = result
+                };
+            }
+            catch (Exception ex)
+            {
+                LogErrorMessage(ex);
+                if (_transaction == null)
+                {
+                    //if current transaction is root transaction
+                    transaction.Rollback();
+                }
+
+                return new RepositoryResponse<List<TView>>()
+                {
+                    IsSucceed = false,
+                    Data = null,
+                    Exception = ex
+                };
+            }
+            finally
+            {
+                if (_context == null)
+                {
+                    //if current Context is Root
+                    context.Dispose();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets the model list by asynchronous.
+        /// </summary>
+        /// <param name="predicate">The predicate.</param>
+        /// <param name="orderByPropertyName">Name of the order by property.</param>
+        /// <param name="direction">The direction.</param>
+        /// <param name="pageSize">Size of the page.</param>
+        /// <param name="pageIndex">Index of the page.</param>
+        /// <param name="_context">The context.</param>
+        /// <param name="_transaction">The transaction.</param>
+        /// <returns></returns>
+        public virtual async Task<RepositoryResponse<PaginationModel<TView>>> GetModelListByAsync(
+            Expression<Func<TModel, bool>> predicate, string orderByPropertyName
+            , OrderByDirection direction, int? pageSize, int? pageIndex
+            , TDbContext _context = null, IDbContextTransaction _transaction = null)
+        {
+            var context = _context ?? InitContext();
+            var transaction = _transaction ?? context.Database.BeginTransaction();
+
+            try
+            {
+                var query = context.Set<TModel>().Where(predicate);
+
+                var result = await ParsePagingQueryAsync(query
+                    , orderByPropertyName, direction
+                    , pageSize, pageIndex
+                    , context, transaction);
+                return new RepositoryResponse<PaginationModel<TView>>()
+                {
+                    IsSucceed = true,
+                    Data = result
+                };
+            }
+            catch (Exception ex)
+            {
+                LogErrorMessage(ex);
+                if (_transaction == null)
+                {
+                    //if current transaction is root transaction
+                    transaction.Rollback();
+                }
+
+                return new RepositoryResponse<PaginationModel<TView>>()
+                {
+                    IsSucceed = false,
+                    Data = null,
+                    Exception = ex
+                };
+            }
+            finally
+            {
+                if (_context == null)
+                {
+                    //if current Context is Root
+                    context.Dispose();
+                }
+            }
+        }
+
+        #endregion GetModelListBy
         // TODO: Should return return enum status code instead
         /// <summary>
         /// Removes the list model.
         /// </summary>
         /// <param name="predicate">The predicate.</param>
+        /// <param name="_context">The context.</param>
+        /// <param name="_transaction">The transaction.</param>
         /// <returns></returns>
         public virtual RepositoryResponse<bool> RemoveListModel(Expression<Func<TModel, bool>> predicate
             , TDbContext _context = null, IDbContextTransaction _transaction = null)
@@ -1247,6 +1276,8 @@ namespace Swastika.Domain.Data.Repository
         /// Removes the list model asynchronous.
         /// </summary>
         /// <param name="predicate">The predicate.</param>
+        /// <param name="_context">The context.</param>
+        /// <param name="_transaction">The transaction.</param>
         /// <returns></returns>
         public virtual async Task<RepositoryResponse<bool>> RemoveListModelAsync(Expression<Func<TModel, bool>> predicate
             , TDbContext _context = null, IDbContextTransaction _transaction = null)
@@ -1339,6 +1370,8 @@ namespace Swastika.Domain.Data.Repository
         /// Removes the model.
         /// </summary>
         /// <param name="predicate">The predicate.</param>
+        /// <param name="_context">The context.</param>
+        /// <param name="_transaction">The transaction.</param>
         /// <returns></returns>
         public virtual RepositoryResponse<bool> RemoveModel(Expression<Func<TModel, bool>> predicate
             , TDbContext _context = null, IDbContextTransaction _transaction = null)
@@ -1382,7 +1415,6 @@ namespace Swastika.Domain.Data.Repository
                         Data = false
                     };
                 }
-
             }
             catch (Exception ex)
             {
@@ -1415,6 +1447,8 @@ namespace Swastika.Domain.Data.Repository
         /// Removes the model.
         /// </summary>
         /// <param name="model">The model.</param>
+        /// <param name="_context">The context.</param>
+        /// <param name="_transaction">The transaction.</param>
         /// <returns></returns>
         public virtual RepositoryResponse<bool> RemoveModel(TModel model
             , TDbContext _context = null, IDbContextTransaction _transaction = null)
@@ -1457,7 +1491,6 @@ namespace Swastika.Domain.Data.Repository
                         Data = false
                     };
                 }
-
             }
             catch (Exception ex)
             {
@@ -1490,6 +1523,8 @@ namespace Swastika.Domain.Data.Repository
         /// Removes the model asynchronous.
         /// </summary>
         /// <param name="predicate">The predicate.</param>
+        /// <param name="_context">The context.</param>
+        /// <param name="_transaction">The transaction.</param>
         /// <returns></returns>
         public virtual async Task<RepositoryResponse<bool>> RemoveModelAsync(Expression<Func<TModel, bool>> predicate
             , TDbContext _context = null, IDbContextTransaction _transaction = null)
@@ -1533,7 +1568,6 @@ namespace Swastika.Domain.Data.Repository
                         Data = false
                     };
                 }
-
             }
             catch (Exception ex)
             {
@@ -1566,6 +1600,8 @@ namespace Swastika.Domain.Data.Repository
         /// Removes the model asynchronous.
         /// </summary>
         /// <param name="model">The model.</param>
+        /// <param name="_context">The context.</param>
+        /// <param name="_transaction">The transaction.</param>
         /// <returns></returns>
         public virtual async Task<RepositoryResponse<bool>> RemoveModelAsync(TModel model
             , TDbContext _context = null, IDbContextTransaction _transaction = null)
@@ -1608,7 +1644,6 @@ namespace Swastika.Domain.Data.Repository
                         Data = false
                     };
                 }
-
             }
             catch (Exception ex)
             {
@@ -1639,7 +1674,10 @@ namespace Swastika.Domain.Data.Repository
         /// <summary>
         /// Saves the model.
         /// </summary>
-        /// <param name="model">The model.</param>
+        /// <param name="view">The view.</param>
+        /// <param name="isSaveSubModels">if set to <c>true</c> [is save sub models].</param>
+        /// <param name="_context">The context.</param>
+        /// <param name="_transaction">The transaction.</param>
         /// <returns></returns>
         public virtual RepositoryResponse<TView> SaveModel(TView view, bool isSaveSubModels = false
             , TDbContext _context = null, IDbContextTransaction _transaction = null)
@@ -1657,7 +1695,10 @@ namespace Swastika.Domain.Data.Repository
         /// <summary>
         /// Saves the model asynchronous.
         /// </summary>
-        /// <param name="model">The model.</param>
+        /// <param name="view">The view.</param>
+        /// <param name="isSaveSubModels">if set to <c>true</c> [is save sub models].</param>
+        /// <param name="_context">The context.</param>
+        /// <param name="_transaction">The transaction.</param>
         /// <returns></returns>
         public virtual Task<RepositoryResponse<TView>> SaveModelAsync(TView view, bool isSaveSubModels = false
             , TDbContext _context = null, IDbContextTransaction _transaction = null)
@@ -1673,21 +1714,26 @@ namespace Swastika.Domain.Data.Repository
         }
 
         /// <summary>
-        /// Saves the model asynchronous.
+        /// Saves the sub model asynchronous.
         /// </summary>
         /// <param name="model">The model.</param>
+        /// <param name="context">The context.</param>
+        /// <param name="_transaction">The transaction.</param>
         /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
         public virtual Task<bool> SaveSubModelAsync(TModel model, TDbContext context, IDbContextTransaction _transaction)
         {
             throw new NotImplementedException();
         }
 
         #region Max
+
         /// <summary>
-        /// Gets the model list by.
+        /// Maximums the specified predicate.
         /// </summary>
         /// <param name="predicate">The predicate.</param>
-        /// <param name="isGetSubModels">if set to <c>true</c> [is get sub Items].</param>
+        /// <param name="_context">The context.</param>
+        /// <param name="_transaction">The transaction.</param>
         /// <returns></returns>
         public virtual RepositoryResponse<int> Max(Expression<Func<TModel, int>> predicate
             , TDbContext _context = null, IDbContextTransaction _transaction = null)
@@ -1732,10 +1778,11 @@ namespace Swastika.Domain.Data.Repository
         }
 
         /// <summary>
-        /// Gets the model list by.
+        /// Maximums the asynchronous.
         /// </summary>
         /// <param name="predicate">The predicate.</param>
-        /// <param name="isGetSubModels">if set to <c>true</c> [is get sub Items].</param>
+        /// <param name="_context">The context.</param>
+        /// <param name="_transaction">The transaction.</param>
         /// <returns></returns>
         public virtual async Task<RepositoryResponse<int>> MaxAsync(Expression<Func<TModel, int>> predicate
             , TDbContext _context = null, IDbContextTransaction _transaction = null)
@@ -1778,14 +1825,17 @@ namespace Swastika.Domain.Data.Repository
                 }
             }
         }
-        #endregion
+
+        #endregion Max
 
         #region Count
+
         /// <summary>
-        /// Gets the model list by.
+        /// Counts the specified predicate.
         /// </summary>
         /// <param name="predicate">The predicate.</param>
-        /// <param name="isGetSubModels">if set to <c>true</c> [is get sub Items].</param>
+        /// <param name="_context">The context.</param>
+        /// <param name="_transaction">The transaction.</param>
         /// <returns></returns>
         public virtual RepositoryResponse<int> Count(Expression<Func<TModel, bool>> predicate
             , TDbContext _context = null, IDbContextTransaction _transaction = null)
@@ -1830,10 +1880,11 @@ namespace Swastika.Domain.Data.Repository
         }
 
         /// <summary>
-        /// Gets the model list by.
+        /// Counts the asynchronous.
         /// </summary>
         /// <param name="predicate">The predicate.</param>
-        /// <param name="isGetSubModels">if set to <c>true</c> [is get sub Items].</param>
+        /// <param name="_context">The context.</param>
+        /// <param name="_transaction">The transaction.</param>
         /// <returns></returns>
         public virtual async Task<RepositoryResponse<int>> CountAsync(Expression<Func<TModel, bool>> predicate
             , TDbContext _context = null, IDbContextTransaction _transaction = null)
@@ -1876,14 +1927,16 @@ namespace Swastika.Domain.Data.Repository
                 }
             }
         }
-        #endregion
+
+        #endregion Count
 
         #region Count
+
         /// <summary>
-        /// Gets the model list by.
+        /// Counts the specified context.
         /// </summary>
-        /// <param name="predicate">The predicate.</param>
-        /// <param name="isGetSubModels">if set to <c>true</c> [is get sub Items].</param>
+        /// <param name="_context">The context.</param>
+        /// <param name="_transaction">The transaction.</param>
         /// <returns></returns>
         public virtual RepositoryResponse<int> Count(TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
@@ -1927,10 +1980,10 @@ namespace Swastika.Domain.Data.Repository
         }
 
         /// <summary>
-        /// Gets the model list by.
+        /// Counts the asynchronous.
         /// </summary>
-        /// <param name="predicate">The predicate.</param>
-        /// <param name="isGetSubModels">if set to <c>true</c> [is get sub Items].</param>
+        /// <param name="_context">The context.</param>
+        /// <param name="_transaction">The transaction.</param>
         /// <returns></returns>
         public virtual async Task<RepositoryResponse<int>> CountAsync(TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
@@ -1972,9 +2025,19 @@ namespace Swastika.Domain.Data.Repository
                 }
             }
         }
-        #endregion
+
+        #endregion Count
+
         #region Update Fields
 
+        /// <summary>
+        /// Updates the fields.
+        /// </summary>
+        /// <param name="predicate">The predicate.</param>
+        /// <param name="fields">The fields.</param>
+        /// <param name="_context">The context.</param>
+        /// <param name="_transaction">The transaction.</param>
+        /// <returns></returns>
         public RepositoryResponse<bool> UpdateFields(Expression<Func<TModel, bool>> predicate
             , List<EntityField> fields
             , TDbContext _context = null, IDbContextTransaction _transaction = null)
@@ -1989,7 +2052,6 @@ namespace Swastika.Domain.Data.Repository
                 {
                     foreach (var field in fields)
                     {
-                        
                         var lamda = GetLambda(field.PropertyName, false);
                         if (lamda != null)
                         {
@@ -1997,7 +2059,6 @@ namespace Swastika.Domain.Data.Repository
                             if (DateTime.TryParse(field.PropertyValue, out DateTime dateValue))
                             {
                                 prop.CurrentValue = dateValue;
-
                             }
                             else if (int.TryParse(field.PropertyValue, out int integerValue))
                             {
@@ -2017,8 +2078,7 @@ namespace Swastika.Domain.Data.Repository
                             break;
                         }
                     }
-
-                }                
+                }
 
                 if (result)
                 {
@@ -2073,6 +2133,14 @@ namespace Swastika.Domain.Data.Repository
             }
         }
 
+        /// <summary>
+        /// Updates the fields asynchronous.
+        /// </summary>
+        /// <param name="predicate">The predicate.</param>
+        /// <param name="fields">The fields.</param>
+        /// <param name="_context">The context.</param>
+        /// <param name="_transaction">The transaction.</param>
+        /// <returns></returns>
         public async Task<RepositoryResponse<bool>> UpdateFieldsAsync(Expression<Func<TModel, bool>> predicate
            , List<EntityField> fields
            , TDbContext _context = null, IDbContextTransaction _transaction = null)
@@ -2087,7 +2155,6 @@ namespace Swastika.Domain.Data.Repository
                 {
                     foreach (var field in fields)
                     {
-
                         var lamda = GetLambda(field.PropertyName, false);
                         if (lamda != null)
                         {
@@ -2095,7 +2162,6 @@ namespace Swastika.Domain.Data.Repository
                             if (DateTime.TryParse(field.PropertyValue, out DateTime dateValue))
                             {
                                 prop.CurrentValue = dateValue;
-
                             }
                             else if (int.TryParse(field.PropertyValue, out int integerValue))
                             {
@@ -2115,7 +2181,6 @@ namespace Swastika.Domain.Data.Repository
                             break;
                         }
                     }
-
                 }
 
                 if (result)
@@ -2171,27 +2236,25 @@ namespace Swastika.Domain.Data.Repository
             }
         }
 
-        #endregion
+        #endregion Update Fields
 
+        /// <summary>
+        /// Gets the lambda.
+        /// </summary>
+        /// <param name="propName">Name of the property.</param>
+        /// <param name="isGetDefault">if set to <c>true</c> [is get default].</param>
+        /// <returns></returns>
         protected LambdaExpression GetLambda(string propName, bool isGetDefault = true)
         {
             var parameter = Expression.Parameter(typeof(TModel));
             var type = typeof(TModel);
-            var prop = type.GetProperties().FirstOrDefault(p=>p.Name== propName);
-            if (prop==null && isGetDefault)
+            var prop = type.GetProperties().FirstOrDefault(p => p.Name == propName);
+            if (prop == null && isGetDefault)
             {
                 propName = type.GetProperties().FirstOrDefault().Name;
             }
             var memberExpression = Expression.Property(parameter, propName);
             return Expression.Lambda(memberExpression, parameter);
-        }
-
-        /// <summary>
-        /// Logs the error message.
-        /// </summary>
-        /// <param name="ex">The ex.</param>
-        public virtual void LogErrorMessage(Exception ex)
-        {
         }
     }
 }
