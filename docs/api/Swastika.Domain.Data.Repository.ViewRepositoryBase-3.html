@@ -1,0 +1,2527 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Class ViewRepositoryBase&lt;TDbContext, TModel, TView&gt;
+   </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Class ViewRepositoryBase&lt;TDbContext, TModel, TView&gt;
+   ">
+    <meta name="generator" content="docfx 2.30.0.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="Swastika.Domain.Data.Repository.ViewRepositoryBase`3">
+  
+  
+  <h1 id="Swastika_Domain_Data_Repository_ViewRepositoryBase_3" data-uid="Swastika.Domain.Data.Repository.ViewRepositoryBase`3" class="text-break">Class ViewRepositoryBase&lt;TDbContext, TModel, TView&gt;
+  </h1>
+  <div class="markdown level0 summary"><p>View Repository Base</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><span class="xref">System.Object</span></div>
+    <div class="level1"><span class="xref">ViewRepositoryBase&lt;TDbContext, TModel, TView&gt;</span></div>
+      <div class="level2"><a class="xref" href="Swastika.Domain.Data.Repository.DefaultRepository-3.html">DefaultRepository&lt;TDbContext, TModel, TView&gt;</a></div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetHashCode()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetType()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.MemberwiseClone()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ToString()</span>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="Swastika.Domain.Data.Repository.html">Swastika.Domain.Data.Repository</a></h6>
+  <h6><strong>Assembly</strong>: Swastika.dll</h6>
+  <h5 id="Swastika_Domain_Data_Repository_ViewRepositoryBase_3_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public abstract class ViewRepositoryBase&lt;TDbContext, TModel, TView&gt;
+    where TDbContext : DbContext where TModel : class where TView : ViewModelBase&lt;TDbContext, TModel, TView&gt;</code></pre>
+  </div>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">TDbContext</span></td>
+        <td><p>The type of the database context.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="parametername">TModel</span></td>
+        <td><p>The type of the model.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="parametername">TView</span></td>
+        <td><p>The type of the view.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="constructors">Constructors
+  </h3>
+  
+  
+  <a id="Swastika_Domain_Data_Repository_ViewRepositoryBase_3__ctor_" data-uid="Swastika.Domain.Data.Repository.ViewRepositoryBase`3.#ctor*"></a>
+  <h4 id="Swastika_Domain_Data_Repository_ViewRepositoryBase_3__ctor" data-uid="Swastika.Domain.Data.Repository.ViewRepositoryBase`3.#ctor">ViewRepositoryBase()</h4>
+  <div class="markdown level1 summary"><p>Initializes a new instance of the <a class="xref" href="Swastika.Domain.Data.Repository.ViewRepositoryBase-3.html">ViewRepositoryBase&lt;TDbContext, TModel, TView&gt;</a> class.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ViewRepositoryBase()</code></pre>
+  </div>
+  <h3 id="methods">Methods
+  </h3>
+  
+  
+  <a id="Swastika_Domain_Data_Repository_ViewRepositoryBase_3_CheckIsExists_" data-uid="Swastika.Domain.Data.Repository.ViewRepositoryBase`3.CheckIsExists*"></a>
+  <h4 id="Swastika_Domain_Data_Repository_ViewRepositoryBase_3_CheckIsExists__1__0_Microsoft_EntityFrameworkCore_Storage_IDbContextTransaction_" data-uid="Swastika.Domain.Data.Repository.ViewRepositoryBase`3.CheckIsExists(`1,`0,Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction)">CheckIsExists(TModel, TDbContext, IDbContextTransaction)</h4>
+  <div class="markdown level1 summary"><p>Checks the is exists.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual bool CheckIsExists(TModel entity, TDbContext _context = null, IDbContextTransaction _transaction = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">TModel</span></td>
+        <td><span class="parametername">entity</span></td>
+        <td><p>The entity.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">TDbContext</span></td>
+        <td><span class="parametername">_context</span></td>
+        <td><p>The context.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction</span></td>
+        <td><span class="parametername">_transaction</span></td>
+        <td><p>The transaction.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="Swastika_Domain_Data_Repository_ViewRepositoryBase_3_CheckIsExists_" data-uid="Swastika.Domain.Data.Repository.ViewRepositoryBase`3.CheckIsExists*"></a>
+  <h4 id="Swastika_Domain_Data_Repository_ViewRepositoryBase_3_CheckIsExists_System_Func__1_System_Boolean___0_Microsoft_EntityFrameworkCore_Storage_IDbContextTransaction_" data-uid="Swastika.Domain.Data.Repository.ViewRepositoryBase`3.CheckIsExists(System.Func{`1,System.Boolean},`0,Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction)">CheckIsExists(Func&lt;TModel, Boolean&gt;, TDbContext, IDbContextTransaction)</h4>
+  <div class="markdown level1 summary"><p>Checks the is exists.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool CheckIsExists(Func&lt;TModel, bool&gt; predicate, TDbContext _context = null, IDbContextTransaction _transaction = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Func</span>&lt;TModel, <span class="xref">System.Boolean</span>&gt;</td>
+        <td><span class="parametername">predicate</span></td>
+        <td><p>The predicate.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">TDbContext</span></td>
+        <td><span class="parametername">_context</span></td>
+        <td><p>The context.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction</span></td>
+        <td><span class="parametername">_transaction</span></td>
+        <td><p>The transaction.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="Swastika_Domain_Data_Repository_ViewRepositoryBase_3_Count_" data-uid="Swastika.Domain.Data.Repository.ViewRepositoryBase`3.Count*"></a>
+  <h4 id="Swastika_Domain_Data_Repository_ViewRepositoryBase_3_Count__0_Microsoft_EntityFrameworkCore_Storage_IDbContextTransaction_" data-uid="Swastika.Domain.Data.Repository.ViewRepositoryBase`3.Count(`0,Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction)">Count(TDbContext, IDbContextTransaction)</h4>
+  <div class="markdown level1 summary"><p>Counts the specified context.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual RepositoryResponse&lt;int&gt; Count(TDbContext _context = null, IDbContextTransaction _transaction = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">TDbContext</span></td>
+        <td><span class="parametername">_context</span></td>
+        <td><p>The context.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction</span></td>
+        <td><span class="parametername">_transaction</span></td>
+        <td><p>The transaction.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Swastika.Domain.Core.ViewModels.RepositoryResponse-1.html">RepositoryResponse</a>&lt;<span class="xref">System.Int32</span>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="Swastika_Domain_Data_Repository_ViewRepositoryBase_3_Count_" data-uid="Swastika.Domain.Data.Repository.ViewRepositoryBase`3.Count*"></a>
+  <h4 id="Swastika_Domain_Data_Repository_ViewRepositoryBase_3_Count_System_Linq_Expressions_Expression_System_Func__1_System_Boolean____0_Microsoft_EntityFrameworkCore_Storage_IDbContextTransaction_" data-uid="Swastika.Domain.Data.Repository.ViewRepositoryBase`3.Count(System.Linq.Expressions.Expression{System.Func{`1,System.Boolean}},`0,Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction)">Count(Expression&lt;Func&lt;TModel, Boolean&gt;&gt;, TDbContext, IDbContextTransaction)</h4>
+  <div class="markdown level1 summary"><p>Counts the specified predicate.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual RepositoryResponse&lt;int&gt; Count(Expression&lt;Func&lt;TModel, bool&gt;&gt; predicate, TDbContext _context = null, IDbContextTransaction _transaction = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Linq.Expressions.Expression</span>&lt;<span class="xref">System.Func</span>&lt;TModel, <span class="xref">System.Boolean</span>&gt;&gt;</td>
+        <td><span class="parametername">predicate</span></td>
+        <td><p>The predicate.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">TDbContext</span></td>
+        <td><span class="parametername">_context</span></td>
+        <td><p>The context.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction</span></td>
+        <td><span class="parametername">_transaction</span></td>
+        <td><p>The transaction.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Swastika.Domain.Core.ViewModels.RepositoryResponse-1.html">RepositoryResponse</a>&lt;<span class="xref">System.Int32</span>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="Swastika_Domain_Data_Repository_ViewRepositoryBase_3_CountAsync_" data-uid="Swastika.Domain.Data.Repository.ViewRepositoryBase`3.CountAsync*"></a>
+  <h4 id="Swastika_Domain_Data_Repository_ViewRepositoryBase_3_CountAsync__0_Microsoft_EntityFrameworkCore_Storage_IDbContextTransaction_" data-uid="Swastika.Domain.Data.Repository.ViewRepositoryBase`3.CountAsync(`0,Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction)">CountAsync(TDbContext, IDbContextTransaction)</h4>
+  <div class="markdown level1 summary"><p>Counts the asynchronous.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual Task&lt;RepositoryResponse&lt;int&gt;&gt; CountAsync(TDbContext _context = null, IDbContextTransaction _transaction = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">TDbContext</span></td>
+        <td><span class="parametername">_context</span></td>
+        <td><p>The context.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction</span></td>
+        <td><span class="parametername">_transaction</span></td>
+        <td><p>The transaction.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;<a class="xref" href="Swastika.Domain.Core.ViewModels.RepositoryResponse-1.html">RepositoryResponse</a>&lt;<span class="xref">System.Int32</span>&gt;&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="Swastika_Domain_Data_Repository_ViewRepositoryBase_3_CountAsync_" data-uid="Swastika.Domain.Data.Repository.ViewRepositoryBase`3.CountAsync*"></a>
+  <h4 id="Swastika_Domain_Data_Repository_ViewRepositoryBase_3_CountAsync_System_Linq_Expressions_Expression_System_Func__1_System_Boolean____0_Microsoft_EntityFrameworkCore_Storage_IDbContextTransaction_" data-uid="Swastika.Domain.Data.Repository.ViewRepositoryBase`3.CountAsync(System.Linq.Expressions.Expression{System.Func{`1,System.Boolean}},`0,Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction)">CountAsync(Expression&lt;Func&lt;TModel, Boolean&gt;&gt;, TDbContext, IDbContextTransaction)</h4>
+  <div class="markdown level1 summary"><p>Counts the asynchronous.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual Task&lt;RepositoryResponse&lt;int&gt;&gt; CountAsync(Expression&lt;Func&lt;TModel, bool&gt;&gt; predicate, TDbContext _context = null, IDbContextTransaction _transaction = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Linq.Expressions.Expression</span>&lt;<span class="xref">System.Func</span>&lt;TModel, <span class="xref">System.Boolean</span>&gt;&gt;</td>
+        <td><span class="parametername">predicate</span></td>
+        <td><p>The predicate.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">TDbContext</span></td>
+        <td><span class="parametername">_context</span></td>
+        <td><p>The context.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction</span></td>
+        <td><span class="parametername">_transaction</span></td>
+        <td><p>The transaction.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;<a class="xref" href="Swastika.Domain.Core.ViewModels.RepositoryResponse-1.html">RepositoryResponse</a>&lt;<span class="xref">System.Int32</span>&gt;&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="Swastika_Domain_Data_Repository_ViewRepositoryBase_3_CreateModel_" data-uid="Swastika.Domain.Data.Repository.ViewRepositoryBase`3.CreateModel*"></a>
+  <h4 id="Swastika_Domain_Data_Repository_ViewRepositoryBase_3_CreateModel__2__0_Microsoft_EntityFrameworkCore_Storage_IDbContextTransaction_" data-uid="Swastika.Domain.Data.Repository.ViewRepositoryBase`3.CreateModel(`2,`0,Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction)">CreateModel(TView, TDbContext, IDbContextTransaction)</h4>
+  <div class="markdown level1 summary"><p>Creates the model.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual RepositoryResponse&lt;TView&gt; CreateModel(TView view, TDbContext _context = null, IDbContextTransaction _transaction = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">TView</span></td>
+        <td><span class="parametername">view</span></td>
+        <td><p>The view.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">TDbContext</span></td>
+        <td><span class="parametername">_context</span></td>
+        <td><p>The context.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction</span></td>
+        <td><span class="parametername">_transaction</span></td>
+        <td><p>The transaction.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Swastika.Domain.Core.ViewModels.RepositoryResponse-1.html">RepositoryResponse</a>&lt;TView&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="Swastika_Domain_Data_Repository_ViewRepositoryBase_3_CreateModelAsync_" data-uid="Swastika.Domain.Data.Repository.ViewRepositoryBase`3.CreateModelAsync*"></a>
+  <h4 id="Swastika_Domain_Data_Repository_ViewRepositoryBase_3_CreateModelAsync__2__0_Microsoft_EntityFrameworkCore_Storage_IDbContextTransaction_" data-uid="Swastika.Domain.Data.Repository.ViewRepositoryBase`3.CreateModelAsync(`2,`0,Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction)">CreateModelAsync(TView, TDbContext, IDbContextTransaction)</h4>
+  <div class="markdown level1 summary"><p>Creates the model asynchronous.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual Task&lt;RepositoryResponse&lt;TView&gt;&gt; CreateModelAsync(TView view, TDbContext _context = null, IDbContextTransaction _transaction = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">TView</span></td>
+        <td><span class="parametername">view</span></td>
+        <td><p>The view.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">TDbContext</span></td>
+        <td><span class="parametername">_context</span></td>
+        <td><p>The context.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction</span></td>
+        <td><span class="parametername">_transaction</span></td>
+        <td><p>The transaction.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;<a class="xref" href="Swastika.Domain.Core.ViewModels.RepositoryResponse-1.html">RepositoryResponse</a>&lt;TView&gt;&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="Swastika_Domain_Data_Repository_ViewRepositoryBase_3_EditModel_" data-uid="Swastika.Domain.Data.Repository.ViewRepositoryBase`3.EditModel*"></a>
+  <h4 id="Swastika_Domain_Data_Repository_ViewRepositoryBase_3_EditModel__2__0_Microsoft_EntityFrameworkCore_Storage_IDbContextTransaction_" data-uid="Swastika.Domain.Data.Repository.ViewRepositoryBase`3.EditModel(`2,`0,Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction)">EditModel(TView, TDbContext, IDbContextTransaction)</h4>
+  <div class="markdown level1 summary"><p>Edits the model.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual RepositoryResponse&lt;TView&gt; EditModel(TView view, TDbContext _context = null, IDbContextTransaction _transaction = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">TView</span></td>
+        <td><span class="parametername">view</span></td>
+        <td><p>The view.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">TDbContext</span></td>
+        <td><span class="parametername">_context</span></td>
+        <td><p>The context.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction</span></td>
+        <td><span class="parametername">_transaction</span></td>
+        <td><p>The transaction.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Swastika.Domain.Core.ViewModels.RepositoryResponse-1.html">RepositoryResponse</a>&lt;TView&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="Swastika_Domain_Data_Repository_ViewRepositoryBase_3_EditModelAsync_" data-uid="Swastika.Domain.Data.Repository.ViewRepositoryBase`3.EditModelAsync*"></a>
+  <h4 id="Swastika_Domain_Data_Repository_ViewRepositoryBase_3_EditModelAsync__2__0_Microsoft_EntityFrameworkCore_Storage_IDbContextTransaction_" data-uid="Swastika.Domain.Data.Repository.ViewRepositoryBase`3.EditModelAsync(`2,`0,Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction)">EditModelAsync(TView, TDbContext, IDbContextTransaction)</h4>
+  <div class="markdown level1 summary"><p>Edits the model asynchronous.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual Task&lt;RepositoryResponse&lt;TView&gt;&gt; EditModelAsync(TView view, TDbContext _context = null, IDbContextTransaction _transaction = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">TView</span></td>
+        <td><span class="parametername">view</span></td>
+        <td><p>The view.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">TDbContext</span></td>
+        <td><span class="parametername">_context</span></td>
+        <td><p>The context.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction</span></td>
+        <td><span class="parametername">_transaction</span></td>
+        <td><p>The transaction.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;<a class="xref" href="Swastika.Domain.Core.ViewModels.RepositoryResponse-1.html">RepositoryResponse</a>&lt;TView&gt;&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="Swastika_Domain_Data_Repository_ViewRepositoryBase_3_GetLambda_" data-uid="Swastika.Domain.Data.Repository.ViewRepositoryBase`3.GetLambda*"></a>
+  <h4 id="Swastika_Domain_Data_Repository_ViewRepositoryBase_3_GetLambda_System_String_System_Boolean_" data-uid="Swastika.Domain.Data.Repository.ViewRepositoryBase`3.GetLambda(System.String,System.Boolean)">GetLambda(String, Boolean)</h4>
+  <div class="markdown level1 summary"><p>Gets the lambda.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected LambdaExpression GetLambda(string propName, bool isGetDefault = true)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">propName</span></td>
+        <td><p>Name of the property.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">isGetDefault</span></td>
+        <td><p>if set to <code>true</code> [is get default].</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Linq.Expressions.LambdaExpression</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="Swastika_Domain_Data_Repository_ViewRepositoryBase_3_GetModelList_" data-uid="Swastika.Domain.Data.Repository.ViewRepositoryBase`3.GetModelList*"></a>
+  <h4 id="Swastika_Domain_Data_Repository_ViewRepositoryBase_3_GetModelList__0_Microsoft_EntityFrameworkCore_Storage_IDbContextTransaction_" data-uid="Swastika.Domain.Data.Repository.ViewRepositoryBase`3.GetModelList(`0,Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction)">GetModelList(TDbContext, IDbContextTransaction)</h4>
+  <div class="markdown level1 summary"><p>Gets the model list.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual RepositoryResponse&lt;List&lt;TView&gt;&gt; GetModelList(TDbContext _context = null, IDbContextTransaction _transaction = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">TDbContext</span></td>
+        <td><span class="parametername">_context</span></td>
+        <td><p>The context.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction</span></td>
+        <td><span class="parametername">_transaction</span></td>
+        <td><p>The transaction.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Swastika.Domain.Core.ViewModels.RepositoryResponse-1.html">RepositoryResponse</a>&lt;<span class="xref">System.Collections.Generic.List</span>&lt;TView&gt;&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="Swastika_Domain_Data_Repository_ViewRepositoryBase_3_GetModelList_" data-uid="Swastika.Domain.Data.Repository.ViewRepositoryBase`3.GetModelList*"></a>
+  <h4 id="Swastika_Domain_Data_Repository_ViewRepositoryBase_3_GetModelList_System_String_Microsoft_Data_OData_Query_OrderByDirection_System_Nullable_System_Int32__System_Nullable_System_Int32___0_Microsoft_EntityFrameworkCore_Storage_IDbContextTransaction_" data-uid="Swastika.Domain.Data.Repository.ViewRepositoryBase`3.GetModelList(System.String,Microsoft.Data.OData.Query.OrderByDirection,System.Nullable{System.Int32},System.Nullable{System.Int32},`0,Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction)">GetModelList(String, OrderByDirection, Nullable&lt;Int32&gt;, Nullable&lt;Int32&gt;, TDbContext, IDbContextTransaction)</h4>
+  <div class="markdown level1 summary"><p>Gets the model list.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual RepositoryResponse&lt;PaginationModel&lt;TView&gt;&gt; GetModelList(string orderByPropertyName, OrderByDirection direction, int ? pageSize, int ? pageIndex, TDbContext _context = null, IDbContextTransaction _transaction = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">orderByPropertyName</span></td>
+        <td><p>Name of the order by property.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">Microsoft.Data.OData.Query.OrderByDirection</span></td>
+        <td><span class="parametername">direction</span></td>
+        <td><p>The direction.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Int32</span>&gt;</td>
+        <td><span class="parametername">pageSize</span></td>
+        <td><p>Size of the page.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Int32</span>&gt;</td>
+        <td><span class="parametername">pageIndex</span></td>
+        <td><p>Index of the page.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">TDbContext</span></td>
+        <td><span class="parametername">_context</span></td>
+        <td><p>The context.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction</span></td>
+        <td><span class="parametername">_transaction</span></td>
+        <td><p>The transaction.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Swastika.Domain.Core.ViewModels.RepositoryResponse-1.html">RepositoryResponse</a>&lt;<a class="xref" href="Swastika.Domain.Core.ViewModels.PaginationModel-1.html">PaginationModel</a>&lt;TView&gt;&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="Swastika_Domain_Data_Repository_ViewRepositoryBase_3_GetModelListAsync_" data-uid="Swastika.Domain.Data.Repository.ViewRepositoryBase`3.GetModelListAsync*"></a>
+  <h4 id="Swastika_Domain_Data_Repository_ViewRepositoryBase_3_GetModelListAsync__0_Microsoft_EntityFrameworkCore_Storage_IDbContextTransaction_" data-uid="Swastika.Domain.Data.Repository.ViewRepositoryBase`3.GetModelListAsync(`0,Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction)">GetModelListAsync(TDbContext, IDbContextTransaction)</h4>
+  <div class="markdown level1 summary"><p>Gets the model list asynchronous.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual Task&lt;RepositoryResponse&lt;List&lt;TView&gt;&gt;&gt; GetModelListAsync(TDbContext _context = null, IDbContextTransaction _transaction = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">TDbContext</span></td>
+        <td><span class="parametername">_context</span></td>
+        <td><p>The context.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction</span></td>
+        <td><span class="parametername">_transaction</span></td>
+        <td><p>The transaction.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;<a class="xref" href="Swastika.Domain.Core.ViewModels.RepositoryResponse-1.html">RepositoryResponse</a>&lt;<span class="xref">System.Collections.Generic.List</span>&lt;TView&gt;&gt;&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="Swastika_Domain_Data_Repository_ViewRepositoryBase_3_GetModelListAsync_" data-uid="Swastika.Domain.Data.Repository.ViewRepositoryBase`3.GetModelListAsync*"></a>
+  <h4 id="Swastika_Domain_Data_Repository_ViewRepositoryBase_3_GetModelListAsync_System_String_Microsoft_Data_OData_Query_OrderByDirection_System_Nullable_System_Int32__System_Nullable_System_Int32___0_Microsoft_EntityFrameworkCore_Storage_IDbContextTransaction_" data-uid="Swastika.Domain.Data.Repository.ViewRepositoryBase`3.GetModelListAsync(System.String,Microsoft.Data.OData.Query.OrderByDirection,System.Nullable{System.Int32},System.Nullable{System.Int32},`0,Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction)">GetModelListAsync(String, OrderByDirection, Nullable&lt;Int32&gt;, Nullable&lt;Int32&gt;, TDbContext, IDbContextTransaction)</h4>
+  <div class="markdown level1 summary"><p>Gets the model list asynchronous.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual Task&lt;RepositoryResponse&lt;PaginationModel&lt;TView&gt;&gt;&gt; GetModelListAsync(string orderByPropertyName, OrderByDirection direction, int ? pageSize, int ? pageIndex, TDbContext _context = null, IDbContextTransaction _transaction = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">orderByPropertyName</span></td>
+        <td><p>Name of the order by property.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">Microsoft.Data.OData.Query.OrderByDirection</span></td>
+        <td><span class="parametername">direction</span></td>
+        <td><p>The direction.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Int32</span>&gt;</td>
+        <td><span class="parametername">pageSize</span></td>
+        <td><p>Size of the page.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Int32</span>&gt;</td>
+        <td><span class="parametername">pageIndex</span></td>
+        <td><p>Index of the page.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">TDbContext</span></td>
+        <td><span class="parametername">_context</span></td>
+        <td><p>The context.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction</span></td>
+        <td><span class="parametername">_transaction</span></td>
+        <td><p>The transaction.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;<a class="xref" href="Swastika.Domain.Core.ViewModels.RepositoryResponse-1.html">RepositoryResponse</a>&lt;<a class="xref" href="Swastika.Domain.Core.ViewModels.PaginationModel-1.html">PaginationModel</a>&lt;TView&gt;&gt;&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="Swastika_Domain_Data_Repository_ViewRepositoryBase_3_GetModelListBy_" data-uid="Swastika.Domain.Data.Repository.ViewRepositoryBase`3.GetModelListBy*"></a>
+  <h4 id="Swastika_Domain_Data_Repository_ViewRepositoryBase_3_GetModelListBy_System_Linq_Expressions_Expression_System_Func__1_System_Boolean____0_Microsoft_EntityFrameworkCore_Storage_IDbContextTransaction_" data-uid="Swastika.Domain.Data.Repository.ViewRepositoryBase`3.GetModelListBy(System.Linq.Expressions.Expression{System.Func{`1,System.Boolean}},`0,Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction)">GetModelListBy(Expression&lt;Func&lt;TModel, Boolean&gt;&gt;, TDbContext, IDbContextTransaction)</h4>
+  <div class="markdown level1 summary"><p>Gets the model list by.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual RepositoryResponse&lt;List&lt;TView&gt;&gt; GetModelListBy(Expression&lt;Func&lt;TModel, bool&gt;&gt; predicate, TDbContext _context = null, IDbContextTransaction _transaction = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Linq.Expressions.Expression</span>&lt;<span class="xref">System.Func</span>&lt;TModel, <span class="xref">System.Boolean</span>&gt;&gt;</td>
+        <td><span class="parametername">predicate</span></td>
+        <td><p>The predicate.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">TDbContext</span></td>
+        <td><span class="parametername">_context</span></td>
+        <td><p>The context.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction</span></td>
+        <td><span class="parametername">_transaction</span></td>
+        <td><p>The transaction.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Swastika.Domain.Core.ViewModels.RepositoryResponse-1.html">RepositoryResponse</a>&lt;<span class="xref">System.Collections.Generic.List</span>&lt;TView&gt;&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="Swastika_Domain_Data_Repository_ViewRepositoryBase_3_GetModelListBy_" data-uid="Swastika.Domain.Data.Repository.ViewRepositoryBase`3.GetModelListBy*"></a>
+  <h4 id="Swastika_Domain_Data_Repository_ViewRepositoryBase_3_GetModelListBy_System_Linq_Expressions_Expression_System_Func__1_System_Boolean___System_String_Microsoft_Data_OData_Query_OrderByDirection_System_Nullable_System_Int32__System_Nullable_System_Int32___0_Microsoft_EntityFrameworkCore_Storage_IDbContextTransaction_" data-uid="Swastika.Domain.Data.Repository.ViewRepositoryBase`3.GetModelListBy(System.Linq.Expressions.Expression{System.Func{`1,System.Boolean}},System.String,Microsoft.Data.OData.Query.OrderByDirection,System.Nullable{System.Int32},System.Nullable{System.Int32},`0,Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction)">GetModelListBy(Expression&lt;Func&lt;TModel, Boolean&gt;&gt;, String, OrderByDirection, Nullable&lt;Int32&gt;, Nullable&lt;Int32&gt;, TDbContext, IDbContextTransaction)</h4>
+  <div class="markdown level1 summary"><p>Gets the model list by.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual RepositoryResponse&lt;PaginationModel&lt;TView&gt;&gt; GetModelListBy(Expression&lt;Func&lt;TModel, bool&gt;&gt; predicate, string orderByPropertyName, OrderByDirection direction, int ? pageSize, int ? pageIndex, TDbContext _context = null, IDbContextTransaction _transaction = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Linq.Expressions.Expression</span>&lt;<span class="xref">System.Func</span>&lt;TModel, <span class="xref">System.Boolean</span>&gt;&gt;</td>
+        <td><span class="parametername">predicate</span></td>
+        <td><p>The predicate.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">orderByPropertyName</span></td>
+        <td><p>Name of the order by property.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">Microsoft.Data.OData.Query.OrderByDirection</span></td>
+        <td><span class="parametername">direction</span></td>
+        <td><p>The direction.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Int32</span>&gt;</td>
+        <td><span class="parametername">pageSize</span></td>
+        <td><p>Size of the page.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Int32</span>&gt;</td>
+        <td><span class="parametername">pageIndex</span></td>
+        <td><p>Index of the page.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">TDbContext</span></td>
+        <td><span class="parametername">_context</span></td>
+        <td><p>The context.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction</span></td>
+        <td><span class="parametername">_transaction</span></td>
+        <td><p>The transaction.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Swastika.Domain.Core.ViewModels.RepositoryResponse-1.html">RepositoryResponse</a>&lt;<a class="xref" href="Swastika.Domain.Core.ViewModels.PaginationModel-1.html">PaginationModel</a>&lt;TView&gt;&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="Swastika_Domain_Data_Repository_ViewRepositoryBase_3_GetModelListByAsync_" data-uid="Swastika.Domain.Data.Repository.ViewRepositoryBase`3.GetModelListByAsync*"></a>
+  <h4 id="Swastika_Domain_Data_Repository_ViewRepositoryBase_3_GetModelListByAsync_System_Linq_Expressions_Expression_System_Func__1_System_Boolean____0_Microsoft_EntityFrameworkCore_Storage_IDbContextTransaction_" data-uid="Swastika.Domain.Data.Repository.ViewRepositoryBase`3.GetModelListByAsync(System.Linq.Expressions.Expression{System.Func{`1,System.Boolean}},`0,Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction)">GetModelListByAsync(Expression&lt;Func&lt;TModel, Boolean&gt;&gt;, TDbContext, IDbContextTransaction)</h4>
+  <div class="markdown level1 summary"><p>Gets the model list by asynchronous.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual Task&lt;RepositoryResponse&lt;List&lt;TView&gt;&gt;&gt; GetModelListByAsync(Expression&lt;Func&lt;TModel, bool&gt;&gt; predicate, TDbContext _context = null, IDbContextTransaction _transaction = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Linq.Expressions.Expression</span>&lt;<span class="xref">System.Func</span>&lt;TModel, <span class="xref">System.Boolean</span>&gt;&gt;</td>
+        <td><span class="parametername">predicate</span></td>
+        <td><p>The predicate.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">TDbContext</span></td>
+        <td><span class="parametername">_context</span></td>
+        <td><p>The context.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction</span></td>
+        <td><span class="parametername">_transaction</span></td>
+        <td><p>The transaction.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;<a class="xref" href="Swastika.Domain.Core.ViewModels.RepositoryResponse-1.html">RepositoryResponse</a>&lt;<span class="xref">System.Collections.Generic.List</span>&lt;TView&gt;&gt;&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="Swastika_Domain_Data_Repository_ViewRepositoryBase_3_GetModelListByAsync_" data-uid="Swastika.Domain.Data.Repository.ViewRepositoryBase`3.GetModelListByAsync*"></a>
+  <h4 id="Swastika_Domain_Data_Repository_ViewRepositoryBase_3_GetModelListByAsync_System_Linq_Expressions_Expression_System_Func__1_System_Boolean___System_String_Microsoft_Data_OData_Query_OrderByDirection_System_Nullable_System_Int32__System_Nullable_System_Int32___0_Microsoft_EntityFrameworkCore_Storage_IDbContextTransaction_" data-uid="Swastika.Domain.Data.Repository.ViewRepositoryBase`3.GetModelListByAsync(System.Linq.Expressions.Expression{System.Func{`1,System.Boolean}},System.String,Microsoft.Data.OData.Query.OrderByDirection,System.Nullable{System.Int32},System.Nullable{System.Int32},`0,Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction)">GetModelListByAsync(Expression&lt;Func&lt;TModel, Boolean&gt;&gt;, String, OrderByDirection, Nullable&lt;Int32&gt;, Nullable&lt;Int32&gt;, TDbContext, IDbContextTransaction)</h4>
+  <div class="markdown level1 summary"><p>Gets the model list by asynchronous.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual Task&lt;RepositoryResponse&lt;PaginationModel&lt;TView&gt;&gt;&gt; GetModelListByAsync(Expression&lt;Func&lt;TModel, bool&gt;&gt; predicate, string orderByPropertyName, OrderByDirection direction, int ? pageSize, int ? pageIndex, TDbContext _context = null, IDbContextTransaction _transaction = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Linq.Expressions.Expression</span>&lt;<span class="xref">System.Func</span>&lt;TModel, <span class="xref">System.Boolean</span>&gt;&gt;</td>
+        <td><span class="parametername">predicate</span></td>
+        <td><p>The predicate.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">orderByPropertyName</span></td>
+        <td><p>Name of the order by property.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">Microsoft.Data.OData.Query.OrderByDirection</span></td>
+        <td><span class="parametername">direction</span></td>
+        <td><p>The direction.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Int32</span>&gt;</td>
+        <td><span class="parametername">pageSize</span></td>
+        <td><p>Size of the page.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Int32</span>&gt;</td>
+        <td><span class="parametername">pageIndex</span></td>
+        <td><p>Index of the page.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">TDbContext</span></td>
+        <td><span class="parametername">_context</span></td>
+        <td><p>The context.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction</span></td>
+        <td><span class="parametername">_transaction</span></td>
+        <td><p>The transaction.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;<a class="xref" href="Swastika.Domain.Core.ViewModels.RepositoryResponse-1.html">RepositoryResponse</a>&lt;<a class="xref" href="Swastika.Domain.Core.ViewModels.PaginationModel-1.html">PaginationModel</a>&lt;TView&gt;&gt;&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="Swastika_Domain_Data_Repository_ViewRepositoryBase_3_GetSingleModel_" data-uid="Swastika.Domain.Data.Repository.ViewRepositoryBase`3.GetSingleModel*"></a>
+  <h4 id="Swastika_Domain_Data_Repository_ViewRepositoryBase_3_GetSingleModel_System_Linq_Expressions_Expression_System_Func__1_System_Boolean____0_Microsoft_EntityFrameworkCore_Storage_IDbContextTransaction_" data-uid="Swastika.Domain.Data.Repository.ViewRepositoryBase`3.GetSingleModel(System.Linq.Expressions.Expression{System.Func{`1,System.Boolean}},`0,Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction)">GetSingleModel(Expression&lt;Func&lt;TModel, Boolean&gt;&gt;, TDbContext, IDbContextTransaction)</h4>
+  <div class="markdown level1 summary"><p>Gets the single model.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual RepositoryResponse&lt;TView&gt; GetSingleModel(Expression&lt;Func&lt;TModel, bool&gt;&gt; predicate, TDbContext _context = null, IDbContextTransaction _transaction = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Linq.Expressions.Expression</span>&lt;<span class="xref">System.Func</span>&lt;TModel, <span class="xref">System.Boolean</span>&gt;&gt;</td>
+        <td><span class="parametername">predicate</span></td>
+        <td><p>The predicate.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">TDbContext</span></td>
+        <td><span class="parametername">_context</span></td>
+        <td><p>The context.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction</span></td>
+        <td><span class="parametername">_transaction</span></td>
+        <td><p>The transaction.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Swastika.Domain.Core.ViewModels.RepositoryResponse-1.html">RepositoryResponse</a>&lt;TView&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="Swastika_Domain_Data_Repository_ViewRepositoryBase_3_GetSingleModelAsync_" data-uid="Swastika.Domain.Data.Repository.ViewRepositoryBase`3.GetSingleModelAsync*"></a>
+  <h4 id="Swastika_Domain_Data_Repository_ViewRepositoryBase_3_GetSingleModelAsync_System_Linq_Expressions_Expression_System_Func__1_System_Boolean____0_Microsoft_EntityFrameworkCore_Storage_IDbContextTransaction_" data-uid="Swastika.Domain.Data.Repository.ViewRepositoryBase`3.GetSingleModelAsync(System.Linq.Expressions.Expression{System.Func{`1,System.Boolean}},`0,Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction)">GetSingleModelAsync(Expression&lt;Func&lt;TModel, Boolean&gt;&gt;, TDbContext, IDbContextTransaction)</h4>
+  <div class="markdown level1 summary"><p>Gets the single model asynchronous.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual Task&lt;RepositoryResponse&lt;TView&gt;&gt; GetSingleModelAsync(Expression&lt;Func&lt;TModel, bool&gt;&gt; predicate, TDbContext _context = null, IDbContextTransaction _transaction = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Linq.Expressions.Expression</span>&lt;<span class="xref">System.Func</span>&lt;TModel, <span class="xref">System.Boolean</span>&gt;&gt;</td>
+        <td><span class="parametername">predicate</span></td>
+        <td><p>The predicate.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">TDbContext</span></td>
+        <td><span class="parametername">_context</span></td>
+        <td><p>The context.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction</span></td>
+        <td><span class="parametername">_transaction</span></td>
+        <td><p>The transaction.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;<a class="xref" href="Swastika.Domain.Core.ViewModels.RepositoryResponse-1.html">RepositoryResponse</a>&lt;TView&gt;&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="Swastika_Domain_Data_Repository_ViewRepositoryBase_3_InitContext_" data-uid="Swastika.Domain.Data.Repository.ViewRepositoryBase`3.InitContext*"></a>
+  <h4 id="Swastika_Domain_Data_Repository_ViewRepositoryBase_3_InitContext" data-uid="Swastika.Domain.Data.Repository.ViewRepositoryBase`3.InitContext">InitContext()</h4>
+  <div class="markdown level1 summary"><p>Initializes the context.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual TDbContext InitContext()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">TDbContext</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="Swastika_Domain_Data_Repository_ViewRepositoryBase_3_LogErrorMessage_" data-uid="Swastika.Domain.Data.Repository.ViewRepositoryBase`3.LogErrorMessage*"></a>
+  <h4 id="Swastika_Domain_Data_Repository_ViewRepositoryBase_3_LogErrorMessage_System_Exception_" data-uid="Swastika.Domain.Data.Repository.ViewRepositoryBase`3.LogErrorMessage(System.Exception)">LogErrorMessage(Exception)</h4>
+  <div class="markdown level1 summary"><p>Logs the error message.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual void LogErrorMessage(Exception ex)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Exception</span></td>
+        <td><span class="parametername">ex</span></td>
+        <td><p>The ex.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="Swastika_Domain_Data_Repository_ViewRepositoryBase_3_Max_" data-uid="Swastika.Domain.Data.Repository.ViewRepositoryBase`3.Max*"></a>
+  <h4 id="Swastika_Domain_Data_Repository_ViewRepositoryBase_3_Max_System_Linq_Expressions_Expression_System_Func__1_System_Int32____0_Microsoft_EntityFrameworkCore_Storage_IDbContextTransaction_" data-uid="Swastika.Domain.Data.Repository.ViewRepositoryBase`3.Max(System.Linq.Expressions.Expression{System.Func{`1,System.Int32}},`0,Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction)">Max(Expression&lt;Func&lt;TModel, Int32&gt;&gt;, TDbContext, IDbContextTransaction)</h4>
+  <div class="markdown level1 summary"><p>Maximums the specified predicate.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual RepositoryResponse&lt;int&gt; Max(Expression&lt;Func&lt;TModel, int&gt;&gt; predicate, TDbContext _context = null, IDbContextTransaction _transaction = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Linq.Expressions.Expression</span>&lt;<span class="xref">System.Func</span>&lt;TModel, <span class="xref">System.Int32</span>&gt;&gt;</td>
+        <td><span class="parametername">predicate</span></td>
+        <td><p>The predicate.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">TDbContext</span></td>
+        <td><span class="parametername">_context</span></td>
+        <td><p>The context.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction</span></td>
+        <td><span class="parametername">_transaction</span></td>
+        <td><p>The transaction.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Swastika.Domain.Core.ViewModels.RepositoryResponse-1.html">RepositoryResponse</a>&lt;<span class="xref">System.Int32</span>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="Swastika_Domain_Data_Repository_ViewRepositoryBase_3_MaxAsync_" data-uid="Swastika.Domain.Data.Repository.ViewRepositoryBase`3.MaxAsync*"></a>
+  <h4 id="Swastika_Domain_Data_Repository_ViewRepositoryBase_3_MaxAsync_System_Linq_Expressions_Expression_System_Func__1_System_Int32____0_Microsoft_EntityFrameworkCore_Storage_IDbContextTransaction_" data-uid="Swastika.Domain.Data.Repository.ViewRepositoryBase`3.MaxAsync(System.Linq.Expressions.Expression{System.Func{`1,System.Int32}},`0,Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction)">MaxAsync(Expression&lt;Func&lt;TModel, Int32&gt;&gt;, TDbContext, IDbContextTransaction)</h4>
+  <div class="markdown level1 summary"><p>Maximums the asynchronous.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual Task&lt;RepositoryResponse&lt;int&gt;&gt; MaxAsync(Expression&lt;Func&lt;TModel, int&gt;&gt; predicate, TDbContext _context = null, IDbContextTransaction _transaction = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Linq.Expressions.Expression</span>&lt;<span class="xref">System.Func</span>&lt;TModel, <span class="xref">System.Int32</span>&gt;&gt;</td>
+        <td><span class="parametername">predicate</span></td>
+        <td><p>The predicate.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">TDbContext</span></td>
+        <td><span class="parametername">_context</span></td>
+        <td><p>The context.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction</span></td>
+        <td><span class="parametername">_transaction</span></td>
+        <td><p>The transaction.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;<a class="xref" href="Swastika.Domain.Core.ViewModels.RepositoryResponse-1.html">RepositoryResponse</a>&lt;<span class="xref">System.Int32</span>&gt;&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="Swastika_Domain_Data_Repository_ViewRepositoryBase_3_ParsePagingQuery_" data-uid="Swastika.Domain.Data.Repository.ViewRepositoryBase`3.ParsePagingQuery*"></a>
+  <h4 id="Swastika_Domain_Data_Repository_ViewRepositoryBase_3_ParsePagingQuery_System_Linq_IQueryable__1__System_String_Microsoft_Data_OData_Query_OrderByDirection_System_Nullable_System_Int32__System_Nullable_System_Int32___0_Microsoft_EntityFrameworkCore_Storage_IDbContextTransaction_" data-uid="Swastika.Domain.Data.Repository.ViewRepositoryBase`3.ParsePagingQuery(System.Linq.IQueryable{`1},System.String,Microsoft.Data.OData.Query.OrderByDirection,System.Nullable{System.Int32},System.Nullable{System.Int32},`0,Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction)">ParsePagingQuery(IQueryable&lt;TModel&gt;, String, OrderByDirection, Nullable&lt;Int32&gt;, Nullable&lt;Int32&gt;, TDbContext, IDbContextTransaction)</h4>
+  <div class="markdown level1 summary"><p>Parses the paging query.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual PaginationModel&lt;TView&gt; ParsePagingQuery(IQueryable&lt;TModel&gt; query, string orderByPropertyName, OrderByDirection direction, int ? pageSize, int ? pageIndex, TDbContext context, IDbContextTransaction transaction)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Linq.IQueryable</span>&lt;TModel&gt;</td>
+        <td><span class="parametername">query</span></td>
+        <td><p>The query.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">orderByPropertyName</span></td>
+        <td><p>Name of the order by property.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">Microsoft.Data.OData.Query.OrderByDirection</span></td>
+        <td><span class="parametername">direction</span></td>
+        <td><p>The direction.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Int32</span>&gt;</td>
+        <td><span class="parametername">pageSize</span></td>
+        <td><p>Size of the page.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Int32</span>&gt;</td>
+        <td><span class="parametername">pageIndex</span></td>
+        <td><p>Index of the page.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">TDbContext</span></td>
+        <td><span class="parametername">context</span></td>
+        <td><p>The context.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction</span></td>
+        <td><span class="parametername">transaction</span></td>
+        <td><p>The transaction.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Swastika.Domain.Core.ViewModels.PaginationModel-1.html">PaginationModel</a>&lt;TView&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="Swastika_Domain_Data_Repository_ViewRepositoryBase_3_ParsePagingQueryAsync_" data-uid="Swastika.Domain.Data.Repository.ViewRepositoryBase`3.ParsePagingQueryAsync*"></a>
+  <h4 id="Swastika_Domain_Data_Repository_ViewRepositoryBase_3_ParsePagingQueryAsync_System_Linq_IQueryable__1__System_String_Microsoft_Data_OData_Query_OrderByDirection_System_Nullable_System_Int32__System_Nullable_System_Int32___0_Microsoft_EntityFrameworkCore_Storage_IDbContextTransaction_" data-uid="Swastika.Domain.Data.Repository.ViewRepositoryBase`3.ParsePagingQueryAsync(System.Linq.IQueryable{`1},System.String,Microsoft.Data.OData.Query.OrderByDirection,System.Nullable{System.Int32},System.Nullable{System.Int32},`0,Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction)">ParsePagingQueryAsync(IQueryable&lt;TModel&gt;, String, OrderByDirection, Nullable&lt;Int32&gt;, Nullable&lt;Int32&gt;, TDbContext, IDbContextTransaction)</h4>
+  <div class="markdown level1 summary"><p>Parses the paging query asynchronous.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual Task&lt;PaginationModel&lt;TView&gt;&gt; ParsePagingQueryAsync(IQueryable&lt;TModel&gt; query, string orderByPropertyName, OrderByDirection direction, int ? pageSize, int ? pageIndex, TDbContext context, IDbContextTransaction transaction)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Linq.IQueryable</span>&lt;TModel&gt;</td>
+        <td><span class="parametername">query</span></td>
+        <td><p>The query.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">orderByPropertyName</span></td>
+        <td><p>Name of the order by property.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">Microsoft.Data.OData.Query.OrderByDirection</span></td>
+        <td><span class="parametername">direction</span></td>
+        <td><p>The direction.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Int32</span>&gt;</td>
+        <td><span class="parametername">pageSize</span></td>
+        <td><p>Size of the page.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Int32</span>&gt;</td>
+        <td><span class="parametername">pageIndex</span></td>
+        <td><p>Index of the page.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">TDbContext</span></td>
+        <td><span class="parametername">context</span></td>
+        <td><p>The context.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction</span></td>
+        <td><span class="parametername">transaction</span></td>
+        <td><p>The transaction.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;<a class="xref" href="Swastika.Domain.Core.ViewModels.PaginationModel-1.html">PaginationModel</a>&lt;TView&gt;&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="Swastika_Domain_Data_Repository_ViewRepositoryBase_3_ParseView_" data-uid="Swastika.Domain.Data.Repository.ViewRepositoryBase`3.ParseView*"></a>
+  <h4 id="Swastika_Domain_Data_Repository_ViewRepositoryBase_3_ParseView__1__0_Microsoft_EntityFrameworkCore_Storage_IDbContextTransaction_" data-uid="Swastika.Domain.Data.Repository.ViewRepositoryBase`3.ParseView(`1,`0,Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction)">ParseView(TModel, TDbContext, IDbContextTransaction)</h4>
+  <div class="markdown level1 summary"><p>Parses the view.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual TView ParseView(TModel model, TDbContext _context = null, IDbContextTransaction _transaction = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">TModel</span></td>
+        <td><span class="parametername">model</span></td>
+        <td><p>The model.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">TDbContext</span></td>
+        <td><span class="parametername">_context</span></td>
+        <td><p>The context.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction</span></td>
+        <td><span class="parametername">_transaction</span></td>
+        <td><p>The transaction.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">TView</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="Swastika_Domain_Data_Repository_ViewRepositoryBase_3_ParseView_" data-uid="Swastika.Domain.Data.Repository.ViewRepositoryBase`3.ParseView*"></a>
+  <h4 id="Swastika_Domain_Data_Repository_ViewRepositoryBase_3_ParseView_System_Collections_Generic_List__1___0_Microsoft_EntityFrameworkCore_Storage_IDbContextTransaction_" data-uid="Swastika.Domain.Data.Repository.ViewRepositoryBase`3.ParseView(System.Collections.Generic.List{`1},`0,Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction)">ParseView(List&lt;TModel&gt;, TDbContext, IDbContextTransaction)</h4>
+  <div class="markdown level1 summary"><p>Parses the view.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual List&lt;TView&gt; ParseView(List&lt;TModel&gt; lstModels, TDbContext _context = null, IDbContextTransaction _transaction = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;TModel&gt;</td>
+        <td><span class="parametername">lstModels</span></td>
+        <td><p>The LST models.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">TDbContext</span></td>
+        <td><span class="parametername">_context</span></td>
+        <td><p>The context.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction</span></td>
+        <td><span class="parametername">_transaction</span></td>
+        <td><p>The transaction.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;TView&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="Swastika_Domain_Data_Repository_ViewRepositoryBase_3_RegisterAutoMapper_" data-uid="Swastika.Domain.Data.Repository.ViewRepositoryBase`3.RegisterAutoMapper*"></a>
+  <h4 id="Swastika_Domain_Data_Repository_ViewRepositoryBase_3_RegisterAutoMapper" data-uid="Swastika.Domain.Data.Repository.ViewRepositoryBase`3.RegisterAutoMapper">RegisterAutoMapper()</h4>
+  <div class="markdown level1 summary"><p>Registers the automatic mapper.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual void RegisterAutoMapper()</code></pre>
+  </div>
+  
+  
+  <a id="Swastika_Domain_Data_Repository_ViewRepositoryBase_3_RemoveListModel_" data-uid="Swastika.Domain.Data.Repository.ViewRepositoryBase`3.RemoveListModel*"></a>
+  <h4 id="Swastika_Domain_Data_Repository_ViewRepositoryBase_3_RemoveListModel_System_Linq_Expressions_Expression_System_Func__1_System_Boolean____0_Microsoft_EntityFrameworkCore_Storage_IDbContextTransaction_" data-uid="Swastika.Domain.Data.Repository.ViewRepositoryBase`3.RemoveListModel(System.Linq.Expressions.Expression{System.Func{`1,System.Boolean}},`0,Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction)">RemoveListModel(Expression&lt;Func&lt;TModel, Boolean&gt;&gt;, TDbContext, IDbContextTransaction)</h4>
+  <div class="markdown level1 summary"><p>Removes the list model.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual RepositoryResponse&lt;bool&gt; RemoveListModel(Expression&lt;Func&lt;TModel, bool&gt;&gt; predicate, TDbContext _context = null, IDbContextTransaction _transaction = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Linq.Expressions.Expression</span>&lt;<span class="xref">System.Func</span>&lt;TModel, <span class="xref">System.Boolean</span>&gt;&gt;</td>
+        <td><span class="parametername">predicate</span></td>
+        <td><p>The predicate.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">TDbContext</span></td>
+        <td><span class="parametername">_context</span></td>
+        <td><p>The context.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction</span></td>
+        <td><span class="parametername">_transaction</span></td>
+        <td><p>The transaction.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Swastika.Domain.Core.ViewModels.RepositoryResponse-1.html">RepositoryResponse</a>&lt;<span class="xref">System.Boolean</span>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="Swastika_Domain_Data_Repository_ViewRepositoryBase_3_RemoveListModelAsync_" data-uid="Swastika.Domain.Data.Repository.ViewRepositoryBase`3.RemoveListModelAsync*"></a>
+  <h4 id="Swastika_Domain_Data_Repository_ViewRepositoryBase_3_RemoveListModelAsync_System_Linq_Expressions_Expression_System_Func__1_System_Boolean____0_Microsoft_EntityFrameworkCore_Storage_IDbContextTransaction_" data-uid="Swastika.Domain.Data.Repository.ViewRepositoryBase`3.RemoveListModelAsync(System.Linq.Expressions.Expression{System.Func{`1,System.Boolean}},`0,Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction)">RemoveListModelAsync(Expression&lt;Func&lt;TModel, Boolean&gt;&gt;, TDbContext, IDbContextTransaction)</h4>
+  <div class="markdown level1 summary"><p>Removes the list model asynchronous.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual Task&lt;RepositoryResponse&lt;bool&gt;&gt; RemoveListModelAsync(Expression&lt;Func&lt;TModel, bool&gt;&gt; predicate, TDbContext _context = null, IDbContextTransaction _transaction = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Linq.Expressions.Expression</span>&lt;<span class="xref">System.Func</span>&lt;TModel, <span class="xref">System.Boolean</span>&gt;&gt;</td>
+        <td><span class="parametername">predicate</span></td>
+        <td><p>The predicate.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">TDbContext</span></td>
+        <td><span class="parametername">_context</span></td>
+        <td><p>The context.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction</span></td>
+        <td><span class="parametername">_transaction</span></td>
+        <td><p>The transaction.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;<a class="xref" href="Swastika.Domain.Core.ViewModels.RepositoryResponse-1.html">RepositoryResponse</a>&lt;<span class="xref">System.Boolean</span>&gt;&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="Swastika_Domain_Data_Repository_ViewRepositoryBase_3_RemoveModel_" data-uid="Swastika.Domain.Data.Repository.ViewRepositoryBase`3.RemoveModel*"></a>
+  <h4 id="Swastika_Domain_Data_Repository_ViewRepositoryBase_3_RemoveModel__1__0_Microsoft_EntityFrameworkCore_Storage_IDbContextTransaction_" data-uid="Swastika.Domain.Data.Repository.ViewRepositoryBase`3.RemoveModel(`1,`0,Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction)">RemoveModel(TModel, TDbContext, IDbContextTransaction)</h4>
+  <div class="markdown level1 summary"><p>Removes the model.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual RepositoryResponse&lt;bool&gt; RemoveModel(TModel model, TDbContext _context = null, IDbContextTransaction _transaction = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">TModel</span></td>
+        <td><span class="parametername">model</span></td>
+        <td><p>The model.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">TDbContext</span></td>
+        <td><span class="parametername">_context</span></td>
+        <td><p>The context.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction</span></td>
+        <td><span class="parametername">_transaction</span></td>
+        <td><p>The transaction.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Swastika.Domain.Core.ViewModels.RepositoryResponse-1.html">RepositoryResponse</a>&lt;<span class="xref">System.Boolean</span>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="Swastika_Domain_Data_Repository_ViewRepositoryBase_3_RemoveModel_" data-uid="Swastika.Domain.Data.Repository.ViewRepositoryBase`3.RemoveModel*"></a>
+  <h4 id="Swastika_Domain_Data_Repository_ViewRepositoryBase_3_RemoveModel_System_Linq_Expressions_Expression_System_Func__1_System_Boolean____0_Microsoft_EntityFrameworkCore_Storage_IDbContextTransaction_" data-uid="Swastika.Domain.Data.Repository.ViewRepositoryBase`3.RemoveModel(System.Linq.Expressions.Expression{System.Func{`1,System.Boolean}},`0,Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction)">RemoveModel(Expression&lt;Func&lt;TModel, Boolean&gt;&gt;, TDbContext, IDbContextTransaction)</h4>
+  <div class="markdown level1 summary"><p>Removes the model.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual RepositoryResponse&lt;bool&gt; RemoveModel(Expression&lt;Func&lt;TModel, bool&gt;&gt; predicate, TDbContext _context = null, IDbContextTransaction _transaction = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Linq.Expressions.Expression</span>&lt;<span class="xref">System.Func</span>&lt;TModel, <span class="xref">System.Boolean</span>&gt;&gt;</td>
+        <td><span class="parametername">predicate</span></td>
+        <td><p>The predicate.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">TDbContext</span></td>
+        <td><span class="parametername">_context</span></td>
+        <td><p>The context.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction</span></td>
+        <td><span class="parametername">_transaction</span></td>
+        <td><p>The transaction.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Swastika.Domain.Core.ViewModels.RepositoryResponse-1.html">RepositoryResponse</a>&lt;<span class="xref">System.Boolean</span>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="Swastika_Domain_Data_Repository_ViewRepositoryBase_3_RemoveModelAsync_" data-uid="Swastika.Domain.Data.Repository.ViewRepositoryBase`3.RemoveModelAsync*"></a>
+  <h4 id="Swastika_Domain_Data_Repository_ViewRepositoryBase_3_RemoveModelAsync__1__0_Microsoft_EntityFrameworkCore_Storage_IDbContextTransaction_" data-uid="Swastika.Domain.Data.Repository.ViewRepositoryBase`3.RemoveModelAsync(`1,`0,Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction)">RemoveModelAsync(TModel, TDbContext, IDbContextTransaction)</h4>
+  <div class="markdown level1 summary"><p>Removes the model asynchronous.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual Task&lt;RepositoryResponse&lt;bool&gt;&gt; RemoveModelAsync(TModel model, TDbContext _context = null, IDbContextTransaction _transaction = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">TModel</span></td>
+        <td><span class="parametername">model</span></td>
+        <td><p>The model.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">TDbContext</span></td>
+        <td><span class="parametername">_context</span></td>
+        <td><p>The context.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction</span></td>
+        <td><span class="parametername">_transaction</span></td>
+        <td><p>The transaction.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;<a class="xref" href="Swastika.Domain.Core.ViewModels.RepositoryResponse-1.html">RepositoryResponse</a>&lt;<span class="xref">System.Boolean</span>&gt;&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="Swastika_Domain_Data_Repository_ViewRepositoryBase_3_RemoveModelAsync_" data-uid="Swastika.Domain.Data.Repository.ViewRepositoryBase`3.RemoveModelAsync*"></a>
+  <h4 id="Swastika_Domain_Data_Repository_ViewRepositoryBase_3_RemoveModelAsync_System_Linq_Expressions_Expression_System_Func__1_System_Boolean____0_Microsoft_EntityFrameworkCore_Storage_IDbContextTransaction_" data-uid="Swastika.Domain.Data.Repository.ViewRepositoryBase`3.RemoveModelAsync(System.Linq.Expressions.Expression{System.Func{`1,System.Boolean}},`0,Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction)">RemoveModelAsync(Expression&lt;Func&lt;TModel, Boolean&gt;&gt;, TDbContext, IDbContextTransaction)</h4>
+  <div class="markdown level1 summary"><p>Removes the model asynchronous.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual Task&lt;RepositoryResponse&lt;bool&gt;&gt; RemoveModelAsync(Expression&lt;Func&lt;TModel, bool&gt;&gt; predicate, TDbContext _context = null, IDbContextTransaction _transaction = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Linq.Expressions.Expression</span>&lt;<span class="xref">System.Func</span>&lt;TModel, <span class="xref">System.Boolean</span>&gt;&gt;</td>
+        <td><span class="parametername">predicate</span></td>
+        <td><p>The predicate.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">TDbContext</span></td>
+        <td><span class="parametername">_context</span></td>
+        <td><p>The context.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction</span></td>
+        <td><span class="parametername">_transaction</span></td>
+        <td><p>The transaction.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;<a class="xref" href="Swastika.Domain.Core.ViewModels.RepositoryResponse-1.html">RepositoryResponse</a>&lt;<span class="xref">System.Boolean</span>&gt;&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="Swastika_Domain_Data_Repository_ViewRepositoryBase_3_SaveModel_" data-uid="Swastika.Domain.Data.Repository.ViewRepositoryBase`3.SaveModel*"></a>
+  <h4 id="Swastika_Domain_Data_Repository_ViewRepositoryBase_3_SaveModel__2_System_Boolean__0_Microsoft_EntityFrameworkCore_Storage_IDbContextTransaction_" data-uid="Swastika.Domain.Data.Repository.ViewRepositoryBase`3.SaveModel(`2,System.Boolean,`0,Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction)">SaveModel(TView, Boolean, TDbContext, IDbContextTransaction)</h4>
+  <div class="markdown level1 summary"><p>Saves the model.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual RepositoryResponse&lt;TView&gt; SaveModel(TView view, bool isSaveSubModels = false, TDbContext _context = null, IDbContextTransaction _transaction = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">TView</span></td>
+        <td><span class="parametername">view</span></td>
+        <td><p>The view.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">isSaveSubModels</span></td>
+        <td><p>if set to <code>true</code> [is save sub models].</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">TDbContext</span></td>
+        <td><span class="parametername">_context</span></td>
+        <td><p>The context.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction</span></td>
+        <td><span class="parametername">_transaction</span></td>
+        <td><p>The transaction.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Swastika.Domain.Core.ViewModels.RepositoryResponse-1.html">RepositoryResponse</a>&lt;TView&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="Swastika_Domain_Data_Repository_ViewRepositoryBase_3_SaveModelAsync_" data-uid="Swastika.Domain.Data.Repository.ViewRepositoryBase`3.SaveModelAsync*"></a>
+  <h4 id="Swastika_Domain_Data_Repository_ViewRepositoryBase_3_SaveModelAsync__2_System_Boolean__0_Microsoft_EntityFrameworkCore_Storage_IDbContextTransaction_" data-uid="Swastika.Domain.Data.Repository.ViewRepositoryBase`3.SaveModelAsync(`2,System.Boolean,`0,Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction)">SaveModelAsync(TView, Boolean, TDbContext, IDbContextTransaction)</h4>
+  <div class="markdown level1 summary"><p>Saves the model asynchronous.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual Task&lt;RepositoryResponse&lt;TView&gt;&gt; SaveModelAsync(TView view, bool isSaveSubModels = false, TDbContext _context = null, IDbContextTransaction _transaction = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">TView</span></td>
+        <td><span class="parametername">view</span></td>
+        <td><p>The view.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">isSaveSubModels</span></td>
+        <td><p>if set to <code>true</code> [is save sub models].</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">TDbContext</span></td>
+        <td><span class="parametername">_context</span></td>
+        <td><p>The context.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction</span></td>
+        <td><span class="parametername">_transaction</span></td>
+        <td><p>The transaction.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;<a class="xref" href="Swastika.Domain.Core.ViewModels.RepositoryResponse-1.html">RepositoryResponse</a>&lt;TView&gt;&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="Swastika_Domain_Data_Repository_ViewRepositoryBase_3_SaveSubModelAsync_" data-uid="Swastika.Domain.Data.Repository.ViewRepositoryBase`3.SaveSubModelAsync*"></a>
+  <h4 id="Swastika_Domain_Data_Repository_ViewRepositoryBase_3_SaveSubModelAsync__1__0_Microsoft_EntityFrameworkCore_Storage_IDbContextTransaction_" data-uid="Swastika.Domain.Data.Repository.ViewRepositoryBase`3.SaveSubModelAsync(`1,`0,Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction)">SaveSubModelAsync(TModel, TDbContext, IDbContextTransaction)</h4>
+  <div class="markdown level1 summary"><p>Saves the sub model asynchronous.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual Task&lt;bool&gt; SaveSubModelAsync(TModel model, TDbContext context, IDbContextTransaction _transaction)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">TModel</span></td>
+        <td><span class="parametername">model</span></td>
+        <td><p>The model.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">TDbContext</span></td>
+        <td><span class="parametername">context</span></td>
+        <td><p>The context.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction</span></td>
+        <td><span class="parametername">_transaction</span></td>
+        <td><p>The transaction.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;<span class="xref">System.Boolean</span>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.NotImplementedException</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="Swastika_Domain_Data_Repository_ViewRepositoryBase_3_UpdateFields_" data-uid="Swastika.Domain.Data.Repository.ViewRepositoryBase`3.UpdateFields*"></a>
+  <h4 id="Swastika_Domain_Data_Repository_ViewRepositoryBase_3_UpdateFields_System_Linq_Expressions_Expression_System_Func__1_System_Boolean___System_Collections_Generic_List_Swastika_Domain_Core_ViewModels_EntityField___0_Microsoft_EntityFrameworkCore_Storage_IDbContextTransaction_" data-uid="Swastika.Domain.Data.Repository.ViewRepositoryBase`3.UpdateFields(System.Linq.Expressions.Expression{System.Func{`1,System.Boolean}},System.Collections.Generic.List{Swastika.Domain.Core.ViewModels.EntityField},`0,Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction)">UpdateFields(Expression&lt;Func&lt;TModel, Boolean&gt;&gt;, List&lt;EntityField&gt;, TDbContext, IDbContextTransaction)</h4>
+  <div class="markdown level1 summary"><p>Updates the fields.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public RepositoryResponse&lt;bool&gt; UpdateFields(Expression&lt;Func&lt;TModel, bool&gt;&gt; predicate, List&lt;EntityField&gt; fields, TDbContext _context = null, IDbContextTransaction _transaction = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Linq.Expressions.Expression</span>&lt;<span class="xref">System.Func</span>&lt;TModel, <span class="xref">System.Boolean</span>&gt;&gt;</td>
+        <td><span class="parametername">predicate</span></td>
+        <td><p>The predicate.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Swastika.Domain.Core.ViewModels.EntityField.html">EntityField</a>&gt;</td>
+        <td><span class="parametername">fields</span></td>
+        <td><p>The fields.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">TDbContext</span></td>
+        <td><span class="parametername">_context</span></td>
+        <td><p>The context.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction</span></td>
+        <td><span class="parametername">_transaction</span></td>
+        <td><p>The transaction.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Swastika.Domain.Core.ViewModels.RepositoryResponse-1.html">RepositoryResponse</a>&lt;<span class="xref">System.Boolean</span>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="Swastika_Domain_Data_Repository_ViewRepositoryBase_3_UpdateFieldsAsync_" data-uid="Swastika.Domain.Data.Repository.ViewRepositoryBase`3.UpdateFieldsAsync*"></a>
+  <h4 id="Swastika_Domain_Data_Repository_ViewRepositoryBase_3_UpdateFieldsAsync_System_Linq_Expressions_Expression_System_Func__1_System_Boolean___System_Collections_Generic_List_Swastika_Domain_Core_ViewModels_EntityField___0_Microsoft_EntityFrameworkCore_Storage_IDbContextTransaction_" data-uid="Swastika.Domain.Data.Repository.ViewRepositoryBase`3.UpdateFieldsAsync(System.Linq.Expressions.Expression{System.Func{`1,System.Boolean}},System.Collections.Generic.List{Swastika.Domain.Core.ViewModels.EntityField},`0,Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction)">UpdateFieldsAsync(Expression&lt;Func&lt;TModel, Boolean&gt;&gt;, List&lt;EntityField&gt;, TDbContext, IDbContextTransaction)</h4>
+  <div class="markdown level1 summary"><p>Updates the fields asynchronous.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task&lt;RepositoryResponse&lt;bool&gt;&gt; UpdateFieldsAsync(Expression&lt;Func&lt;TModel, bool&gt;&gt; predicate, List&lt;EntityField&gt; fields, TDbContext _context = null, IDbContextTransaction _transaction = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Linq.Expressions.Expression</span>&lt;<span class="xref">System.Func</span>&lt;TModel, <span class="xref">System.Boolean</span>&gt;&gt;</td>
+        <td><span class="parametername">predicate</span></td>
+        <td><p>The predicate.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Swastika.Domain.Core.ViewModels.EntityField.html">EntityField</a>&gt;</td>
+        <td><span class="parametername">fields</span></td>
+        <td><p>The fields.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">TDbContext</span></td>
+        <td><span class="parametername">_context</span></td>
+        <td><p>The context.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction</span></td>
+        <td><span class="parametername">_transaction</span></td>
+        <td><p>The transaction.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;<a class="xref" href="Swastika.Domain.Core.ViewModels.RepositoryResponse-1.html">RepositoryResponse</a>&lt;<span class="xref">System.Boolean</span>&gt;&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Copyright © 2015-2017 Microsoft<br>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

@@ -1,0 +1,1617 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Class ViewModelBase&lt;TDbContext, TModel, TView&gt;
+   </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Class ViewModelBase&lt;TDbContext, TModel, TView&gt;
+   ">
+    <meta name="generator" content="docfx 2.30.0.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="Swastika.Domain.Data.ViewModels.ViewModelBase`3">
+  
+  
+  <h1 id="Swastika_Domain_Data_ViewModels_ViewModelBase_3" data-uid="Swastika.Domain.Data.ViewModels.ViewModelBase`3" class="text-break">Class ViewModelBase&lt;TDbContext, TModel, TView&gt;
+  </h1>
+  <div class="markdown level0 summary"></div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><span class="xref">System.Object</span></div>
+    <div class="level1"><span class="xref">ViewModelBase&lt;TDbContext, TModel, TView&gt;</span></div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetHashCode()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetType()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.MemberwiseClone()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ToString()</span>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="Swastika.Domain.Data.ViewModels.html">Swastika.Domain.Data.ViewModels</a></h6>
+  <h6><strong>Assembly</strong>: Swastika.dll</h6>
+  <h5 id="Swastika_Domain_Data_ViewModels_ViewModelBase_3_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public abstract class ViewModelBase&lt;TDbContext, TModel, TView&gt;
+    where TDbContext : DbContext where TModel : class where TView : ViewModelBase&lt;TDbContext, TModel, TView&gt;</code></pre>
+  </div>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">TDbContext</span></td>
+        <td><p>The type of the database context.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="parametername">TModel</span></td>
+        <td><p>The type of the model.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="parametername">TView</span></td>
+        <td><p>The type of the view.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="constructors">Constructors
+  </h3>
+  
+  
+  <a id="Swastika_Domain_Data_ViewModels_ViewModelBase_3__ctor_" data-uid="Swastika.Domain.Data.ViewModels.ViewModelBase`3.#ctor*"></a>
+  <h4 id="Swastika_Domain_Data_ViewModels_ViewModelBase_3__ctor" data-uid="Swastika.Domain.Data.ViewModels.ViewModelBase`3.#ctor">ViewModelBase()</h4>
+  <div class="markdown level1 summary"><p>Initializes a new instance of the <a class="xref" href="Swastika.Domain.Data.ViewModels.ViewModelBase-3.html">ViewModelBase&lt;TDbContext, TModel, TView&gt;</a> class.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ViewModelBase()</code></pre>
+  </div>
+  
+  
+  <a id="Swastika_Domain_Data_ViewModels_ViewModelBase_3__ctor_" data-uid="Swastika.Domain.Data.ViewModels.ViewModelBase`3.#ctor*"></a>
+  <h4 id="Swastika_Domain_Data_ViewModels_ViewModelBase_3__ctor__1__0_Microsoft_EntityFrameworkCore_Storage_IDbContextTransaction_" data-uid="Swastika.Domain.Data.ViewModels.ViewModelBase`3.#ctor(`1,`0,Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction)">ViewModelBase(TModel, TDbContext, IDbContextTransaction)</h4>
+  <div class="markdown level1 summary"><p>Initializes a new instance of the <a class="xref" href="Swastika.Domain.Data.ViewModels.ViewModelBase-3.html">ViewModelBase&lt;TDbContext, TModel, TView&gt;</a> class.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ViewModelBase(TModel model, TDbContext _context = null, IDbContextTransaction _transaction = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">TModel</span></td>
+        <td><span class="parametername">model</span></td>
+        <td><p>The model.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">TDbContext</span></td>
+        <td><span class="parametername">_context</span></td>
+        <td><p>The context.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction</span></td>
+        <td><span class="parametername">_transaction</span></td>
+        <td><p>The transaction.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="Swastika_Domain_Data_ViewModels_ViewModelBase_3__ctor_" data-uid="Swastika.Domain.Data.ViewModels.ViewModelBase`3.#ctor*"></a>
+  <h4 id="Swastika_Domain_Data_ViewModels_ViewModelBase_3__ctor__1_System_Boolean__0_Microsoft_EntityFrameworkCore_Storage_IDbContextTransaction_" data-uid="Swastika.Domain.Data.ViewModels.ViewModelBase`3.#ctor(`1,System.Boolean,`0,Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction)">ViewModelBase(TModel, Boolean, TDbContext, IDbContextTransaction)</h4>
+  <div class="markdown level1 summary"><p>Initializes a new instance of the <a class="xref" href="Swastika.Domain.Data.ViewModels.ViewModelBase-3.html">ViewModelBase&lt;TDbContext, TModel, TView&gt;</a> class.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ViewModelBase(TModel model, bool isLazyLoad, TDbContext _context = null, IDbContextTransaction _transaction = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">TModel</span></td>
+        <td><span class="parametername">model</span></td>
+        <td><p>The model.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">isLazyLoad</span></td>
+        <td><p>if set to <code>true</code> [is lazy load].</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">TDbContext</span></td>
+        <td><span class="parametername">_context</span></td>
+        <td><p>The context.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction</span></td>
+        <td><span class="parametername">_transaction</span></td>
+        <td><p>The transaction.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="fields">Fields
+  </h3>
+  
+  
+  <h4 id="Swastika_Domain_Data_ViewModels_ViewModelBase_3_IsValid" data-uid="Swastika.Domain.Data.ViewModels.ViewModelBase`3.IsValid">IsValid</h4>
+  <div class="markdown level1 summary"><p>Returns true if ... is valid.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonIgnore]
+public bool IsValid</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="properties">Properties
+  </h3>
+  
+  
+  <a id="Swastika_Domain_Data_ViewModels_ViewModelBase_3_Errors_" data-uid="Swastika.Domain.Data.ViewModels.ViewModelBase`3.Errors*"></a>
+  <h4 id="Swastika_Domain_Data_ViewModels_ViewModelBase_3_Errors" data-uid="Swastika.Domain.Data.ViewModels.ViewModelBase`3.Errors">Errors</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public List&lt;string&gt; Errors { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<span class="xref">System.String</span>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="Swastika_Domain_Data_ViewModels_ViewModelBase_3_Exception_" data-uid="Swastika.Domain.Data.ViewModels.ViewModelBase`3.Exception*"></a>
+  <h4 id="Swastika_Domain_Data_ViewModels_ViewModelBase_3_Exception" data-uid="Swastika.Domain.Data.ViewModels.ViewModelBase`3.Exception">Exception</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the exception.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonIgnore]
+public Exception Exception { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Exception</span></td>
+        <td><p>The exception.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="Swastika_Domain_Data_ViewModels_ViewModelBase_3_IsClone_" data-uid="Swastika.Domain.Data.ViewModels.ViewModelBase`3.IsClone*"></a>
+  <h4 id="Swastika_Domain_Data_ViewModels_ViewModelBase_3_IsClone" data-uid="Swastika.Domain.Data.ViewModels.ViewModelBase`3.IsClone">IsClone</h4>
+  <div class="markdown level1 summary"><p>Gets or sets a value indicating whether this instance is clone.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonIgnore]
+public bool IsClone { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><p><code>true</code> if this instance is clone; otherwise, <code>false</code>.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="Swastika_Domain_Data_ViewModels_ViewModelBase_3_IsLazyLoad_" data-uid="Swastika.Domain.Data.ViewModels.ViewModelBase`3.IsLazyLoad*"></a>
+  <h4 id="Swastika_Domain_Data_ViewModels_ViewModelBase_3_IsLazyLoad" data-uid="Swastika.Domain.Data.ViewModels.ViewModelBase`3.IsLazyLoad">IsLazyLoad</h4>
+  <div class="markdown level1 summary"><p>Gets or sets a value indicating whether this instance is lazy load.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonIgnore]
+public bool IsLazyLoad { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><p><code>true</code> if this instance is lazy load; otherwise, <code>false</code>.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="Swastika_Domain_Data_ViewModels_ViewModelBase_3_ListSupportedCulture_" data-uid="Swastika.Domain.Data.ViewModels.ViewModelBase`3.ListSupportedCulture*"></a>
+  <h4 id="Swastika_Domain_Data_ViewModels_ViewModelBase_3_ListSupportedCulture" data-uid="Swastika.Domain.Data.ViewModels.ViewModelBase`3.ListSupportedCulture">ListSupportedCulture</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the list supported culture.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonIgnore]
+public List&lt;SupportedCulture&gt; ListSupportedCulture { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Swastika.Domain.Core.Models.SupportedCulture.html">SupportedCulture</a>&gt;</td>
+        <td><p>The list supported culture.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="Swastika_Domain_Data_ViewModels_ViewModelBase_3_Mapper_" data-uid="Swastika.Domain.Data.ViewModels.ViewModelBase`3.Mapper*"></a>
+  <h4 id="Swastika_Domain_Data_ViewModels_ViewModelBase_3_Mapper" data-uid="Swastika.Domain.Data.ViewModels.ViewModelBase`3.Mapper">Mapper</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the mapper.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonIgnore]
+public IMapper Mapper { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">AutoMapper.IMapper</span></td>
+        <td><p>The mapper.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="Swastika_Domain_Data_ViewModels_ViewModelBase_3_Model_" data-uid="Swastika.Domain.Data.ViewModels.ViewModelBase`3.Model*"></a>
+  <h4 id="Swastika_Domain_Data_ViewModels_ViewModelBase_3_Model" data-uid="Swastika.Domain.Data.ViewModels.ViewModelBase`3.Model">Model</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the model.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonIgnore]
+public TModel Model { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">TModel</span></td>
+        <td><p>The model.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="Swastika_Domain_Data_ViewModels_ViewModelBase_3_ModelMapper_" data-uid="Swastika.Domain.Data.ViewModels.ViewModelBase`3.ModelMapper*"></a>
+  <h4 id="Swastika_Domain_Data_ViewModels_ViewModelBase_3_ModelMapper" data-uid="Swastika.Domain.Data.ViewModels.ViewModelBase`3.ModelMapper">ModelMapper</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the model mapper.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonIgnore]
+public IMapper ModelMapper { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">AutoMapper.IMapper</span></td>
+        <td><p>The model mapper.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="Swastika_Domain_Data_ViewModels_ViewModelBase_3_PageIndex_" data-uid="Swastika.Domain.Data.ViewModels.ViewModelBase`3.PageIndex*"></a>
+  <h4 id="Swastika_Domain_Data_ViewModels_ViewModelBase_3_PageIndex" data-uid="Swastika.Domain.Data.ViewModels.ViewModelBase`3.PageIndex">PageIndex</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the index of the page.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonIgnore]
+public int PageIndex { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td><p>The index of the page.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="Swastika_Domain_Data_ViewModels_ViewModelBase_3_PageSize_" data-uid="Swastika.Domain.Data.ViewModels.ViewModelBase`3.PageSize*"></a>
+  <h4 id="Swastika_Domain_Data_ViewModels_ViewModelBase_3_PageSize" data-uid="Swastika.Domain.Data.ViewModels.ViewModelBase`3.PageSize">PageSize</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the size of the page.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonIgnore]
+public int PageSize { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td><p>The size of the page.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="Swastika_Domain_Data_ViewModels_ViewModelBase_3_Priority_" data-uid="Swastika.Domain.Data.ViewModels.ViewModelBase`3.Priority*"></a>
+  <h4 id="Swastika_Domain_Data_ViewModels_ViewModelBase_3_Priority" data-uid="Swastika.Domain.Data.ViewModels.ViewModelBase`3.Priority">Priority</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the priority.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;priority&quot;)]
+public int ? Priority { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Int32</span>&gt;</td>
+        <td><p>The priority.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="Swastika_Domain_Data_ViewModels_ViewModelBase_3_Repository_" data-uid="Swastika.Domain.Data.ViewModels.ViewModelBase`3.Repository*"></a>
+  <h4 id="Swastika_Domain_Data_ViewModels_ViewModelBase_3_Repository" data-uid="Swastika.Domain.Data.ViewModels.ViewModelBase`3.Repository">Repository</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonIgnore]
+public static DefaultRepository&lt;TDbContext, TModel, TView&gt; Repository { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Swastika.Domain.Data.Repository.DefaultRepository-3.html">DefaultRepository</a>&lt;TDbContext, TModel, TView&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="Swastika_Domain_Data_ViewModels_ViewModelBase_3_Specificulture_" data-uid="Swastika.Domain.Data.ViewModels.ViewModelBase`3.Specificulture*"></a>
+  <h4 id="Swastika_Domain_Data_ViewModels_ViewModelBase_3_Specificulture" data-uid="Swastika.Domain.Data.ViewModels.ViewModelBase`3.Specificulture">Specificulture</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the specificulture.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;specificulture&quot;)]
+public string Specificulture { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><p>The specificulture.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="methods">Methods
+  </h3>
+  
+  
+  <a id="Swastika_Domain_Data_ViewModels_ViewModelBase_3_Clone_" data-uid="Swastika.Domain.Data.ViewModels.ViewModelBase`3.Clone*"></a>
+  <h4 id="Swastika_Domain_Data_ViewModels_ViewModelBase_3_Clone_System_Collections_Generic_List_Swastika_Domain_Core_Models_SupportedCulture___0_Microsoft_EntityFrameworkCore_Storage_IDbContextTransaction_" data-uid="Swastika.Domain.Data.ViewModels.ViewModelBase`3.Clone(System.Collections.Generic.List{Swastika.Domain.Core.Models.SupportedCulture},`0,Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction)">Clone(List&lt;SupportedCulture&gt;, TDbContext, IDbContextTransaction)</h4>
+  <div class="markdown level1 summary"><p>Clones the specified clone cultures.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual RepositoryResponse&lt;List&lt;TView&gt;&gt; Clone(List&lt;SupportedCulture&gt; cloneCultures, TDbContext _context = null, IDbContextTransaction _transaction = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Swastika.Domain.Core.Models.SupportedCulture.html">SupportedCulture</a>&gt;</td>
+        <td><span class="parametername">cloneCultures</span></td>
+        <td><p>The clone cultures.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">TDbContext</span></td>
+        <td><span class="parametername">_context</span></td>
+        <td><p>The context.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction</span></td>
+        <td><span class="parametername">_transaction</span></td>
+        <td><p>The transaction.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Swastika.Domain.Core.ViewModels.RepositoryResponse-1.html">RepositoryResponse</a>&lt;<span class="xref">System.Collections.Generic.List</span>&lt;TView&gt;&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="Swastika_Domain_Data_ViewModels_ViewModelBase_3_CloneAsync_" data-uid="Swastika.Domain.Data.ViewModels.ViewModelBase`3.CloneAsync*"></a>
+  <h4 id="Swastika_Domain_Data_ViewModels_ViewModelBase_3_CloneAsync_System_Collections_Generic_List_Swastika_Domain_Core_Models_SupportedCulture___0_Microsoft_EntityFrameworkCore_Storage_IDbContextTransaction_" data-uid="Swastika.Domain.Data.ViewModels.ViewModelBase`3.CloneAsync(System.Collections.Generic.List{Swastika.Domain.Core.Models.SupportedCulture},`0,Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction)">CloneAsync(List&lt;SupportedCulture&gt;, TDbContext, IDbContextTransaction)</h4>
+  <div class="markdown level1 summary"><p>Clones the asynchronous.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual Task&lt;RepositoryResponse&lt;List&lt;TView&gt;&gt;&gt; CloneAsync(List&lt;SupportedCulture&gt; cloneCultures, TDbContext _context = null, IDbContextTransaction _transaction = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Swastika.Domain.Core.Models.SupportedCulture.html">SupportedCulture</a>&gt;</td>
+        <td><span class="parametername">cloneCultures</span></td>
+        <td><p>The clone cultures.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">TDbContext</span></td>
+        <td><span class="parametername">_context</span></td>
+        <td><p>The context.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction</span></td>
+        <td><span class="parametername">_transaction</span></td>
+        <td><p>The transaction.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;<a class="xref" href="Swastika.Domain.Core.ViewModels.RepositoryResponse-1.html">RepositoryResponse</a>&lt;<span class="xref">System.Collections.Generic.List</span>&lt;TView&gt;&gt;&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="Swastika_Domain_Data_ViewModels_ViewModelBase_3_CloneSubModels_" data-uid="Swastika.Domain.Data.ViewModels.ViewModelBase`3.CloneSubModels*"></a>
+  <h4 id="Swastika_Domain_Data_ViewModels_ViewModelBase_3_CloneSubModels__2_System_Collections_Generic_List_Swastika_Domain_Core_Models_SupportedCulture___0_Microsoft_EntityFrameworkCore_Storage_IDbContextTransaction_" data-uid="Swastika.Domain.Data.ViewModels.ViewModelBase`3.CloneSubModels(`2,System.Collections.Generic.List{Swastika.Domain.Core.Models.SupportedCulture},`0,Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction)">CloneSubModels(TView, List&lt;SupportedCulture&gt;, TDbContext, IDbContextTransaction)</h4>
+  <div class="markdown level1 summary"><p>Clones the sub models.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual RepositoryResponse&lt;bool&gt; CloneSubModels(TView parent, List&lt;SupportedCulture&gt; cloneCultures, TDbContext _context = null, IDbContextTransaction _transaction = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">TView</span></td>
+        <td><span class="parametername">parent</span></td>
+        <td><p>The parent.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Swastika.Domain.Core.Models.SupportedCulture.html">SupportedCulture</a>&gt;</td>
+        <td><span class="parametername">cloneCultures</span></td>
+        <td><p>The clone cultures.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">TDbContext</span></td>
+        <td><span class="parametername">_context</span></td>
+        <td><p>The context.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction</span></td>
+        <td><span class="parametername">_transaction</span></td>
+        <td><p>The transaction.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Swastika.Domain.Core.ViewModels.RepositoryResponse-1.html">RepositoryResponse</a>&lt;<span class="xref">System.Boolean</span>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="Swastika_Domain_Data_ViewModels_ViewModelBase_3_CloneSubModelsAsync_" data-uid="Swastika.Domain.Data.ViewModels.ViewModelBase`3.CloneSubModelsAsync*"></a>
+  <h4 id="Swastika_Domain_Data_ViewModels_ViewModelBase_3_CloneSubModelsAsync__2_System_Collections_Generic_List_Swastika_Domain_Core_Models_SupportedCulture___0_Microsoft_EntityFrameworkCore_Storage_IDbContextTransaction_" data-uid="Swastika.Domain.Data.ViewModels.ViewModelBase`3.CloneSubModelsAsync(`2,System.Collections.Generic.List{Swastika.Domain.Core.Models.SupportedCulture},`0,Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction)">CloneSubModelsAsync(TView, List&lt;SupportedCulture&gt;, TDbContext, IDbContextTransaction)</h4>
+  <div class="markdown level1 summary"><p>Clones the sub models asynchronous.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual Task&lt;RepositoryResponse&lt;bool&gt;&gt; CloneSubModelsAsync(TView parent, List&lt;SupportedCulture&gt; cloneCultures, TDbContext _context = null, IDbContextTransaction _transaction = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">TView</span></td>
+        <td><span class="parametername">parent</span></td>
+        <td><p>The parent.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Swastika.Domain.Core.Models.SupportedCulture.html">SupportedCulture</a>&gt;</td>
+        <td><span class="parametername">cloneCultures</span></td>
+        <td><p>The clone cultures.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">TDbContext</span></td>
+        <td><span class="parametername">_context</span></td>
+        <td><p>The context.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction</span></td>
+        <td><span class="parametername">_transaction</span></td>
+        <td><p>The transaction.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;<a class="xref" href="Swastika.Domain.Core.ViewModels.RepositoryResponse-1.html">RepositoryResponse</a>&lt;<span class="xref">System.Boolean</span>&gt;&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="Swastika_Domain_Data_ViewModels_ViewModelBase_3_ExpandView_" data-uid="Swastika.Domain.Data.ViewModels.ViewModelBase`3.ExpandView*"></a>
+  <h4 id="Swastika_Domain_Data_ViewModels_ViewModelBase_3_ExpandView__0_Microsoft_EntityFrameworkCore_Storage_IDbContextTransaction_" data-uid="Swastika.Domain.Data.ViewModels.ViewModelBase`3.ExpandView(`0,Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction)">ExpandView(TDbContext, IDbContextTransaction)</h4>
+  <div class="markdown level1 summary"><p>Expands the view.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual void ExpandView(TDbContext _context = null, IDbContextTransaction _transaction = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">TDbContext</span></td>
+        <td><span class="parametername">_context</span></td>
+        <td><p>The context.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction</span></td>
+        <td><span class="parametername">_transaction</span></td>
+        <td><p>The transaction.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="Swastika_Domain_Data_ViewModels_ViewModelBase_3_InitContext_" data-uid="Swastika.Domain.Data.ViewModels.ViewModelBase`3.InitContext*"></a>
+  <h4 id="Swastika_Domain_Data_ViewModels_ViewModelBase_3_InitContext" data-uid="Swastika.Domain.Data.ViewModels.ViewModelBase`3.InitContext">InitContext()</h4>
+  <div class="markdown level1 summary"><p>Initializes the context.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual TDbContext InitContext()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">TDbContext</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="Swastika_Domain_Data_ViewModels_ViewModelBase_3_InitModel_" data-uid="Swastika.Domain.Data.ViewModels.ViewModelBase`3.InitModel*"></a>
+  <h4 id="Swastika_Domain_Data_ViewModels_ViewModelBase_3_InitModel" data-uid="Swastika.Domain.Data.ViewModels.ViewModelBase`3.InitModel">InitModel()</h4>
+  <div class="markdown level1 summary"><p>Initializes the model.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual TModel InitModel()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">TModel</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="Swastika_Domain_Data_ViewModels_ViewModelBase_3_InitView_" data-uid="Swastika.Domain.Data.ViewModels.ViewModelBase`3.InitView*"></a>
+  <h4 id="Swastika_Domain_Data_ViewModels_ViewModelBase_3_InitView__1_System_Boolean__0_Microsoft_EntityFrameworkCore_Storage_IDbContextTransaction_" data-uid="Swastika.Domain.Data.ViewModels.ViewModelBase`3.InitView(`1,System.Boolean,`0,Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction)">InitView(TModel, Boolean, TDbContext, IDbContextTransaction)</h4>
+  <div class="markdown level1 summary"><p>Initializes the view.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual TView InitView(TModel model = null, bool isLazyLoad = true, TDbContext _context = null, IDbContextTransaction _transaction = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">TModel</span></td>
+        <td><span class="parametername">model</span></td>
+        <td><p>The model.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">isLazyLoad</span></td>
+        <td><p>if set to <code>true</code> [is lazy load].</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">TDbContext</span></td>
+        <td><span class="parametername">_context</span></td>
+        <td><p>The context.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction</span></td>
+        <td><span class="parametername">_transaction</span></td>
+        <td><p>The transaction.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">TView</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="Swastika_Domain_Data_ViewModels_ViewModelBase_3_ParseModel_" data-uid="Swastika.Domain.Data.ViewModels.ViewModelBase`3.ParseModel*"></a>
+  <h4 id="Swastika_Domain_Data_ViewModels_ViewModelBase_3_ParseModel" data-uid="Swastika.Domain.Data.ViewModels.ViewModelBase`3.ParseModel">ParseModel()</h4>
+  <div class="markdown level1 summary"><p>Parses the model.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual TModel ParseModel()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">TModel</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="Swastika_Domain_Data_ViewModels_ViewModelBase_3_ParseView_" data-uid="Swastika.Domain.Data.ViewModels.ViewModelBase`3.ParseView*"></a>
+  <h4 id="Swastika_Domain_Data_ViewModels_ViewModelBase_3_ParseView_System_Boolean__0_Microsoft_EntityFrameworkCore_Storage_IDbContextTransaction_" data-uid="Swastika.Domain.Data.ViewModels.ViewModelBase`3.ParseView(System.Boolean,`0,Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction)">ParseView(Boolean, TDbContext, IDbContextTransaction)</h4>
+  <div class="markdown level1 summary"><p>Parses the view.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual TView ParseView(bool isExpand = true, TDbContext _context = null, IDbContextTransaction _transaction = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">isExpand</span></td>
+        <td><p>if set to <code>true</code> [is expand].</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">TDbContext</span></td>
+        <td><span class="parametername">_context</span></td>
+        <td><p>The context.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction</span></td>
+        <td><span class="parametername">_transaction</span></td>
+        <td><p>The transaction.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">TView</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="Swastika_Domain_Data_ViewModels_ViewModelBase_3_RemoveModel_" data-uid="Swastika.Domain.Data.ViewModels.ViewModelBase`3.RemoveModel*"></a>
+  <h4 id="Swastika_Domain_Data_ViewModels_ViewModelBase_3_RemoveModel_System_Boolean__0_Microsoft_EntityFrameworkCore_Storage_IDbContextTransaction_" data-uid="Swastika.Domain.Data.ViewModels.ViewModelBase`3.RemoveModel(System.Boolean,`0,Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction)">RemoveModel(Boolean, TDbContext, IDbContextTransaction)</h4>
+  <div class="markdown level1 summary"><p>Removes the model.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual RepositoryResponse&lt;bool&gt; RemoveModel(bool isRemoveRelatedModels = false, TDbContext _context = null, IDbContextTransaction _transaction = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">isRemoveRelatedModels</span></td>
+        <td><p>if set to <code>true</code> [is remove related models].</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">TDbContext</span></td>
+        <td><span class="parametername">_context</span></td>
+        <td><p>The context.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction</span></td>
+        <td><span class="parametername">_transaction</span></td>
+        <td><p>The transaction.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Swastika.Domain.Core.ViewModels.RepositoryResponse-1.html">RepositoryResponse</a>&lt;<span class="xref">System.Boolean</span>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="Swastika_Domain_Data_ViewModels_ViewModelBase_3_RemoveModelAsync_" data-uid="Swastika.Domain.Data.ViewModels.ViewModelBase`3.RemoveModelAsync*"></a>
+  <h4 id="Swastika_Domain_Data_ViewModels_ViewModelBase_3_RemoveModelAsync_System_Boolean__0_Microsoft_EntityFrameworkCore_Storage_IDbContextTransaction_" data-uid="Swastika.Domain.Data.ViewModels.ViewModelBase`3.RemoveModelAsync(System.Boolean,`0,Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction)">RemoveModelAsync(Boolean, TDbContext, IDbContextTransaction)</h4>
+  <div class="markdown level1 summary"><p>Removes the model asynchronous.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual Task&lt;RepositoryResponse&lt;bool&gt;&gt; RemoveModelAsync(bool isRemoveRelatedModels = false, TDbContext _context = null, IDbContextTransaction _transaction = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">isRemoveRelatedModels</span></td>
+        <td><p>if set to <code>true</code> [is remove related models].</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">TDbContext</span></td>
+        <td><span class="parametername">_context</span></td>
+        <td><p>The context.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction</span></td>
+        <td><span class="parametername">_transaction</span></td>
+        <td><p>The transaction.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;<a class="xref" href="Swastika.Domain.Core.ViewModels.RepositoryResponse-1.html">RepositoryResponse</a>&lt;<span class="xref">System.Boolean</span>&gt;&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="Swastika_Domain_Data_ViewModels_ViewModelBase_3_RemoveRelatedModels_" data-uid="Swastika.Domain.Data.ViewModels.ViewModelBase`3.RemoveRelatedModels*"></a>
+  <h4 id="Swastika_Domain_Data_ViewModels_ViewModelBase_3_RemoveRelatedModels__2__0_Microsoft_EntityFrameworkCore_Storage_IDbContextTransaction_" data-uid="Swastika.Domain.Data.ViewModels.ViewModelBase`3.RemoveRelatedModels(`2,`0,Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction)">RemoveRelatedModels(TView, TDbContext, IDbContextTransaction)</h4>
+  <div class="markdown level1 summary"><p>Removes the related models.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual RepositoryResponse&lt;bool&gt; RemoveRelatedModels(TView view, TDbContext _context = null, IDbContextTransaction _transaction = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">TView</span></td>
+        <td><span class="parametername">view</span></td>
+        <td><p>The view.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">TDbContext</span></td>
+        <td><span class="parametername">_context</span></td>
+        <td><p>The context.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction</span></td>
+        <td><span class="parametername">_transaction</span></td>
+        <td><p>The transaction.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Swastika.Domain.Core.ViewModels.RepositoryResponse-1.html">RepositoryResponse</a>&lt;<span class="xref">System.Boolean</span>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="Swastika_Domain_Data_ViewModels_ViewModelBase_3_RemoveRelatedModelsAsync_" data-uid="Swastika.Domain.Data.ViewModels.ViewModelBase`3.RemoveRelatedModelsAsync*"></a>
+  <h4 id="Swastika_Domain_Data_ViewModels_ViewModelBase_3_RemoveRelatedModelsAsync__2__0_Microsoft_EntityFrameworkCore_Storage_IDbContextTransaction_" data-uid="Swastika.Domain.Data.ViewModels.ViewModelBase`3.RemoveRelatedModelsAsync(`2,`0,Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction)">RemoveRelatedModelsAsync(TView, TDbContext, IDbContextTransaction)</h4>
+  <div class="markdown level1 summary"><p>Removes the related models asynchronous.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual Task&lt;RepositoryResponse&lt;bool&gt;&gt; RemoveRelatedModelsAsync(TView view, TDbContext _context = null, IDbContextTransaction _transaction = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">TView</span></td>
+        <td><span class="parametername">view</span></td>
+        <td><p>The view.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">TDbContext</span></td>
+        <td><span class="parametername">_context</span></td>
+        <td><p>The context.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction</span></td>
+        <td><span class="parametername">_transaction</span></td>
+        <td><p>The transaction.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;<a class="xref" href="Swastika.Domain.Core.ViewModels.RepositoryResponse-1.html">RepositoryResponse</a>&lt;<span class="xref">System.Boolean</span>&gt;&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="Swastika_Domain_Data_ViewModels_ViewModelBase_3_SaveModel_" data-uid="Swastika.Domain.Data.ViewModels.ViewModelBase`3.SaveModel*"></a>
+  <h4 id="Swastika_Domain_Data_ViewModels_ViewModelBase_3_SaveModel_System_Boolean__0_Microsoft_EntityFrameworkCore_Storage_IDbContextTransaction_" data-uid="Swastika.Domain.Data.ViewModels.ViewModelBase`3.SaveModel(System.Boolean,`0,Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction)">SaveModel(Boolean, TDbContext, IDbContextTransaction)</h4>
+  <div class="markdown level1 summary"><p>Saves the model.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual RepositoryResponse&lt;TView&gt; SaveModel(bool isSaveSubModels = false, TDbContext _context = null, IDbContextTransaction _transaction = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">isSaveSubModels</span></td>
+        <td><p>if set to <code>true</code> [is save sub models].</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">TDbContext</span></td>
+        <td><span class="parametername">_context</span></td>
+        <td><p>The context.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction</span></td>
+        <td><span class="parametername">_transaction</span></td>
+        <td><p>The transaction.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Swastika.Domain.Core.ViewModels.RepositoryResponse-1.html">RepositoryResponse</a>&lt;TView&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="Swastika_Domain_Data_ViewModels_ViewModelBase_3_SaveModelAsync_" data-uid="Swastika.Domain.Data.ViewModels.ViewModelBase`3.SaveModelAsync*"></a>
+  <h4 id="Swastika_Domain_Data_ViewModels_ViewModelBase_3_SaveModelAsync_System_Boolean__0_Microsoft_EntityFrameworkCore_Storage_IDbContextTransaction_" data-uid="Swastika.Domain.Data.ViewModels.ViewModelBase`3.SaveModelAsync(System.Boolean,`0,Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction)">SaveModelAsync(Boolean, TDbContext, IDbContextTransaction)</h4>
+  <div class="markdown level1 summary"><p>Saves the model asynchronous.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual Task&lt;RepositoryResponse&lt;TView&gt;&gt; SaveModelAsync(bool isSaveSubModels = false, TDbContext _context = null, IDbContextTransaction _transaction = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">isSaveSubModels</span></td>
+        <td><p>if set to <code>true</code> [is save sub models].</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">TDbContext</span></td>
+        <td><span class="parametername">_context</span></td>
+        <td><p>The context.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction</span></td>
+        <td><span class="parametername">_transaction</span></td>
+        <td><p>The transaction.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;<a class="xref" href="Swastika.Domain.Core.ViewModels.RepositoryResponse-1.html">RepositoryResponse</a>&lt;TView&gt;&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="Swastika_Domain_Data_ViewModels_ViewModelBase_3_SaveSubModels_" data-uid="Swastika.Domain.Data.ViewModels.ViewModelBase`3.SaveSubModels*"></a>
+  <h4 id="Swastika_Domain_Data_ViewModels_ViewModelBase_3_SaveSubModels__1__0_Microsoft_EntityFrameworkCore_Storage_IDbContextTransaction_" data-uid="Swastika.Domain.Data.ViewModels.ViewModelBase`3.SaveSubModels(`1,`0,Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction)">SaveSubModels(TModel, TDbContext, IDbContextTransaction)</h4>
+  <div class="markdown level1 summary"><p>Saves the sub models.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual RepositoryResponse&lt;bool&gt; SaveSubModels(TModel parent, TDbContext _context = null, IDbContextTransaction _transaction = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">TModel</span></td>
+        <td><span class="parametername">parent</span></td>
+        <td><p>The parent.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">TDbContext</span></td>
+        <td><span class="parametername">_context</span></td>
+        <td><p>The context.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction</span></td>
+        <td><span class="parametername">_transaction</span></td>
+        <td><p>The transaction.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Swastika.Domain.Core.ViewModels.RepositoryResponse-1.html">RepositoryResponse</a>&lt;<span class="xref">System.Boolean</span>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="Swastika_Domain_Data_ViewModels_ViewModelBase_3_SaveSubModelsAsync_" data-uid="Swastika.Domain.Data.ViewModels.ViewModelBase`3.SaveSubModelsAsync*"></a>
+  <h4 id="Swastika_Domain_Data_ViewModels_ViewModelBase_3_SaveSubModelsAsync__1__0_Microsoft_EntityFrameworkCore_Storage_IDbContextTransaction_" data-uid="Swastika.Domain.Data.ViewModels.ViewModelBase`3.SaveSubModelsAsync(`1,`0,Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction)">SaveSubModelsAsync(TModel, TDbContext, IDbContextTransaction)</h4>
+  <div class="markdown level1 summary"><p>Saves the sub models asynchronous.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual Task&lt;RepositoryResponse&lt;bool&gt;&gt; SaveSubModelsAsync(TModel parent, TDbContext _context = null, IDbContextTransaction _transaction = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">TModel</span></td>
+        <td><span class="parametername">parent</span></td>
+        <td><p>The parent.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">TDbContext</span></td>
+        <td><span class="parametername">_context</span></td>
+        <td><p>The context.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction</span></td>
+        <td><span class="parametername">_transaction</span></td>
+        <td><p>The transaction.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;<a class="xref" href="Swastika.Domain.Core.ViewModels.RepositoryResponse-1.html">RepositoryResponse</a>&lt;<span class="xref">System.Boolean</span>&gt;&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="Swastika_Domain_Data_ViewModels_ViewModelBase_3_Validate_" data-uid="Swastika.Domain.Data.ViewModels.ViewModelBase`3.Validate*"></a>
+  <h4 id="Swastika_Domain_Data_ViewModels_ViewModelBase_3_Validate__0_Microsoft_EntityFrameworkCore_Storage_IDbContextTransaction_" data-uid="Swastika.Domain.Data.ViewModels.ViewModelBase`3.Validate(`0,Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction)">Validate(TDbContext, IDbContextTransaction)</h4>
+  <div class="markdown level1 summary"><p>Validates the specified context.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual void Validate(TDbContext _context = null, IDbContextTransaction _transaction = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">TDbContext</span></td>
+        <td><span class="parametername">_context</span></td>
+        <td><p>The context.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction</span></td>
+        <td><span class="parametername">_transaction</span></td>
+        <td><p>The transaction.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Copyright © 2015-2017 Microsoft<br>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

@@ -1,0 +1,705 @@
+{
+  "homepages": [],
+  "source_base_path": "E:/_Workspace/Github/docfx/Swastika-IO-Heart-Docs",
+  "xrefmap": "xrefmap.yml",
+  "files": [
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Swastika.Api.Controllers.BaseApiController-2.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Swastika.Api.Controllers.BaseApiController-2.html",
+          "hash": "NRRwsQj8nV4aAITLgbY9SA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Swastika.Api.Controllers.BaseApiController-3.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Swastika.Api.Controllers.BaseApiController-3.html",
+          "hash": "IRUmOKLO70BBjdF9YMv0bQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Swastika.Api.Controllers.BaseApiController.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Swastika.Api.Controllers.BaseApiController.html",
+          "hash": "uRFXDDvXVMjaNn82fqldNA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Swastika.Api.Controllers.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Swastika.Api.Controllers.html",
+          "hash": "hW4PmmnKn+GQwb+czrpoZQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Swastika.Common.Helper.CommonHelper.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Swastika.Common.Helper.CommonHelper.html",
+          "hash": "7hmnLuTgvqCw8Fd+z3pAzg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Swastika.Common.Helper.SEOHelper.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Swastika.Common.Helper.SEOHelper.html",
+          "hash": "Pdg+lkUiPLjJSyARdOrg7w=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Swastika.Common.Helper.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Swastika.Common.Helper.html",
+          "hash": "lL0pS7wScYSkdKFdXDwxBQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Swastika.Common.Utility.Const.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Swastika.Common.Utility.Const.html",
+          "hash": "khkRtJdvzMAzU7YlCvwgJg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Swastika.Common.Utility.Enum.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Swastika.Common.Utility.Enum.html",
+          "hash": "kFXrM2f4UTmcOaQwUFCtmg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Swastika.Common.Utility.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Swastika.Common.Utility.html",
+          "hash": "xUskfIKugT1pdKSnRO3TeQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Swastika.Domain.Core.Interfaces.IExpandViewModel-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Swastika.Domain.Core.Interfaces.IExpandViewModel-1.html",
+          "hash": "8WfKEWeCD3mGGu4c2hYz0w=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Swastika.Domain.Core.Interfaces.IUser.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Swastika.Domain.Core.Interfaces.IUser.html",
+          "hash": "ohMeGtSPpPTJ9yTCbzekvg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Swastika.Domain.Core.Interfaces.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Swastika.Domain.Core.Interfaces.html",
+          "hash": "DOBSAa3iS24zrOS2zB1rXg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Swastika.Domain.Core.Models.Entity.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Swastika.Domain.Core.Models.Entity.html",
+          "hash": "kVsEWMQmfVVP6zAHSj1cHg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Swastika.Domain.Core.Models.Enums.ResponseKey.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Swastika.Domain.Core.Models.Enums.ResponseKey.html",
+          "hash": "VFofrUqDtAEZidkcx5GWRA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Swastika.Domain.Core.Models.Enums.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Swastika.Domain.Core.Models.Enums.html",
+          "hash": "Di3MC4/8S/eFrrxEL/BJaQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Swastika.Domain.Core.Models.HistoryData-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Swastika.Domain.Core.Models.HistoryData-1.html",
+          "hash": "BmTmXpjwDbN44/LWTPxL3Q=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Swastika.Domain.Core.Models.SignalRClient.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Swastika.Domain.Core.Models.SignalRClient.html",
+          "hash": "9Ra3XwfAq0dYGgGXDOE8Aw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Swastika.Domain.Core.Models.SupportedCulture.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Swastika.Domain.Core.Models.SupportedCulture.html",
+          "hash": "ZGD/da3g3PmE65R5D3dC6Q=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Swastika.Domain.Core.Models.ValueObject-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Swastika.Domain.Core.Models.ValueObject-1.html",
+          "hash": "uuux/oaHApkI2vV643FF7g=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Swastika.Domain.Core.Models.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Swastika.Domain.Core.Models.html",
+          "hash": "827iMWByjQUeu/eigkM0MA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Swastika.Domain.Core.ViewModels.ApiResult-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Swastika.Domain.Core.ViewModels.ApiResult-1.html",
+          "hash": "OGIMT3tkO4sDse4CcEzk0w=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Swastika.Domain.Core.ViewModels.EntityField.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Swastika.Domain.Core.ViewModels.EntityField.html",
+          "hash": "O+D4+mFDUCwhAgSI1gcmOg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Swastika.Domain.Core.ViewModels.ExpandViewModelBase-2.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Swastika.Domain.Core.ViewModels.ExpandViewModelBase-2.html",
+          "hash": "wPUu7L7WjeU/MNK9kDXJQA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Swastika.Domain.Core.ViewModels.FileStreamViewModel.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Swastika.Domain.Core.ViewModels.FileStreamViewModel.html",
+          "hash": "CmsAyY1ZuxGL76MDz0FEGQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Swastika.Domain.Core.ViewModels.PaginationModel-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Swastika.Domain.Core.ViewModels.PaginationModel-1.html",
+          "hash": "FfdNB4EzxtcOKjzdwJSpWA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Swastika.Domain.Core.ViewModels.RepositoryResponse-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Swastika.Domain.Core.ViewModels.RepositoryResponse-1.html",
+          "hash": "fuyDmEMaGA66OSf3o1LDJw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Swastika.Domain.Core.ViewModels.RequestPaging.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Swastika.Domain.Core.ViewModels.RequestPaging.html",
+          "hash": "6Naf1F/odKMLvpq9M/1x4w=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Swastika.Domain.Core.ViewModels.ViewModelBase-2.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Swastika.Domain.Core.ViewModels.ViewModelBase-2.html",
+          "hash": "lRwj9H86I+XZx+kzXFqa0g=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Swastika.Domain.Core.ViewModels.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Swastika.Domain.Core.ViewModels.html",
+          "hash": "r6dvKAUE24x6V8/ZkGXVmw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Swastika.Domain.Data.Repository.DefaultRepository-2.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Swastika.Domain.Data.Repository.DefaultRepository-2.html",
+          "hash": "h+tcGrWzWsyIIwZcu7/rVA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Swastika.Domain.Data.Repository.DefaultRepository-3.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Swastika.Domain.Data.Repository.DefaultRepository-3.html",
+          "hash": "L/B2Lw/4lSNF0xTYpp9MzQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Swastika.Domain.Data.Repository.ModelRepositoryBase-2.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Swastika.Domain.Data.Repository.ModelRepositoryBase-2.html",
+          "hash": "YEmazEdswGswsbdJepsS+w=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Swastika.Domain.Data.Repository.RepositoryBase-3.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Swastika.Domain.Data.Repository.RepositoryBase-3.html",
+          "hash": "QBjRIAl8hUbSUIveP4ggwA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Swastika.Domain.Data.Repository.ViewRepositoryBase-3.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Swastika.Domain.Data.Repository.ViewRepositoryBase-3.html",
+          "hash": "RJYKO1kVUFeBls7aqL6Jkw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Swastika.Domain.Data.Repository.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Swastika.Domain.Data.Repository.html",
+          "hash": "lxYpGisj1+R12sK0hs4Kmw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Swastika.Domain.Data.ViewModels.ViewModelBase-3.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Swastika.Domain.Data.ViewModels.ViewModelBase-3.html",
+          "hash": "/wiu+LWXeRoU6P5VXNwP/w=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Swastika.Domain.Data.ViewModels.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Swastika.Domain.Data.ViewModels.html",
+          "hash": "2NO7sxk5G5Yz8ZUqKHCs/A=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Swastika.Extension.Core.Interfaces.IService-2.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Swastika.Extension.Core.Interfaces.IService-2.html",
+          "hash": "SawMITS3KZuoLT+VpOatEg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Swastika.Extension.Core.Interfaces.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Swastika.Extension.Core.Interfaces.html",
+          "hash": "8avLKsBjLl3/HR6hhlRJGA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Swastika.UI.Base.ApiHelper-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Swastika.UI.Base.ApiHelper-1.html",
+          "hash": "KyR+8I02e8d+mBT4PTB6ag=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Swastika.UI.Base.Controllers.BaseController.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Swastika.UI.Base.Controllers.BaseController.html",
+          "hash": "m0olWXmFTf3sFSmt1JxdOw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Swastika.UI.Base.Controllers.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Swastika.UI.Base.Controllers.html",
+          "hash": "MJE7hNLEitz2hSl63YHfqw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Swastika.UI.Base.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Swastika.UI.Base.html",
+          "hash": "FgsupYqcFygmFi+VSKb9jw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Swastika.UI.Core.Controllers.ApiHubController-3.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Swastika.UI.Core.Controllers.ApiHubController-3.html",
+          "hash": "E0I1EGYEDCHAgdkMe8aCxg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Swastika.UI.Core.Controllers.ApiHubController-4.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Swastika.UI.Core.Controllers.ApiHubController-4.html",
+          "hash": "Hy1fGMDxzPPNPe2Zxp0cCg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Swastika.UI.Core.Controllers.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Swastika.UI.Core.Controllers.html",
+          "hash": "uvyPS9EfA3FSqDm1cBv3Qw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Swastika.UI.Core.SignalR.BaseSignalRHub.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Swastika.UI.Core.SignalR.BaseSignalRHub.html",
+          "hash": "/XrwaeD8FQUFXIu8i6u0ag=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Swastika.UI.Core.SignalR.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Swastika.UI.Core.SignalR.html",
+          "hash": "I1Xp8FIO0pcI//QqpmeOpQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "api/index.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/index.html",
+          "hash": "9h510IHKwGahzX0xgLWQIw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "api/toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/toc.html",
+          "hash": "cZ3kuYE6ydH9NUq7Do5igA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/intro.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/intro.html",
+          "hash": "Vz/dfjyJtbfEFS+t4C0xZg=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "articles/toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "articles/toc.html",
+          "hash": "xVlQaX7Tk85omoiWv3O+Ag=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "index.md",
+      "output": {
+        ".html": {
+          "relative_path": "index.html",
+          "hash": "/7W7gAku4KKVpXcy15nq/g=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "toc.html",
+          "hash": "ob7LqWp4kTNLz+9W4omdTw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    }
+  ],
+  "incremental_info": [
+    {
+      "status": {
+        "can_incremental": true,
+        "incrementalPhase": "build"
+      },
+      "processors": {
+        "TocDocumentProcessor": {
+          "can_incremental": false,
+          "details": "Processor TocDocumentProcessor cannot suppport incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
+          "incrementalPhase": "build"
+        },
+        "ManagedReferenceDocumentProcessor": {
+          "can_incremental": false,
+          "details": "Processor ManagedReferenceDocumentProcessor disable incremental build because last build doesn't contain version .",
+          "incrementalPhase": "build"
+        },
+        "ConceptualDocumentProcessor": {
+          "can_incremental": true,
+          "incrementalPhase": "build"
+        }
+      }
+    },
+    {
+      "status": {
+        "can_incremental": true,
+        "details": "Can support incremental post processing.",
+        "incrementalPhase": "postProcessing"
+      },
+      "processors": {}
+    }
+  ],
+  "version_info": {},
+  "groups": [
+    {
+      "xrefmap": "xrefmap.yml"
+    }
+  ]
+}
