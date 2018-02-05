@@ -83,7 +83,7 @@ namespace Swastika.Domain.Data.ViewModels
         ///   <c>true</c> if this instance is clone; otherwise, <c>false</c>.
         /// </value>
         [JsonIgnore]
-        public bool IsClone { get; set; } = true;
+        public bool IsClone { get; set; } = false;
 
         /// <summary>
         /// Gets or sets a value indicating whether this instance is lazy load.
