@@ -69,6 +69,7 @@ namespace Swastika.Domain.Core.ViewModels
         /// <value>
         /// The name of the property.
         /// </value>
+        [JsonProperty("propertyName")]
         public string PropertyName { get; set; }
 
         /// <summary>
@@ -77,6 +78,7 @@ namespace Swastika.Domain.Core.ViewModels
         /// <value>
         /// The property value.
         /// </value>
+        [JsonProperty("propertyValue")]
         public string PropertyValue { get; set; }
     }
 
@@ -91,6 +93,7 @@ namespace Swastika.Domain.Core.ViewModels
         /// <value>
         /// The base64.
         /// </value>
+        [JsonProperty("base64")]
         public string Base64 { get; set; }
 
         /// <summary>
@@ -99,6 +102,7 @@ namespace Swastika.Domain.Core.ViewModels
         /// <value>
         /// The name.
         /// </value>
+        [JsonProperty("name")]
         public string Name { get; set; }
 
         /// <summary>
@@ -107,6 +111,7 @@ namespace Swastika.Domain.Core.ViewModels
         /// <value>
         /// The size.
         /// </value>
+        [JsonProperty("size")]
         public int Size { get; set; }
 
         /// <summary>
@@ -115,6 +120,7 @@ namespace Swastika.Domain.Core.ViewModels
         /// <value>
         /// The type.
         /// </value>
+        [JsonProperty("type")]
         public string Type { get; set; }
     }
 
@@ -142,6 +148,7 @@ namespace Swastika.Domain.Core.ViewModels
         /// <value>
         /// The items.
         /// </value>
+        [JsonProperty("items")]
         public List<T> Items { get; set; }
 
         /// <summary>
@@ -150,6 +157,7 @@ namespace Swastika.Domain.Core.ViewModels
         /// <value>
         /// The json items.
         /// </value>
+        [JsonProperty("jsonItems")]
         public List<JObject> JsonItems { get; set; } = new List<JObject>();
 
         /// <summary>
@@ -158,6 +166,7 @@ namespace Swastika.Domain.Core.ViewModels
         /// <value>
         /// The index of the page.
         /// </value>
+        [JsonProperty("pageIndex")]
         public int PageIndex { get; set; }
 
         /// <summary>
@@ -166,6 +175,7 @@ namespace Swastika.Domain.Core.ViewModels
         /// <value>
         /// The size of the page.
         /// </value>
+        [JsonProperty("pageSize")]
         public int PageSize { get; set; }
 
         /// <summary>
@@ -174,6 +184,7 @@ namespace Swastika.Domain.Core.ViewModels
         /// <value>
         /// The total items.
         /// </value>
+        [JsonProperty("totalItems")]
         public int TotalItems { get; set; }
 
         /// <summary>
@@ -182,6 +193,7 @@ namespace Swastika.Domain.Core.ViewModels
         /// <value>
         /// The total page.
         /// </value>
+        [JsonProperty("totalPage")]
         public int TotalPage { get; set; }
     }
 
@@ -257,14 +269,15 @@ namespace Swastika.Domain.Core.ViewModels
         /// <value>
         /// The country identifier.
         /// </value>
+        [JsonProperty("countryId")]
         public int CountryId { get; set; }
-        [JsonProperty("pageIndex")]
         /// <summary>
         /// Gets or sets the culture.
         /// </summary>
         /// <value>
         /// The culture.
         /// </value>
+        [JsonProperty("culture")]
         public string Culture { get; set; }
 
         /// <summary>
@@ -273,6 +286,7 @@ namespace Swastika.Domain.Core.ViewModels
         /// <value>
         /// The direction.
         /// </value>
+        [JsonProperty("direction")]
         public OrderByDirection Direction { get; set; } = OrderByDirection.Ascending;
 
         /// <summary>
@@ -281,6 +295,7 @@ namespace Swastika.Domain.Core.ViewModels
         /// <value>
         /// The key.
         /// </value>
+        [JsonProperty("key")]
         public string Key { get; set; }
 
         /// <summary>
@@ -289,6 +304,7 @@ namespace Swastika.Domain.Core.ViewModels
         /// <value>
         /// The keyword.
         /// </value>
+        [JsonProperty("keyword")]
         public string Keyword { get; set; }
 
         /// <summary>
@@ -297,6 +313,7 @@ namespace Swastika.Domain.Core.ViewModels
         /// <value>
         /// The order by.
         /// </value>
+        [JsonProperty("orderBy")]
         public string OrderBy { get; set; } = "Id";
 
         /// <summary>
@@ -305,6 +322,7 @@ namespace Swastika.Domain.Core.ViewModels
         /// <value>
         /// The index of the page.
         /// </value>
+        [JsonProperty("pageIndex")]
         public int PageIndex { get; set; } = 0;
 
         /// <summary>
@@ -313,6 +331,7 @@ namespace Swastika.Domain.Core.ViewModels
         /// <value>
         /// The size of the page.
         /// </value>
+        [JsonProperty("pageSize")]
         public int? PageSize { get; set; } = 10;
 
         /// <summary>
@@ -321,6 +340,7 @@ namespace Swastika.Domain.Core.ViewModels
         /// <value>
         /// The user agent.
         /// </value>
+        [JsonProperty("userAgent")]
         public string UserAgent { get; set; }
 
         /// <summary>
@@ -329,6 +349,7 @@ namespace Swastika.Domain.Core.ViewModels
         /// <value>
         /// The user identifier.
         /// </value>
+        [JsonProperty("userId")]
         public string UserId { get; set; }
     }
 }
