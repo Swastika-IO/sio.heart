@@ -473,6 +473,7 @@ namespace Swastika.Domain.Data.ViewModels
             }
         }
 
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
         /// <summary>
         /// Clones the sub models asynchronous.
         /// </summary>
@@ -482,6 +483,7 @@ namespace Swastika.Domain.Data.ViewModels
         /// <param name="_transaction">The transaction.</param>
         /// <returns></returns>
         public virtual async Task<RepositoryResponse<bool>> CloneSubModelsAsync(TView parent, List<SupportedCulture> cloneCultures, TDbContext _context = null, IDbContextTransaction _transaction = null)
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         {
             var taskSource = new TaskCompletionSource<RepositoryResponse<bool>>();
             taskSource.SetResult(new RepositoryResponse<bool>() { IsSucceed = true, Data = true });
@@ -560,14 +562,16 @@ namespace Swastika.Domain.Data.ViewModels
             }
         }
 
-        /// <summary>
-        /// Removes the related models asynchronous.
-        /// </summary>
-        /// <param name="view">The view.</param>
-        /// <param name="_context">The context.</param>
-        /// <param name="_transaction">The transaction.</param>
-        /// <returns></returns>
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
+                              /// <summary>
+                              /// Removes the related models asynchronous.
+                              /// </summary>
+                              /// <param name="view">The view.</param>
+                              /// <param name="_context">The context.</param>
+                              /// <param name="_transaction">The transaction.</param>
+                              /// <returns></returns>
         public virtual async Task<RepositoryResponse<bool>> RemoveRelatedModelsAsync(TView view, TDbContext _context = null, IDbContextTransaction _transaction = null)
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
 #pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         {
             var taskSource = new TaskCompletionSource<RepositoryResponse<bool>>();
