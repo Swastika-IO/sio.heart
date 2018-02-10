@@ -381,7 +381,7 @@ namespace Swastika.Domain.Data.ViewModels
         /// <param name="_context">The context.</param>
         /// <param name="_transaction">The transaction.</param>
         /// <returns></returns>
-        public virtual async Task<RepositoryResponse<List<TView>>> CloneAsync(List<SupportedCulture> cloneCultures
+        public virtual async Task<RepositoryResponse<List<TView>>> CloneAsync(TModel model, List<SupportedCulture> cloneCultures
             , TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
             bool IsRoot = _context == null;
@@ -402,7 +402,7 @@ namespace Swastika.Domain.Data.ViewModels
                         string desSpecificulture = culture.Specificulture;
 
                         TView view = InitView();
-                        view.Model = this.Model;
+                        view.Model = model;
                         view.ParseView(isExpand: false, _context: context, _transaction: transaction);
                         view.Specificulture = desSpecificulture;
 
@@ -616,7 +616,7 @@ namespace Swastika.Domain.Data.ViewModels
                     if (result.IsSucceed && IsClone && IsRoot)
                     {
                         var cloneCultures = ListSupportedCulture.Where(c => c.Specificulture != Specificulture && c.IsSupported).ToList();
-                        var cloneResult = await CloneAsync(cloneCultures, _context: context, _transaction: transaction);
+                        var cloneResult = await CloneAsync(Model, cloneCultures, _context: context, _transaction: transaction);
                         if (!cloneResult.IsSucceed)
                         {
                             result.Errors.AddRange(cloneResult.Errors);
@@ -710,7 +710,7 @@ namespace Swastika.Domain.Data.ViewModels
         /// <param name="_context">The context.</param>
         /// <param name="_transaction">The transaction.</param>
         /// <returns></returns>
-        public virtual RepositoryResponse<List<TView>> Clone(List<SupportedCulture> cloneCultures
+        public virtual RepositoryResponse<List<TView>> Clone(TModel model, List<SupportedCulture> cloneCultures
             , TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
             bool IsRoot = _context == null;
@@ -731,7 +731,7 @@ namespace Swastika.Domain.Data.ViewModels
                         string desSpecificulture = culture.Specificulture;
 
                         TView view = InitView();
-                        view.Model = this.Model;
+                        view.Model = model;
                         view.ParseView(isExpand: false, _context: context, _transaction: transaction);
                         view.Specificulture = desSpecificulture;
 
@@ -936,7 +936,7 @@ namespace Swastika.Domain.Data.ViewModels
                     if (result.IsSucceed && IsClone && IsRoot)
                     {
                         var cloneCultures = ListSupportedCulture.Where(c => c.Specificulture != Specificulture && c.IsSupported).ToList();
-                        var cloneResult = Clone(cloneCultures, _context: context, _transaction: transaction);
+                        var cloneResult = Clone(Model, cloneCultures, _context: context, _transaction: transaction);
                         if (!cloneResult.IsSucceed)
                         {
                             result.Errors.AddRange(cloneResult.Errors);

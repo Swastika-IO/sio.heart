@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -210,12 +211,42 @@ namespace Swastika.Api.Controllers
         /// </summary>
         protected string _lang;
 
+        protected IHostingEnvironment _env;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="BaseApiController{TDbContext, TModel}"/> class.
         /// </summary>
+        public BaseApiController(IHostingEnvironment env)
+        {
+            _env = env;
+            _repo = DefaultRepository<TDbContext, TModel>.Instance;
+        }
+
         public BaseApiController()
         {
-            _repo = DefaultRepository<TDbContext, TModel>.Instance;
+
+        }
+
+        protected async Task<string> UploadFileAsync(IFormFile file, string folderPath)
+        {
+            if (file != null && file.Length > 0)
+            {
+                string fileName = await CommonHelper.UploadFileAsync(System.IO.Path.Combine(_env.WebRootPath, folderPath), file);
+
+                if (!string.IsNullOrEmpty(fileName))
+                {
+                    string filePath = string.Format("{0}/{1}", folderPath, fileName);
+                    return filePath;
+                }
+                else
+                {
+                    return string.Empty;
+                }
+            }
+            else
+            {
+                return string.Empty;
+            }
         }
 
         /// <summary>
