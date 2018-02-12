@@ -11,6 +11,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using static Swastika.Common.Utility.Enums;
 
 namespace Swastika.Domain.Data.ViewModels
 {
@@ -191,6 +192,15 @@ namespace Swastika.Domain.Data.ViewModels
         /// </value>
         [JsonProperty("priority")]
         public int? Priority { get; set; } = 0;
+
+        /// <summary>
+        /// Gets or sets the priority.
+        /// </summary>
+        /// <value>
+        /// The priority.
+        /// </value>
+        [JsonProperty("status")]
+        public SWStatus Status { get; set; } = SWStatus.Preview;
 
         /// <summary>
         /// Gets or sets the specificulture.
