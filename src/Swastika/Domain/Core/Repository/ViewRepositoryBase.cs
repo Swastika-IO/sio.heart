@@ -1,4 +1,8 @@
-﻿using AutoMapper;
+﻿// Licensed to the Swastika I/O Foundation under one or more agreements.
+// The Swastika I/O Foundation licenses this file to you under the GNU General Public License v3.0 license.
+// See the LICENSE file in the project root for more information.
+
+using AutoMapper;
 using Microsoft.Data.OData.Query;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -736,6 +740,7 @@ namespace Swastika.Domain.Data.Repository
                 cfg.CreateMap<TView, TModel>();
             });
         }
+
         #region GetModelList
 
         /// <summary>
@@ -1177,6 +1182,7 @@ namespace Swastika.Domain.Data.Repository
         }
 
         #endregion GetModelListBy
+
         // TODO: Should return return enum status code instead
         /// <summary>
         /// Removes the list model.

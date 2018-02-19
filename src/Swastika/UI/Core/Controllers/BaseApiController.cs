@@ -1,3 +1,7 @@
+// Licensed to the Swastika I/O Foundation under one or more agreements.
+// The Swastika I/O Foundation licenses this file to you under the GNU General Public License v3.0 license.
+// See the LICENSE file in the project root for more information.
+
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -119,7 +123,7 @@ namespace Swastika.Api.Controllers
             //ViewBag.currentCulture = listCultures.FirstOrDefault(c => c.Specificulture == _lang);
             //ViewBag.cultures = listCultures;
         }
-        
+
         // TODO: Still need?
         //protected IActionResult GetResult<TResult>(int status, TResult data, string responseKey, string error, string message)
         //{
@@ -224,7 +228,6 @@ namespace Swastika.Api.Controllers
 
         public BaseApiController()
         {
-
         }
 
         protected async Task<string> UploadFileAsync(IFormFile file, string folderPath)

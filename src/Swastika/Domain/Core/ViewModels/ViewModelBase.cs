@@ -1,4 +1,8 @@
-﻿using AutoMapper;
+﻿// Licensed to the Swastika I/O Foundation under one or more agreements.
+// The Swastika I/O Foundation licenses this file to you under the GNU General Public License v3.0 license.
+// See the LICENSE file in the project root for more information.
+
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using Newtonsoft.Json;
@@ -484,6 +488,7 @@ namespace Swastika.Domain.Data.ViewModels
         }
 
 #pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
+
         /// <summary>
         /// Clones the sub models asynchronous.
         /// </summary>
@@ -573,13 +578,14 @@ namespace Swastika.Domain.Data.ViewModels
         }
 
 #pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
-                              /// <summary>
-                              /// Removes the related models asynchronous.
-                              /// </summary>
-                              /// <param name="view">The view.</param>
-                              /// <param name="_context">The context.</param>
-                              /// <param name="_transaction">The transaction.</param>
-                              /// <returns></returns>
+
+        /// <summary>
+        /// Removes the related models asynchronous.
+        /// </summary>
+        /// <param name="view">The view.</param>
+        /// <param name="_context">The context.</param>
+        /// <param name="_transaction">The transaction.</param>
+        /// <returns></returns>
         public virtual async Task<RepositoryResponse<bool>> RemoveRelatedModelsAsync(TView view, TDbContext _context = null, IDbContextTransaction _transaction = null)
 #pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         {
