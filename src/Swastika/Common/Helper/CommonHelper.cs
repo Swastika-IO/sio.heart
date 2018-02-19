@@ -336,7 +336,7 @@ namespace Swastika.Common.Helper
         //            return ImageHelper.ResizeImage(img, fullPath);
         //        }
         //    }
-        //    catch (Exception ex)
+        //    catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
         //    {
         //        return string.Empty;
         //    }

@@ -54,7 +54,7 @@ namespace Swastika.Domain.Data.Repository
                 //For the latter case use(it will check loaded entities as well):
                 //return (_context.Set<T>().Find(keys) != null);
             }
-            catch (Exception ex)
+            catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
             {
                 LogErrorMessage(ex);
                 if (_transaction == null)
@@ -93,8 +93,7 @@ namespace Swastika.Domain.Data.Repository
                 //For the latter case use(it will check loaded entities as well):
                 //return (_context.Set<T>().Find(keys) != null);
             }
-            // TODO: Add more specific exeption types instead of Exception only
-            catch (Exception ex)
+            catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
             {
                 LogErrorMessage(ex);
                 if (_transaction == null)
@@ -165,8 +164,7 @@ namespace Swastika.Domain.Data.Repository
                     };
                 }
             }
-            // TODO: Add more specific exeption types instead of Exception only
-            catch (Exception ex)
+            catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
             {
                 LogErrorMessage(ex);
                 if (_transaction == null)
@@ -243,8 +241,7 @@ namespace Swastika.Domain.Data.Repository
                     };
                 }
             }
-            // TODO: Add more specific exeption types instead of Exception only
-            catch (Exception ex)
+            catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
             {
                 LogErrorMessage(ex);
                 if (_transaction == null)
@@ -322,8 +319,7 @@ namespace Swastika.Domain.Data.Repository
                     };
                 }
             }
-            // TODO: Add more specific exeption types instead of Exception only
-            catch (Exception ex)
+            catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
             {
                 LogErrorMessage(ex);
                 if (_transaction == null)
@@ -400,8 +396,7 @@ namespace Swastika.Domain.Data.Repository
                     };
                 }
             }
-            // TODO: Add more specific exeption types instead of Exception only
-            catch (Exception ex)
+            catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
             {
                 LogErrorMessage(ex);
                 if (_transaction == null)
@@ -565,8 +560,7 @@ namespace Swastika.Domain.Data.Repository
                     lstViewResult = ParseView(lstModel);
                     return lstViewResult;
                 }
-                // TODO: Add more specific exeption types instead of Exception only
-                catch (Exception ex)
+                catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
                 {
                     LogErrorMessage(ex);
                     return null;
@@ -648,8 +642,7 @@ namespace Swastika.Domain.Data.Repository
                     result.Items = lstViewResult;
                     return result;
                 }
-                // TODO: Add more specific exeption types instead of Exception only
-                catch (Exception ex)
+                catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
                 {
                     LogErrorMessage(ex);
                     return null;
@@ -732,8 +725,7 @@ namespace Swastika.Domain.Data.Repository
 
                     return result;
                 }
-                // TODO: Add more specific exeption types instead of Exception only
-                catch (Exception ex)
+                catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
                 {
                     LogErrorMessage(ex);
                     return null;
@@ -814,7 +806,7 @@ namespace Swastika.Domain.Data.Repository
                     result.Items = lstViewResult;
                     return result;
                 }
-                catch (Exception ex)
+                catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
                 {
                     LogErrorMessage(ex);
                     return null;
@@ -894,7 +886,7 @@ namespace Swastika.Domain.Data.Repository
 
                     return result;
                 }
-                catch (Exception ex)
+                catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
                 {
                     LogErrorMessage(ex);
                     return null;
@@ -918,7 +910,7 @@ namespace Swastika.Domain.Data.Repository
 
                     return lstViewResult;
                 }
-                catch (Exception ex)
+                catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
                 {
                     LogErrorMessage(ex);
                     return null;
@@ -998,7 +990,7 @@ namespace Swastika.Domain.Data.Repository
 
                     return result;
                 }
-                catch (Exception ex)
+                catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
                 {
                     LogErrorMessage(ex);
                     return null;
@@ -1080,7 +1072,7 @@ namespace Swastika.Domain.Data.Repository
                     result.Items = lstViewResult;
                     return result;
                 }
-                catch (Exception ex)
+                catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
                 {
                     LogErrorMessage(ex);
                     return null;
@@ -1104,8 +1096,7 @@ namespace Swastika.Domain.Data.Repository
                     lstViewResult = ParseView(lstModel);
                     return lstViewResult;
                 }
-                // TODO: Add more specific exeption types instead of Exception only
-                catch (Exception ex)
+                catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
                 {
                     LogErrorMessage(ex);
                     return null;
@@ -1133,7 +1124,7 @@ namespace Swastika.Domain.Data.Repository
                     var lstViewResult = ParseView(lstModel);
                     return lstViewResult;
                 }
-                catch (Exception ex)
+                catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
                 {
                     LogErrorMessage(ex);
                     return null;
@@ -1214,7 +1205,7 @@ namespace Swastika.Domain.Data.Repository
                     result.Items = lstViewResult;
                     return result;
                 }
-                catch (Exception ex)
+                catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
                 {
                     LogErrorMessage(ex);
                     return null;
@@ -1296,7 +1287,7 @@ namespace Swastika.Domain.Data.Repository
                     result.Items = lstViewResult;
                     return result;
                 }
-                catch (Exception ex)
+                catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
                 {
                     LogErrorMessage(ex);
                     return null;
@@ -1377,7 +1368,7 @@ namespace Swastika.Domain.Data.Repository
                     result.Items = lstViewResult;
                     return result;
                 }
-                catch (Exception ex)
+                catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
                 {
                     LogErrorMessage(ex);
                     return null;
@@ -1401,7 +1392,7 @@ namespace Swastika.Domain.Data.Repository
                     var lstViewResult = ParseView(lstModel);
                     return lstViewResult;
                 }
-                catch (Exception ex)
+                catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
                 {
                     LogErrorMessage(ex);
                     return null;
@@ -1483,7 +1474,7 @@ namespace Swastika.Domain.Data.Repository
                     result.Items = lstViewResult;
                     return result;
                 }
-                catch (Exception ex)
+                catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
                 {
                     LogErrorMessage(ex);
                     return null;
@@ -1564,7 +1555,7 @@ namespace Swastika.Domain.Data.Repository
                     result.Items = lstViewResult;
                     return result;
                 }
-                catch (Exception ex)
+                catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
                 {
                     LogErrorMessage(ex);
                     return null;
@@ -1643,7 +1634,7 @@ namespace Swastika.Domain.Data.Repository
                     result.Items = lstViewResult;
                     return result;
                 }
-                catch (Exception ex)
+                catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
                 {
                     LogErrorMessage(ex);
                     return null;
@@ -1721,7 +1712,7 @@ namespace Swastika.Domain.Data.Repository
                     };
                 }
             }
-            catch (Exception ex)
+            catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
             {
                 LogErrorMessage(ex);
                 if (_transaction == null)
@@ -1815,7 +1806,7 @@ namespace Swastika.Domain.Data.Repository
                     };
                 }
             }
-            catch (Exception ex)
+            catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
             {
                 LogErrorMessage(ex);
                 if (_transaction == null)
@@ -1892,7 +1883,7 @@ namespace Swastika.Domain.Data.Repository
                     };
                 }
             }
-            catch (Exception ex)
+            catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
             {
                 LogErrorMessage(ex);
                 if (_transaction == null)
@@ -1968,7 +1959,7 @@ namespace Swastika.Domain.Data.Repository
                     };
                 }
             }
-            catch (Exception ex)
+            catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
             {
                 LogErrorMessage(ex);
                 if (_transaction == null)
@@ -2045,7 +2036,7 @@ namespace Swastika.Domain.Data.Repository
                     };
                 }
             }
-            catch (Exception ex)
+            catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
             {
                 LogErrorMessage(ex);
                 if (_transaction == null)
@@ -2121,7 +2112,7 @@ namespace Swastika.Domain.Data.Repository
                     };
                 }
             }
-            catch (Exception ex)
+            catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
             {
                 LogErrorMessage(ex);
                 if (_transaction == null)

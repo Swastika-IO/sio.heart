@@ -345,8 +345,7 @@ namespace Swastika.Domain.Data.ViewModels
                 {
                     ExpandView(context, transaction);
                 }
-                // TODO: Add more specific exeption types instead of Exception only
-                catch (Exception ex)
+                catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
                 {
                     Repository.LogErrorMessage(ex);
                     if (IsRoot)
@@ -472,7 +471,7 @@ namespace Swastika.Domain.Data.ViewModels
                     return result;
                 }
             }
-            catch (Exception ex)
+            catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
             {
                 result.IsSucceed = false;
                 result.Exception = ex;
@@ -555,8 +554,7 @@ namespace Swastika.Domain.Data.ViewModels
                     return result;
                 }
             }
-            // TODO: Add more specific exeption types instead of Exception only
-            catch (Exception ex)
+            catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
             {
                 if (_transaction == null)
                 {
@@ -661,8 +659,7 @@ namespace Swastika.Domain.Data.ViewModels
                         return result;
                     }
                 }
-                // TODO: Add more specific exeption types instead of Exception only
-                catch (Exception ex)
+                catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
                 {
                     Repository.LogErrorMessage(ex);
                     if (IsRoot)
@@ -802,7 +799,7 @@ namespace Swastika.Domain.Data.ViewModels
                     return result;
                 }
             }
-            catch (Exception ex)
+            catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
             {
                 result.IsSucceed = false;
                 result.Exception = ex;
@@ -880,8 +877,7 @@ namespace Swastika.Domain.Data.ViewModels
                     return result;
                 }
             }
-            // TODO: Add more specific exeption types instead of Exception only
-            catch (Exception ex)
+            catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
             {
                 if (_transaction == null)
                 {
@@ -981,8 +977,7 @@ namespace Swastika.Domain.Data.ViewModels
                         return result;
                     }
                 }
-                // TODO: Add more specific exeption types instead of Exception only
-                catch (Exception ex)
+                catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
                 {
                     Repository.LogErrorMessage(ex);
                     if (IsRoot)
