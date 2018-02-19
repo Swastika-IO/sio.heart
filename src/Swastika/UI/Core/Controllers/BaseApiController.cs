@@ -40,6 +40,8 @@ namespace Swastika.Api.Controllers
         {
         }
 
+        public const string CONST_ROUTE_DEFAULT_CULTURE = "en-us";
+
         /// <summary>
         /// Creates an <see cref="T:Microsoft.AspNetCore.Mvc.BadRequestObjectResult"/> that produces
         /// a <see cref="F:Microsoft.AspNetCore.Http.StatusCodes.Status400BadRequest"/> response.
@@ -115,7 +117,7 @@ namespace Swastika.Api.Controllers
         protected void GetLanguage()
         {
             _lang = RouteData != null && RouteData.Values["culture"] != null
-                ? RouteData.Values["culture"].ToString() : "vi-vn";
+                ? RouteData.Values["culture"].ToString() : CONST_ROUTE_DEFAULT_CULTURE;
             ViewBag.culture = _lang;
 
             _domain = string.Format("{0}://{1}", Request.Scheme, Request.Host);
@@ -330,7 +332,7 @@ namespace Swastika.Api.Controllers
         protected void GetLanguage()
         {
             _lang = RouteData != null && RouteData.Values["culture"] != null
-                ? RouteData.Values["culture"].ToString() : "vi-vn";
+                ? RouteData.Values["culture"].ToString() : BaseApiController.CONST_ROUTE_DEFAULT_CULTURE;
             ViewBag.culture = _lang;
 
             _domain = string.Format("{0}://{1}", Request.Scheme, Request.Host);
@@ -466,7 +468,7 @@ namespace Swastika.Api.Controllers
         protected void GetLanguage()
         {
             _lang = RouteData != null && RouteData.Values["culture"] != null
-                ? RouteData.Values["culture"].ToString() : "vi-vn";
+                ? RouteData.Values["culture"].ToString() : BaseApiController.CONST_ROUTE_DEFAULT_CULTURE;
             ViewBag.culture = _lang;
         }
 
