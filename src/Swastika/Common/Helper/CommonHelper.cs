@@ -13,21 +13,21 @@ using System.Text;
 namespace Swastika.Common.Helper
 {
     /// <summary>
-    ///
+    /// Common helper
     /// </summary>
     public class CommonHelper
     {
         /// <summary>
         /// The base62chars
         /// </summary>
-        private static char[] _base62chars =
+        private static readonly char[] _base62chars =
             "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
             .ToCharArray();
 
         /// <summary>
         /// The random
         /// </summary>
-        private static Random _random = new Random();
+        private static readonly Random _random = new Random();
 
         /// <summary>
         /// Generates the key.
@@ -67,6 +67,7 @@ namespace Swastika.Common.Helper
             string strFormat = string.Empty;
             for (int i = 0; i < subPaths.Length; i++)
             {
+                // TODO: Use regular string literal instead of verbatim string literal => Remove @?
                 strFormat += @"{" + i + "}" + (i < subPaths.Length - 1 ? "/" : string.Empty);
             }
             return string.Format(strFormat, subPaths).Replace("//", "/");
@@ -91,7 +92,7 @@ namespace Swastika.Common.Helper
         public static async System.Threading.Tasks.Task<string> GetWebResponseAsync(string url)
         {
             HttpWebRequest webRequest = (HttpWebRequest)WebRequest.Create(url);
-            using (WebResponse response = await webRequest.GetResponseAsync())
+            using (WebResponse response = await webRequest.GetResponseAsync().ConfigureAwait(false))
             {
                 using (Stream resStream = response.GetResponseStream())
                 {
@@ -274,7 +275,7 @@ namespace Swastika.Common.Helper
                         file.FileName.Split('.').Last());
                     using (var fileStream = new FileStream(Path.Combine(fullPath, fileName), FileMode.Create, FileAccess.ReadWrite))
                     {
-                        await file.CopyToAsync(fileStream);
+                        await file.CopyToAsync(fileStream).ConfigureAwait(false);
                         return fileName;
                     }
                 }

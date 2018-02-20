@@ -9,11 +9,13 @@ using System.Collections.Generic;
 namespace Swastika.Extension.Core.Interfaces
 {
     /// <summary>
-    ///
+    /// Service Interface
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <typeparam name="TView">The type of the view.</typeparam>
-    public interface IService<T, TView> where T : class where TView : class
+    public interface IService<T, TView>
+        where T : class
+        where TView : class
     {
         /// <summary>
         /// Gets all.

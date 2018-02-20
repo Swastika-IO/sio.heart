@@ -29,7 +29,7 @@ namespace Swastika.Domain.Data.Repository
         /// <summary>
         /// Initializes a new instance of the <see cref="RepositoryBase{TModel, TView, TContext}"/> class.
         /// </summary>
-        public RepositoryBase()
+        protected RepositoryBase()
         {
             //RegisterAutoMapper();
         }
@@ -207,10 +207,10 @@ namespace Swastika.Domain.Data.Repository
                 var model = view.ParseModel();
 
                 context.Entry(model).State = EntityState.Added;
-                bool result = await context.SaveChangesAsync() > 0;
+                bool result = await context.SaveChangesAsync().ConfigureAwait(false) > 0;
                 if (result && isSaveSubModels)
                 {
-                    result = await SaveSubModelAsync(view, context, transaction);
+                    result = await SaveSubModelAsync(view, context, transaction).ConfigureAwait(false);
                 }
 
                 if (result)
@@ -363,10 +363,10 @@ namespace Swastika.Domain.Data.Repository
                 var model = view.ParseModel();
 
                 context.Entry(model).State = EntityState.Modified;
-                bool result = await context.SaveChangesAsync() > 0;
+                bool result = await context.SaveChangesAsync().ConfigureAwait(false) > 0;
                 if (result && isSaveSubModels)
                 {
-                    result = await SaveSubModelAsync(view, context, transaction);
+                    result = await SaveSubModelAsync(view, context, transaction).ConfigureAwait(false);
                 }
 
                 if (result)
@@ -455,7 +455,7 @@ namespace Swastika.Domain.Data.Repository
         {
             using (TContext context = InitContext())
             {
-                TModel model = await context.Set<TModel>().FirstOrDefaultAsync(predicate);
+                TModel model = await context.Set<TModel>().FirstOrDefaultAsync(predicate).ConfigureAwait(false);
                 if (model != null)
                 {
                     context.Entry(model).State = EntityState.Detached;
@@ -516,17 +516,15 @@ namespace Swastika.Domain.Data.Repository
         {
             Type classType = typeof(TView);
             ConstructorInfo classConstructor = classType.GetConstructor(new Type[] { model.GetType().GetType() });
-            TView vm = null;
             if (classConstructor != null)
             {
-                vm = (TView)classConstructor.Invoke(new object[] { model });
+                return (TView)classConstructor.Invoke(new object[] { model });
             }
             else
             {
                 classConstructor = classType.GetConstructor(new Type[] { model.GetType() });
-                vm = (TView)classConstructor.Invoke(new object[] { model });
+                return (TView)classConstructor.Invoke(new object[] { model });
             }
-            return vm;
         }
 
         /// <summary>
@@ -557,8 +555,7 @@ namespace Swastika.Domain.Data.Repository
                     var lstModel = context.Set<TModel>().ToList();
 
                     lstModel.ForEach(model => context.Entry(model).State = EntityState.Detached);
-                    lstViewResult = ParseView(lstModel);
-                    return lstViewResult;
+                    return ParseView(lstModel);
                 }
                 catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
                 {
@@ -595,7 +592,7 @@ namespace Swastika.Domain.Data.Repository
 
                     if (pageSize.HasValue)
                     {
-                        result.TotalPage = result.TotalItems / pageSize.Value + (result.TotalItems % pageSize.Value > 0 ? 1 : 0);
+                        result.TotalPage = (result.TotalItems / pageSize.Value) + (result.TotalItems % pageSize.Value > 0 ? 1 : 0);
                     }
 
                     // TODO: should we change "direction" to boolean "isDesc" and use if condition instead?
@@ -677,7 +674,7 @@ namespace Swastika.Domain.Data.Repository
 
                     if (pageSize.HasValue)
                     {
-                        result.TotalPage = result.TotalItems / pageSize.Value + (result.TotalItems % pageSize.Value > 0 ? 1 : 0);
+                        result.TotalPage = (result.TotalItems / pageSize.Value) + (result.TotalItems % pageSize.Value > 0 ? 1 : 0);
                     }
 
                     // TODO: should we change "direction" to boolean "isDesc" and use if condition instead?
@@ -760,7 +757,7 @@ namespace Swastika.Domain.Data.Repository
 
                     if (pageSize.HasValue)
                     {
-                        result.TotalPage = result.TotalItems / pageSize.Value + (result.TotalItems % pageSize.Value > 0 ? 1 : 0);
+                        result.TotalPage = (result.TotalItems / pageSize.Value) + (result.TotalItems % pageSize.Value > 0 ? 1 : 0);
                     }
 
                     switch (direction)
@@ -841,7 +838,7 @@ namespace Swastika.Domain.Data.Repository
 
                     if (pageSize.HasValue)
                     {
-                        result.TotalPage = result.TotalItems / pageSize.Value + (result.TotalItems % pageSize.Value > 0 ? 1 : 0);
+                        result.TotalPage = (result.TotalItems / pageSize.Value) + (result.TotalItems % pageSize.Value > 0 ? 1 : 0);
                     }
 
                     switch (direction)
@@ -853,13 +850,13 @@ namespace Swastika.Domain.Data.Repository
                                     .OrderByDescending(orderBy)
                                     .Skip(pageIndex.Value * pageSize.Value)
                                     .Take(pageSize.Value)
-                                    .ToListAsync();
+                                    .ToListAsync().ConfigureAwait(false);
                             }
                             else
                             {
                                 lstModel = await query
                                     .OrderByDescending(orderBy)
-                                    .ToListAsync();
+                                    .ToListAsync().ConfigureAwait(false);
                             }
                             break;
 
@@ -868,12 +865,12 @@ namespace Swastika.Domain.Data.Repository
                             {
                                 lstModel = await query.OrderBy(orderBy)
                                     .Skip(pageIndex.Value * pageSize.Value)
-                                    .Take(pageSize.Value).ToListAsync();
+                                    .Take(pageSize.Value).ToListAsync().ConfigureAwait(false);
                             }
                             else
                             {
                                 lstModel = await query.OrderBy(orderBy)
-                                    .ToListAsync();
+                                    .ToListAsync().ConfigureAwait(false);
                             }
                             break;
                     }
@@ -904,7 +901,7 @@ namespace Swastika.Domain.Data.Repository
             {
                 try
                 {
-                    var lstModel = await context.Set<TModel>().ToListAsync();
+                    var lstModel = await context.Set<TModel>().ToListAsync().ConfigureAwait(false);
                     lstModel.ForEach(model => context.Entry(model).State = EntityState.Detached);
                     var lstViewResult = ParseView(lstModel);
 
@@ -945,7 +942,7 @@ namespace Swastika.Domain.Data.Repository
 
                     if (pageSize.HasValue)
                     {
-                        result.TotalPage = result.TotalItems / pageSize.Value + (result.TotalItems % pageSize.Value > 0 ? 1 : 0);
+                        result.TotalPage = (result.TotalItems / pageSize.Value) + (result.TotalItems % pageSize.Value > 0 ? 1 : 0);
                     }
 
                     switch (direction)
@@ -957,13 +954,13 @@ namespace Swastika.Domain.Data.Repository
                                     .OrderByDescending(orderBy)
                                     .Skip(pageIndex.Value * pageSize.Value)
                                     .Take(pageSize.Value)
-                                    .ToListAsync();
+                                    .ToListAsync().ConfigureAwait(false);
                             }
                             else
                             {
                                 lstModel = await query
                                     .OrderByDescending(orderBy)
-                                    .ToListAsync();
+                                    .ToListAsync().ConfigureAwait(false);
                             }
                             break;
 
@@ -974,13 +971,13 @@ namespace Swastika.Domain.Data.Repository
                                     .OrderBy(orderBy)
                                     .Skip(pageIndex.Value * pageSize.Value)
                                     .Take(pageSize.Value)
-                                    .ToListAsync();
+                                    .ToListAsync().ConfigureAwait(false);
                             }
                             else
                             {
                                 lstModel = await query
                                     .OrderBy(orderBy)
-                                    .ToListAsync();
+                                    .ToListAsync().ConfigureAwait(false);
                             }
                             break;
                     }
@@ -1025,7 +1022,7 @@ namespace Swastika.Domain.Data.Repository
 
                     if (pageSize.HasValue)
                     {
-                        result.TotalPage = result.TotalItems / pageSize.Value + (result.TotalItems % pageSize.Value > 0 ? 1 : 0);
+                        result.TotalPage = (result.TotalItems / pageSize.Value) + (result.TotalItems % pageSize.Value > 0 ? 1 : 0);
                     }
 
                     switch (direction)
@@ -1037,13 +1034,13 @@ namespace Swastika.Domain.Data.Repository
                                     .OrderByDescending(orderBy)
                                     .Skip(pageIndex.Value * pageSize.Value)
                                     .Take(pageSize.Value)
-                                    .ToListAsync();
+                                    .ToListAsync().ConfigureAwait(false);
                             }
                             else
                             {
                                 lstModel = await query
                                     .OrderByDescending(orderBy)
-                                    .ToListAsync();
+                                    .ToListAsync().ConfigureAwait(false);
                             }
                             break;
 
@@ -1054,13 +1051,13 @@ namespace Swastika.Domain.Data.Repository
                                     .OrderBy(orderBy)
                                     .Skip(pageIndex.Value * pageSize.Value)
                                     .Take(pageSize.Value)
-                                    .ToListAsync();
+                                    .ToListAsync().ConfigureAwait(false);
                             }
                             else
                             {
                                 lstModel = await query
                                     .OrderBy(orderBy)
-                                    .ToListAsync();
+                                    .ToListAsync().ConfigureAwait(false);
                             }
                             break;
                     }
@@ -1091,10 +1088,9 @@ namespace Swastika.Domain.Data.Repository
                 try
                 {
                     List<TView> lstViewResult = new List<TView>();
-                    var lstModel = await context.Set<TModel>().ToListAsync();
+                    var lstModel = await context.Set<TModel>().ToListAsync().ConfigureAwait(false);
                     lstModel.ForEach(model => context.Entry(model).State = EntityState.Detached);
-                    lstViewResult = ParseView(lstModel);
-                    return lstViewResult;
+                    return ParseView(lstModel);
                 }
                 catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
                 {
@@ -1160,7 +1156,7 @@ namespace Swastika.Domain.Data.Repository
 
                     if (pageSize.HasValue)
                     {
-                        result.TotalPage = result.TotalItems / pageSize.Value + (result.TotalItems % pageSize.Value > 0 ? 1 : 0);
+                        result.TotalPage = (result.TotalItems / pageSize.Value) + (result.TotalItems % pageSize.Value > 0 ? 1 : 0);
                     }
 
                     switch (direction)
@@ -1241,7 +1237,7 @@ namespace Swastika.Domain.Data.Repository
 
                     if (pageSize.HasValue)
                     {
-                        result.TotalPage = result.TotalItems / pageSize.Value + (result.TotalItems % pageSize.Value > 0 ? 1 : 0);
+                        result.TotalPage = (result.TotalItems / pageSize.Value) + (result.TotalItems % pageSize.Value > 0 ? 1 : 0);
                     }
                     switch (direction)
                     {
@@ -1323,7 +1319,7 @@ namespace Swastika.Domain.Data.Repository
 
                     if (pageSize.HasValue)
                     {
-                        result.TotalPage = result.TotalItems / pageSize.Value + (result.TotalItems % pageSize.Value > 0 ? 1 : 0);
+                        result.TotalPage = (result.TotalItems / pageSize.Value) + (result.TotalItems % pageSize.Value > 0 ? 1 : 0);
                     }
                     switch (direction)
                     {
@@ -1387,7 +1383,7 @@ namespace Swastika.Domain.Data.Repository
             {
                 try
                 {
-                    var lstModel = await context.Set<TModel>().Where(predicate).ToListAsync();
+                    var lstModel = await context.Set<TModel>().Where(predicate).ToListAsync().ConfigureAwait(false);
                     lstModel.ForEach(model => context.Entry(model).State = EntityState.Detached);
                     var lstViewResult = ParseView(lstModel);
                     return lstViewResult;
@@ -1429,7 +1425,7 @@ namespace Swastika.Domain.Data.Repository
 
                     if (pageSize.HasValue)
                     {
-                        result.TotalPage = result.TotalItems / pageSize.Value + (result.TotalItems % pageSize.Value > 0 ? 1 : 0);
+                        result.TotalPage = (result.TotalItems / pageSize.Value) + (result.TotalItems % pageSize.Value > 0 ? 1 : 0);
                     }
                     switch (direction)
                     {
@@ -1440,13 +1436,13 @@ namespace Swastika.Domain.Data.Repository
                                     .OrderByDescending(orderBy)
                                     .Skip(pageIndex.Value * pageSize.Value)
                                     .Take(pageSize.Value)
-                                    .ToListAsync();
+                                    .ToListAsync().ConfigureAwait(false);
                             }
                             else
                             {
                                 lstModel = await query
                                     .OrderByDescending(orderBy)
-                                    .ToListAsync();
+                                    .ToListAsync().ConfigureAwait(false);
                             }
                             break;
 
@@ -1457,13 +1453,13 @@ namespace Swastika.Domain.Data.Repository
                                     .OrderBy(orderBy)
                                     .Skip(pageIndex.Value * pageSize.Value)
                                     .Take(pageSize.Value)
-                                    .ToListAsync();
+                                    .ToListAsync().ConfigureAwait(false);
                             }
                             else
                             {
                                 lstModel = await query
                                     .OrderBy(orderBy)
-                                    .ToListAsync();
+                                    .ToListAsync().ConfigureAwait(false);
                             }
                             break;
                     }
@@ -1510,7 +1506,7 @@ namespace Swastika.Domain.Data.Repository
 
                     if (pageSize.HasValue)
                     {
-                        result.TotalPage = result.TotalItems / pageSize.Value + (result.TotalItems % pageSize.Value > 0 ? 1 : 0);
+                        result.TotalPage = (result.TotalItems / pageSize.Value) + (result.TotalItems % pageSize.Value > 0 ? 1 : 0);
                     }
                     switch (direction)
                     {
@@ -1521,13 +1517,13 @@ namespace Swastika.Domain.Data.Repository
                                     .OrderByDescending(orderBy)
                                     .Skip(pageIndex.Value * pageSize.Value)
                                     .Take(pageSize.Value)
-                                    .ToListAsync();
+                                    .ToListAsync().ConfigureAwait(false);
                             }
                             else
                             {
                                 lstModel = await query
                                     .OrderByDescending(orderBy)
-                                    .ToListAsync();
+                                    .ToListAsync().ConfigureAwait(false);
                             }
                             break;
 
@@ -1538,13 +1534,13 @@ namespace Swastika.Domain.Data.Repository
                                     .OrderBy(orderBy)
                                     .Skip(pageIndex.Value * pageSize.Value)
                                     .Take(pageSize.Value)
-                                    .ToListAsync();
+                                    .ToListAsync().ConfigureAwait(false);
                             }
                             else
                             {
                                 lstModel = await query
                                     .OrderBy(orderBy)
-                                    .ToListAsync();
+                                    .ToListAsync().ConfigureAwait(false);
                             }
                             break;
                     }
@@ -1590,7 +1586,7 @@ namespace Swastika.Domain.Data.Repository
                     result.PageSize = pageSize ?? result.TotalItems;
                     if (pageSize.HasValue)
                     {
-                        result.TotalPage = result.TotalItems / pageSize.Value + (result.TotalItems % pageSize.Value > 0 ? 1 : 0);
+                        result.TotalPage = (result.TotalItems / pageSize.Value) + (result.TotalItems % pageSize.Value > 0 ? 1 : 0);
                     }
                     switch (direction)
                     {
@@ -1601,13 +1597,13 @@ namespace Swastika.Domain.Data.Repository
                                     .OrderByDescending(orderBy)
                                     .Skip(pageIndex.Value * pageSize.Value)
                                     .Take(pageSize.Value)
-                                    .ToListAsync();
+                                    .ToListAsync().ConfigureAwait(false);
                             }
                             else
                             {
                                 lstModel = await query
                                     .OrderByDescending(orderBy)
-                                    .ToListAsync();
+                                    .ToListAsync().ConfigureAwait(false);
                             }
                             break;
 
@@ -1618,13 +1614,13 @@ namespace Swastika.Domain.Data.Repository
                                     .OrderBy(orderBy)
                                     .Skip(pageIndex.Value * pageSize.Value)
                                     .Take(pageSize.Value)
-                                    .ToListAsync();
+                                    .ToListAsync().ConfigureAwait(false);
                             }
                             else
                             {
                                 lstModel = await query
                                     .OrderBy(orderBy)
-                                    .ToListAsync();
+                                    .ToListAsync().ConfigureAwait(false);
                             }
                             break;
                     }
@@ -1753,7 +1749,7 @@ namespace Swastika.Domain.Data.Repository
             var transaction = _transaction ?? context.Database.BeginTransaction();
             try
             {
-                var models = await context.Set<TModel>().Where(predicate).ToListAsync();
+                var models = await context.Set<TModel>().Where(predicate).ToListAsync().ConfigureAwait(false);
                 bool result = true;
                 if (models != null)
                 {
@@ -1761,7 +1757,7 @@ namespace Swastika.Domain.Data.Repository
                     {
                         if (result)
                         {
-                            var r = await RemoveModelAsync(model, context, transaction);
+                            var r = await RemoveModelAsync(model, context, transaction).ConfigureAwait(false);
                             result = result && r.IsSucceed;
                         }
                         else
@@ -2001,12 +1997,12 @@ namespace Swastika.Domain.Data.Repository
             var transaction = _transaction ?? context.Database.BeginTransaction();
             try
             {
-                TModel model = await context.Set<TModel>().FirstOrDefaultAsync(predicate);
+                TModel model = await context.Set<TModel>().FirstOrDefaultAsync(predicate).ConfigureAwait(false);
                 bool result = true;
                 if (model != null)
                 {
                     context.Entry(model).State = EntityState.Deleted;
-                    result = await context.SaveChangesAsync() > 0;
+                    result = await context.SaveChangesAsync().ConfigureAwait(false) > 0;
                 }
 
                 if (result)
@@ -2082,7 +2078,7 @@ namespace Swastika.Domain.Data.Repository
                 if (model != null)
                 {
                     context.Entry(model).State = EntityState.Deleted;
-                    result = await context.SaveChangesAsync() > 0;
+                    result = await context.SaveChangesAsync().ConfigureAwait(false) > 0;
                 }
 
                 if (result)

@@ -33,10 +33,10 @@ namespace Swastika.Domain.Core.Models
         /// </returns>
         public static bool operator ==(ValueObject<T> a, ValueObject<T> b)
         {
-            if (ReferenceEquals(a, null) && ReferenceEquals(b, null))
+            if (a is null && b is null)
                 return true;
 
-            if (ReferenceEquals(a, null) || ReferenceEquals(b, null))
+            if (a is null || b is null)
                 return false;
 
             return a.Equals(b);
@@ -52,7 +52,7 @@ namespace Swastika.Domain.Core.Models
         public override bool Equals(object obj)
         {
             var valueObject = obj as T;
-            return !ReferenceEquals(valueObject, null) && EqualsCore(valueObject);
+            return !(valueObject is null) && EqualsCore(valueObject);
         }
 
         /// <summary>

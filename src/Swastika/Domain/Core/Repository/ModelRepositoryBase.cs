@@ -21,12 +21,13 @@ namespace Swastika.Domain.Data.Repository
     /// <typeparam name="TDbContext">The type of the database context.</typeparam>
     /// <typeparam name="TModel">The type of the model.</typeparam>
     public abstract class ModelRepositoryBase<TDbContext, TModel>
-        where TModel : class where TDbContext : DbContext
+        where TDbContext : DbContext
+        where TModel : class
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ModelRepositoryBase{TDbContext, TModel}"/> class.
         /// </summary>
-        public ModelRepositoryBase()
+        protected ModelRepositoryBase()
         {
         }
 
@@ -198,10 +199,10 @@ namespace Swastika.Domain.Data.Repository
             try
             {
                 context.Entry(model).State = EntityState.Added;
-                bool result = await context.SaveChangesAsync() > 0;
+                bool result = await context.SaveChangesAsync().ConfigureAwait(false) > 0;
                 if (result && isSaveSubModels)
                 {
-                    result = await SaveSubModelAsync(model, context, transaction);
+                    result = await SaveSubModelAsync(model, context, transaction).ConfigureAwait(false);
                 }
 
                 if (result)
@@ -350,10 +351,10 @@ namespace Swastika.Domain.Data.Repository
             try
             {
                 context.Entry(model).State = EntityState.Modified;
-                bool result = await context.SaveChangesAsync() > 0;
+                bool result = await context.SaveChangesAsync().ConfigureAwait(false) > 0;
                 if (result && isSaveSubModels)
                 {
-                    result = await SaveSubModelAsync(model, context, transaction);
+                    result = await SaveSubModelAsync(model, context, transaction).ConfigureAwait(false);
                 }
 
                 if (result)
@@ -480,7 +481,7 @@ namespace Swastika.Domain.Data.Repository
             var transaction = _transaction ?? context.Database.BeginTransaction();
             try
             {
-                TModel model = await context.Set<TModel>().FirstOrDefaultAsync(predicate);
+                TModel model = await context.Set<TModel>().FirstOrDefaultAsync(predicate).ConfigureAwait(false);
                 if (model != null)
                 {
                     context.Entry(model).State = EntityState.Detached;
@@ -617,7 +618,7 @@ namespace Swastika.Domain.Data.Repository
 
                 if (pageSize.HasValue)
                 {
-                    result.TotalPage = result.TotalItems / pageSize.Value + (result.TotalItems % pageSize.Value > 0 ? 1 : 0);
+                    result.TotalPage = (result.TotalItems / pageSize.Value) + (result.TotalItems % pageSize.Value > 0 ? 1 : 0);
                 }
 
                 switch (direction)
@@ -699,7 +700,7 @@ namespace Swastika.Domain.Data.Repository
             var transaction = _transaction ?? context.Database.BeginTransaction();
             try
             {
-                var lstModel = await context.Set<TModel>().ToListAsync();
+                var lstModel = await context.Set<TModel>().ToListAsync().ConfigureAwait(false);
                 lstModel.ForEach(model => context.Entry(model).State = EntityState.Detached);
 
                 return new RepositoryResponse<List<TModel>>()
@@ -764,7 +765,7 @@ namespace Swastika.Domain.Data.Repository
 
                 if (pageSize.HasValue)
                 {
-                    result.TotalPage = result.TotalItems / pageSize.Value + (result.TotalItems % pageSize.Value > 0 ? 1 : 0);
+                    result.TotalPage = (result.TotalItems / pageSize.Value) + (result.TotalItems % pageSize.Value > 0 ? 1 : 0);
                 }
 
                 switch (direction)
@@ -775,7 +776,7 @@ namespace Swastika.Domain.Data.Repository
                         {
                             lstModel = await sorted.Skip(pageIndex.Value * pageSize.Value)
                                 .Take(pageSize.Value)
-                                .ToListAsync();
+                                .ToListAsync().ConfigureAwait(false);
                         }
                         else
                         {
@@ -790,11 +791,11 @@ namespace Swastika.Domain.Data.Repository
                         {
                             lstModel = await sorted.Skip(pageIndex.Value * pageSize.Value)
                                 .Take(pageSize.Value)
-                                .ToListAsync();
+                                .ToListAsync().ConfigureAwait(false);
                         }
                         else
                         {
-                            lstModel = await sorted.ToListAsync();
+                            lstModel = await sorted.ToListAsync().ConfigureAwait(false);
                         }
                         break;
                 }
@@ -915,7 +916,7 @@ namespace Swastika.Domain.Data.Repository
 
                 if (pageSize.HasValue)
                 {
-                    result.TotalPage = result.TotalItems / pageSize.Value + (result.TotalItems % pageSize.Value > 0 ? 1 : 0);
+                    result.TotalPage = (result.TotalItems / pageSize.Value) + (result.TotalItems % pageSize.Value > 0 ? 1 : 0);
                 }
 
                 switch (direction)
@@ -998,7 +999,7 @@ namespace Swastika.Domain.Data.Repository
             var transaction = _transaction ?? context.Database.BeginTransaction();
             try
             {
-                var lstModel = await context.Set<TModel>().Where(predicate).ToListAsync();
+                var lstModel = await context.Set<TModel>().Where(predicate).ToListAsync().ConfigureAwait(false);
                 lstModel.ForEach(model => context.Entry(model).State = EntityState.Detached);
                 return new RepositoryResponse<List<TModel>>()
                 {
@@ -1065,7 +1066,7 @@ namespace Swastika.Domain.Data.Repository
 
                 if (pageSize.HasValue)
                 {
-                    result.TotalPage = result.TotalItems / pageSize.Value + (result.TotalItems % pageSize.Value > 0 ? 1 : 0);
+                    result.TotalPage = (result.TotalItems / pageSize.Value) + (result.TotalItems % pageSize.Value > 0 ? 1 : 0);
                 }
                 switch (direction)
                 {
@@ -1075,11 +1076,11 @@ namespace Swastika.Domain.Data.Repository
                         {
                             lstModel = await sorted.Skip(pageIndex.Value * pageSize.Value)
                                 .Take(pageSize.Value)
-                                .ToListAsync();
+                                .ToListAsync().ConfigureAwait(false);
                         }
                         else
                         {
-                            lstModel = await sorted.ToListAsync();
+                            lstModel = await sorted.ToListAsync().ConfigureAwait(false);
                         }
                         break;
 
@@ -1090,11 +1091,11 @@ namespace Swastika.Domain.Data.Repository
                             lstModel = await sorted
                                 .Skip(pageIndex.Value * pageSize.Value)
                                 .Take(pageSize.Value)
-                                .ToListAsync();
+                                .ToListAsync().ConfigureAwait(false);
                         }
                         else
                         {
-                            lstModel = await sorted.ToListAsync();
+                            lstModel = await sorted.ToListAsync().ConfigureAwait(false);
                         }
                         break;
                 }
@@ -1252,7 +1253,7 @@ namespace Swastika.Domain.Data.Repository
             var transaction = _transaction ?? context.Database.BeginTransaction();
             try
             {
-                var models = await context.Set<TModel>().Where(predicate).ToListAsync();
+                var models = await context.Set<TModel>().Where(predicate).ToListAsync().ConfigureAwait(false);
                 bool result = true;
                 if (models != null)
                 {
@@ -1260,7 +1261,7 @@ namespace Swastika.Domain.Data.Repository
                     {
                         if (result)
                         {
-                            var r = await RemoveModelAsync(model, context, transaction);
+                            var r = await RemoveModelAsync(model, context, transaction).ConfigureAwait(false);
                             result = result && r.IsSucceed;
                         }
                         else
@@ -1500,12 +1501,12 @@ namespace Swastika.Domain.Data.Repository
             var transaction = _transaction ?? context.Database.BeginTransaction();
             try
             {
-                TModel model = await context.Set<TModel>().FirstOrDefaultAsync(predicate);
+                TModel model = await context.Set<TModel>().FirstOrDefaultAsync(predicate).ConfigureAwait(false);
                 bool result = true;
                 if (model != null)
                 {
                     context.Entry(model).State = EntityState.Deleted;
-                    result = await context.SaveChangesAsync() > 0;
+                    result = await context.SaveChangesAsync().ConfigureAwait(false) > 0;
                 }
 
                 if (result)
@@ -1581,7 +1582,7 @@ namespace Swastika.Domain.Data.Repository
                 if (model != null)
                 {
                     context.Entry(model).State = EntityState.Deleted;
-                    result = await context.SaveChangesAsync() > 0;
+                    result = await context.SaveChangesAsync().ConfigureAwait(false) > 0;
                 }
 
                 if (result)

@@ -60,13 +60,7 @@ namespace Swastika.Domain.Data.ViewModels
 
         [JsonIgnore]
         public static DefaultRepository<TDbContext, TModel, TView> Repository {
-            get {
-                if (_repo == null)
-                {
-                    _repo = DefaultRepository<TDbContext, TModel, TView>.Instance;
-                }
-                return _repo;
-            }
+            get { return _repo ?? (_repo = DefaultRepository<TDbContext, TModel, TView>.Instance); }
             set => _repo = value;
         }
 
@@ -114,13 +108,7 @@ namespace Swastika.Domain.Data.ViewModels
         /// </value>
         [JsonIgnore]
         public IMapper Mapper {
-            get {
-                if (_mapper == null)
-                {
-                    _mapper = this.CreateMapper();
-                }
-                return _mapper;
-            }
+            get { return _mapper ?? (_mapper = this.CreateMapper()); }
             set => _mapper = value;
         }
 
@@ -152,13 +140,7 @@ namespace Swastika.Domain.Data.ViewModels
         /// </value>
         [JsonIgnore]
         public IMapper ModelMapper {
-            get {
-                if (_modelMapper == null)
-                {
-                    _modelMapper = this.CreateModelMapper();
-                }
-                return _modelMapper;
-            }
+            get { return _modelMapper ?? (_modelMapper = this.CreateModelMapper()); }
             set => _modelMapper = value;
         }
 
@@ -281,13 +263,11 @@ namespace Swastika.Domain.Data.ViewModels
         public virtual TView InitView(TModel model = null, bool isLazyLoad = true, TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
             Type classType = typeof(TView);
-            TView view = default(TView);
 
             ConstructorInfo classConstructor = classType.GetConstructor(new Type[] { });
             if (model == null && classConstructor != null)
             {
-                view = (TView)classConstructor.Invoke(new object[] { });
-                return view;
+                return (TView)classConstructor.Invoke(new object[] { });
             }
             else
             {
@@ -382,6 +362,7 @@ namespace Swastika.Domain.Data.ViewModels
         /// <summary>
         /// Clones the asynchronous.
         /// </summary>
+        /// <param name="model"></param>
         /// <param name="cloneCultures">The clone cultures.</param>
         /// <param name="_context">The context.</param>
         /// <param name="_transaction">The transaction.</param>
@@ -420,10 +401,10 @@ namespace Swastika.Domain.Data.ViewModels
                         }
                         else
                         {
-                            var cloneResult = await view.SaveModelAsync(false, context, transaction);
+                            var cloneResult = await view.SaveModelAsync(false, context, transaction).ConfigureAwait(false);
                             if (cloneResult.IsSucceed)
                             {
-                                var cloneSubResult = await CloneSubModelsAsync(cloneResult.Data, cloneCultures, context, transaction);
+                                var cloneSubResult = await CloneSubModelsAsync(cloneResult.Data, cloneCultures, context, transaction).ConfigureAwait(false);
                                 if (!cloneSubResult.IsSucceed)
                                 {
                                     cloneResult.Errors.AddRange(cloneSubResult.Errors);
@@ -513,10 +494,10 @@ namespace Swastika.Domain.Data.ViewModels
                 ParseModel();
                 if (isRemoveRelatedModels)
                 {
-                    var removeRelatedResult = await RemoveRelatedModelsAsync((TView)this, context, transaction);
+                    var removeRelatedResult = await RemoveRelatedModelsAsync((TView)this, context, transaction).ConfigureAwait(false);
                     if (removeRelatedResult.IsSucceed)
                     {
-                        result = await Repository.RemoveModelAsync(Model, context, transaction);
+                        result = await Repository.RemoveModelAsync(Model, context, transaction).ConfigureAwait(false);
                     }
                     else
                     {
@@ -528,7 +509,7 @@ namespace Swastika.Domain.Data.ViewModels
 
                 if (result.IsSucceed)
                 {
-                    result = await Repository.RemoveModelAsync(Model, context, transaction);
+                    result = await Repository.RemoveModelAsync(Model, context, transaction).ConfigureAwait(false);
                     if (_transaction == null)
                     {
                         transaction.Commit();
@@ -603,12 +584,12 @@ namespace Swastika.Domain.Data.ViewModels
                 try
                 {
                     ParseModel();
-                    result = await Repository.SaveModelAsync((TView)this, _context: context, _transaction: transaction);
+                    result = await Repository.SaveModelAsync((TView)this, _context: context, _transaction: transaction).ConfigureAwait(false);
 
                     // Save sub Models
                     if (result.IsSucceed && isSaveSubModels)
                     {
-                        var saveResult = await SaveSubModelsAsync(Model, context, transaction);
+                        var saveResult = await SaveSubModelsAsync(Model, context, transaction).ConfigureAwait(false);
                         if (!saveResult.IsSucceed)
                         {
                             result.Errors.AddRange(saveResult.Errors);
@@ -621,7 +602,7 @@ namespace Swastika.Domain.Data.ViewModels
                     if (result.IsSucceed && IsClone && IsRoot)
                     {
                         var cloneCultures = ListSupportedCulture.Where(c => c.Specificulture != Specificulture && c.IsSupported).ToList();
-                        var cloneResult = await CloneAsync(Model, cloneCultures, _context: context, _transaction: transaction);
+                        var cloneResult = await CloneAsync(Model, cloneCultures, _context: context, _transaction: transaction).ConfigureAwait(false);
                         if (!cloneResult.IsSucceed)
                         {
                             result.Errors.AddRange(cloneResult.Errors);
@@ -710,6 +691,7 @@ namespace Swastika.Domain.Data.ViewModels
         /// <summary>
         /// Clones the specified clone cultures.
         /// </summary>
+        /// <param name="model"></param>
         /// <param name="cloneCultures">The clone cultures.</param>
         /// <param name="_context">The context.</param>
         /// <param name="_transaction">The transaction.</param>
@@ -1023,7 +1005,7 @@ namespace Swastika.Domain.Data.ViewModels
         /// <param name="model">The model.</param>
         /// <param name="_context">The context.</param>
         /// <param name="_transaction">The transaction.</param>
-        public ViewModelBase(TModel model, TDbContext _context = null, IDbContextTransaction _transaction = null)
+        protected ViewModelBase(TModel model, TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
             this.Model = model;
             ParseView(_context: _context, _transaction: _transaction);
@@ -1036,7 +1018,7 @@ namespace Swastika.Domain.Data.ViewModels
         /// <param name="isLazyLoad">if set to <c>true</c> [is lazy load].</param>
         /// <param name="_context">The context.</param>
         /// <param name="_transaction">The transaction.</param>
-        public ViewModelBase(TModel model, bool isLazyLoad, TDbContext _context = null, IDbContextTransaction _transaction = null)
+        protected ViewModelBase(TModel model, bool isLazyLoad, TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
             this.Model = model;
             IsLazyLoad = isLazyLoad;
@@ -1046,7 +1028,7 @@ namespace Swastika.Domain.Data.ViewModels
         /// <summary>
         /// Initializes a new instance of the <see cref="ViewModelBase{TDbContext, TModel, TView}"/> class.
         /// </summary>
-        public ViewModelBase()
+        protected ViewModelBase()
         {
             this.Model = InitModel();
             ParseView();

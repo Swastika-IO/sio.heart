@@ -5,7 +5,7 @@
 namespace Swastika.Domain.Core.Models
 {
     /// <summary>
-    ///
+    /// Supported Culture
     /// </summary>
     public class SupportedCulture
     {

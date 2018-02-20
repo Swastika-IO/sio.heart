@@ -37,7 +37,7 @@ namespace Swastika.Domain.Core.ViewModels
         /// Initializes a new instance of the <see cref="ViewModelBase{TModel, TView}"/> class.
         /// </summary>
         /// <param name="domainName">Name of the domain.</param>
-        public ViewModelBase(string domainName = "/")
+        protected ViewModelBase(string domainName = "/")
         {
             this.DomainName = domainName;
         }
@@ -47,8 +47,9 @@ namespace Swastika.Domain.Core.ViewModels
         /// </summary>
         /// <param name="model">The model.</param>
         /// <param name="domainName">Name of the domain.</param>
-        public ViewModelBase(TModel model, string domainName = "/")
+        protected ViewModelBase(TModel model, string domainName = "/")
         {
+            // TODO: Unused parameter 'model'?
             this.DomainName = domainName;
         }
 
@@ -78,13 +79,7 @@ namespace Swastika.Domain.Core.ViewModels
         /// </value>
         [JsonIgnore]
         public IMapper Mapper {
-            get {
-                if (_mapper == null)
-                {
-                    _mapper = this.CreateMapper();
-                }
-                return _mapper;
-            }
+            get { return _mapper ?? (_mapper = this.CreateMapper()); }
             set => _mapper = value;
         }
 
@@ -116,13 +111,7 @@ namespace Swastika.Domain.Core.ViewModels
         /// </value>
         [JsonIgnore]
         public IMapper ModelMapper {
-            get {
-                if (_modelMapper == null)
-                {
-                    _modelMapper = this.CreateModelMapper();
-                }
-                return _modelMapper;
-            }
+            get { return _modelMapper ?? (_modelMapper = this.CreateModelMapper()); }
             set => _modelMapper = value;
         }
 

@@ -23,14 +23,14 @@ namespace Swastika.Domain.Data.Repository
     /// <typeparam name="TModel">The type of the model.</typeparam>
     /// <typeparam name="TView">The type of the view.</typeparam>
     public abstract class ViewRepositoryBase<TDbContext, TModel, TView>
-       where TModel : class
-        where TView : Swastika.Domain.Data.ViewModels.ViewModelBase<TDbContext, TModel, TView>
         where TDbContext : DbContext
+        where TModel : class
+        where TView : ViewModels.ViewModelBase<TDbContext, TModel, TView>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ViewRepositoryBase{TDbContext, TModel, TView}"/> class.
         /// </summary>
-        public ViewRepositoryBase()
+        protected ViewRepositoryBase()
         {
             //RegisterAutoMapper();
         }
@@ -121,7 +121,7 @@ namespace Swastika.Domain.Data.Repository
         /// <param name="_transaction">The transaction.</param>
         /// <returns></returns>
         public virtual RepositoryResponse<TView> CreateModel(TView view
-            , TDbContext _context = null, IDbContextTransaction _transaction = null)
+        , TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
             TDbContext context = _context ?? InitContext();
             var transaction = _transaction ?? context.Database.BeginTransaction();
@@ -180,7 +180,7 @@ namespace Swastika.Domain.Data.Repository
         /// <param name="_transaction">The transaction.</param>
         /// <returns></returns>
         public virtual async Task<RepositoryResponse<TView>> CreateModelAsync(TView view
-            , TDbContext _context = null, IDbContextTransaction _transaction = null)
+        , TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
             TDbContext context = _context ?? InitContext();
             var transaction = _transaction ?? context.Database.BeginTransaction();
@@ -188,7 +188,7 @@ namespace Swastika.Domain.Data.Repository
             try
             {
                 context.Entry(view.Model).State = EntityState.Added;
-                await context.SaveChangesAsync();
+                await context.SaveChangesAsync().ConfigureAwait(false);
                 //if (result.IsSucceed && isSaveSubModels)
                 //{
                 //    var saveResult = await view.SaveSubModelsAsync(view.Model, context, transaction);
@@ -252,7 +252,7 @@ namespace Swastika.Domain.Data.Repository
         /// <param name="_transaction">The transaction.</param>
         /// <returns></returns>
         public virtual RepositoryResponse<TView> EditModel(TView view
-            , TDbContext _context = null, IDbContextTransaction _transaction = null)
+        , TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
             TDbContext context = _context ?? InitContext();
             var transaction = _transaction ?? context.Database.BeginTransaction();
@@ -329,7 +329,7 @@ namespace Swastika.Domain.Data.Repository
             {
                 //context.Entry(view.Model).State = EntityState.Modified;
                 context.Set<TModel>().Update(view.Model);
-                await context.SaveChangesAsync();
+                await context.SaveChangesAsync().ConfigureAwait(false);
                 //if (result.IsSucceed && isSaveSubModels)
                 //{
                 //    var saveResult = await view.SaveSubModelsAsync(view.Model, context, transaction);
@@ -390,8 +390,8 @@ namespace Swastika.Domain.Data.Repository
         /// <param name="_transaction">The transaction.</param>
         /// <returns></returns>
         public virtual RepositoryResponse<TView> GetSingleModel(
-            Expression<Func<TModel, bool>> predicate
-            , TDbContext _context = null, IDbContextTransaction _transaction = null)
+        Expression<Func<TModel, bool>> predicate
+        , TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
             var context = _context ?? InitContext();
             var transaction = _transaction ?? context.Database.BeginTransaction();
@@ -450,15 +450,15 @@ namespace Swastika.Domain.Data.Repository
         /// <param name="_transaction">The transaction.</param>
         /// <returns></returns>
         public virtual async Task<RepositoryResponse<TView>> GetSingleModelAsync(
-            Expression<Func<TModel, bool>> predicate
-            , TDbContext _context = null, IDbContextTransaction _transaction = null)
+        Expression<Func<TModel, bool>> predicate
+        , TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
             var context = _context ?? InitContext();
             var transaction = _transaction ?? context.Database.BeginTransaction();
 
             try
             {
-                TModel model = await context.Set<TModel>().FirstOrDefaultAsync(predicate);
+                TModel model = await context.Set<TModel>().FirstOrDefaultAsync(predicate).ConfigureAwait(false);
                 if (model != null)
                 {
                     context.Entry(model).State = EntityState.Detached;
@@ -537,9 +537,9 @@ namespace Swastika.Domain.Data.Repository
         /// <param name="transaction">The transaction.</param>
         /// <returns></returns>
         public virtual PaginationModel<TView> ParsePagingQuery(IQueryable<TModel> query
-           , string orderByPropertyName, OrderByDirection direction
-           , int? pageSize, int? pageIndex
-           , TDbContext context, IDbContextTransaction transaction)
+        , string orderByPropertyName, OrderByDirection direction
+        , int? pageSize, int? pageIndex
+        , TDbContext context, IDbContextTransaction transaction)
         {
             List<TModel> lstModel = new List<TModel>();
 
@@ -556,7 +556,7 @@ namespace Swastika.Domain.Data.Repository
 
                 if (pageSize.HasValue)
                 {
-                    result.TotalPage = result.TotalItems / pageSize.Value + (result.TotalItems % pageSize.Value > 0 ? 1 : 0);
+                    result.TotalPage = (result.TotalItems / pageSize.Value) + (result.TotalItems % pageSize.Value > 0 ? 1 : 0);
                 }
 
                 switch (direction)
@@ -566,8 +566,8 @@ namespace Swastika.Domain.Data.Repository
                         if (pageSize.HasValue)
                         {
                             lstModel = sorted.Skip(pageIndex.Value * pageSize.Value)
-                                .Take(pageSize.Value)
-                                .ToList();
+                            .Take(pageSize.Value)
+                            .ToList();
                         }
                         else
                         {
@@ -580,9 +580,9 @@ namespace Swastika.Domain.Data.Repository
                         if (pageSize.HasValue)
                         {
                             lstModel = sorted
-                                .Skip(pageIndex.Value * pageSize.Value)
-                                .Take(pageSize.Value)
-                                .ToList();
+                            .Skip(pageIndex.Value * pageSize.Value)
+                            .Take(pageSize.Value)
+                            .ToList();
                         }
                         else
                         {
@@ -614,9 +614,9 @@ namespace Swastika.Domain.Data.Repository
         /// <param name="transaction">The transaction.</param>
         /// <returns></returns>
         public virtual async Task<PaginationModel<TView>> ParsePagingQueryAsync(IQueryable<TModel> query
-           , string orderByPropertyName, OrderByDirection direction
-           , int? pageSize, int? pageIndex
-           , TDbContext context, IDbContextTransaction transaction)
+        , string orderByPropertyName, OrderByDirection direction
+        , int? pageSize, int? pageIndex
+        , TDbContext context, IDbContextTransaction transaction)
         {
             List<TModel> lstModel = new List<TModel>();
 
@@ -633,7 +633,7 @@ namespace Swastika.Domain.Data.Repository
 
                 if (pageSize.HasValue)
                 {
-                    result.TotalPage = result.TotalItems / pageSize.Value + (result.TotalItems % pageSize.Value > 0 ? 1 : 0);
+                    result.TotalPage = (result.TotalItems / pageSize.Value) + (result.TotalItems % pageSize.Value > 0 ? 1 : 0);
                 }
 
                 switch (direction)
@@ -643,8 +643,8 @@ namespace Swastika.Domain.Data.Repository
                         if (pageSize.HasValue)
                         {
                             lstModel = await sorted.Skip(pageIndex.Value * pageSize.Value)
-                                .Take(pageSize.Value)
-                                .ToListAsync();
+                            .Take(pageSize.Value)
+                            .ToListAsync().ConfigureAwait(false);
                         }
                         else
                         {
@@ -657,13 +657,13 @@ namespace Swastika.Domain.Data.Repository
                         if (pageSize.HasValue)
                         {
                             lstModel = await sorted
-                                .Skip(pageIndex.Value * pageSize.Value)
-                                .Take(pageSize.Value)
-                                .ToListAsync();
+                            .Skip(pageIndex.Value * pageSize.Value)
+                            .Take(pageSize.Value)
+                            .ToListAsync().ConfigureAwait(false);
                         }
                         else
                         {
-                            lstModel = await sorted.ToListAsync();
+                            lstModel = await sorted.ToListAsync().ConfigureAwait(false);
                         }
                         break;
                 }
@@ -708,18 +708,15 @@ namespace Swastika.Domain.Data.Repository
         {
             Type classType = typeof(TView);
             ConstructorInfo classConstructor = classType.GetConstructor(new Type[] { model.GetType(), typeof(TDbContext), typeof(IDbContextTransaction) });
-            TView vm = default(TView);
             if (classConstructor != null)
             {
-                vm = (TView)classConstructor.Invoke(new object[] { model, _context, _transaction });
+                return (TView)classConstructor.Invoke(new object[] { model, _context, _transaction });
             }
             else
             {
                 classConstructor = classType.GetConstructor(new Type[] { model.GetType() });
-                vm = (TView)classConstructor.Invoke(new object[] { model });
+                return (TView)classConstructor.Invoke(new object[] { model });
             }
-
-            return vm;
         }
 
         /// <summary>
@@ -796,8 +793,8 @@ namespace Swastika.Domain.Data.Repository
         /// <param name="_transaction">The transaction.</param>
         /// <returns></returns>
         public virtual RepositoryResponse<PaginationModel<TView>> GetModelList(
-            string orderByPropertyName, OrderByDirection direction, int? pageSize, int? pageIndex
-            , TDbContext _context = null, IDbContextTransaction _transaction = null)
+        string orderByPropertyName, OrderByDirection direction, int? pageSize, int? pageIndex
+        , TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
             var context = _context ?? InitContext();
             var transaction = _transaction ?? context.Database.BeginTransaction();
@@ -807,7 +804,7 @@ namespace Swastika.Domain.Data.Repository
                 var query = context.Set<TModel>();
 
                 var result = ParsePagingQuery(query, orderByPropertyName, direction, pageSize, pageIndex
-                    , context, transaction);
+                , context, transaction);
 
                 return new RepositoryResponse<PaginationModel<TView>>()
                 {
@@ -854,7 +851,7 @@ namespace Swastika.Domain.Data.Repository
             List<TView> result = new List<TView>();
             try
             {
-                var lstModel = await context.Set<TModel>().ToListAsync();
+                var lstModel = await context.Set<TModel>().ToListAsync().ConfigureAwait(false);
 
                 lstModel.ForEach(model => context.Entry(model).State = EntityState.Detached);
                 result = ParseView(lstModel, _context, _transaction);
@@ -901,8 +898,8 @@ namespace Swastika.Domain.Data.Repository
         /// <param name="_transaction">The transaction.</param>
         /// <returns></returns>
         public virtual async Task<RepositoryResponse<PaginationModel<TView>>> GetModelListAsync(
-            string orderByPropertyName, OrderByDirection direction, int? pageSize, int? pageIndex
-            , TDbContext _context = null, IDbContextTransaction _transaction = null)
+        string orderByPropertyName, OrderByDirection direction, int? pageSize, int? pageIndex
+        , TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
             var context = _context ?? InitContext();
             var transaction = _transaction ?? context.Database.BeginTransaction();
@@ -911,10 +908,7 @@ namespace Swastika.Domain.Data.Repository
             {
                 var query = context.Set<TModel>();
 
-                var result = await ParsePagingQueryAsync(query
-                    , orderByPropertyName, direction
-                    , pageSize, pageIndex
-                    , context, transaction);
+                var result = await ParsePagingQueryAsync(query, orderByPropertyName, direction, pageSize, pageIndex, context, transaction).ConfigureAwait(false);
                 return new RepositoryResponse<PaginationModel<TView>>()
                 {
                     IsSucceed = true,
@@ -959,7 +953,7 @@ namespace Swastika.Domain.Data.Repository
         /// <param name="_transaction">The transaction.</param>
         /// <returns></returns>
         public virtual RepositoryResponse<List<TView>> GetModelListBy(Expression<Func<TModel, bool>> predicate
-            , TDbContext _context = null, IDbContextTransaction _transaction = null)
+        , TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
             var context = _context ?? InitContext();
             var transaction = _transaction ?? context.Database.BeginTransaction();
@@ -1013,8 +1007,8 @@ namespace Swastika.Domain.Data.Repository
         /// <param name="_transaction">The transaction.</param>
         /// <returns></returns>
         public virtual RepositoryResponse<PaginationModel<TView>> GetModelListBy(
-            Expression<Func<TModel, bool>> predicate, string orderByPropertyName, OrderByDirection direction, int? pageSize, int? pageIndex
-            , TDbContext _context = null, IDbContextTransaction _transaction = null)
+        Expression<Func<TModel, bool>> predicate, string orderByPropertyName, OrderByDirection direction, int? pageSize, int? pageIndex
+        , TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
             var context = _context ?? InitContext();
             var transaction = _transaction ?? context.Database.BeginTransaction();
@@ -1023,9 +1017,9 @@ namespace Swastika.Domain.Data.Repository
             {
                 var query = context.Set<TModel>().Where(predicate);
                 var result = ParsePagingQuery(query
-                    , orderByPropertyName, direction
-                    , pageSize, pageIndex
-                    , context, transaction);
+                , orderByPropertyName, direction
+                , pageSize, pageIndex
+                , context, transaction);
                 return new RepositoryResponse<PaginationModel<TView>>()
                 {
                     IsSucceed = true,
@@ -1066,7 +1060,7 @@ namespace Swastika.Domain.Data.Repository
         /// <param name="_transaction">The transaction.</param>
         /// <returns></returns>
         public virtual async Task<RepositoryResponse<List<TView>>> GetModelListByAsync(Expression<Func<TModel, bool>> predicate
-            , TDbContext _context = null, IDbContextTransaction _transaction = null)
+        , TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
             var context = _context ?? InitContext();
             var transaction = _transaction ?? context.Database.BeginTransaction();
@@ -1074,7 +1068,7 @@ namespace Swastika.Domain.Data.Repository
             try
             {
                 var query = context.Set<TModel>().Where(predicate);
-                var lstModel = await query.ToListAsync();
+                var lstModel = await query.ToListAsync().ConfigureAwait(false);
                 lstModel.ForEach(model => context.Entry(model).State = EntityState.Detached);
                 var result = ParseView(lstModel, _context, _transaction);
                 return new RepositoryResponse<List<TView>>()
@@ -1121,9 +1115,9 @@ namespace Swastika.Domain.Data.Repository
         /// <param name="_transaction">The transaction.</param>
         /// <returns></returns>
         public virtual async Task<RepositoryResponse<PaginationModel<TView>>> GetModelListByAsync(
-            Expression<Func<TModel, bool>> predicate, string orderByPropertyName
-            , OrderByDirection direction, int? pageSize, int? pageIndex
-            , TDbContext _context = null, IDbContextTransaction _transaction = null)
+        Expression<Func<TModel, bool>> predicate, string orderByPropertyName
+        , OrderByDirection direction, int? pageSize, int? pageIndex
+        , TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
             var context = _context ?? InitContext();
             var transaction = _transaction ?? context.Database.BeginTransaction();
@@ -1133,9 +1127,9 @@ namespace Swastika.Domain.Data.Repository
                 var query = context.Set<TModel>().Where(predicate);
 
                 var result = await ParsePagingQueryAsync(query
-                    , orderByPropertyName, direction
-                    , pageSize, pageIndex
-                    , context, transaction);
+                , orderByPropertyName, direction
+                , pageSize, pageIndex
+                , context, transaction).ConfigureAwait(false);
                 return new RepositoryResponse<PaginationModel<TView>>()
                 {
                     IsSucceed = true,
@@ -1179,7 +1173,7 @@ namespace Swastika.Domain.Data.Repository
         /// <param name="_transaction">The transaction.</param>
         /// <returns></returns>
         public virtual RepositoryResponse<bool> RemoveListModel(Expression<Func<TModel, bool>> predicate
-            , TDbContext _context = null, IDbContextTransaction _transaction = null)
+        , TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
             TDbContext context = _context ?? InitContext();
             var transaction = _transaction ?? context.Database.BeginTransaction();
@@ -1273,13 +1267,13 @@ namespace Swastika.Domain.Data.Repository
         /// <param name="_transaction">The transaction.</param>
         /// <returns></returns>
         public virtual async Task<RepositoryResponse<bool>> RemoveListModelAsync(Expression<Func<TModel, bool>> predicate
-            , TDbContext _context = null, IDbContextTransaction _transaction = null)
+        , TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
             TDbContext context = _context ?? InitContext();
             var transaction = _transaction ?? context.Database.BeginTransaction();
             try
             {
-                var Items = await context.Set<TModel>().Where(predicate).ToListAsync();
+                var Items = await context.Set<TModel>().Where(predicate).ToListAsync().ConfigureAwait(false);
                 bool result = true;
                 if (Items != null)
                 {
@@ -1287,7 +1281,7 @@ namespace Swastika.Domain.Data.Repository
                     {
                         if (result)
                         {
-                            var r = await RemoveModelAsync(model, context, transaction);
+                            var r = await RemoveModelAsync(model, context, transaction).ConfigureAwait(false);
                             result = result && r.IsSucceed;
                         }
                         else
@@ -1367,7 +1361,7 @@ namespace Swastika.Domain.Data.Repository
         /// <param name="_transaction">The transaction.</param>
         /// <returns></returns>
         public virtual RepositoryResponse<bool> RemoveModel(Expression<Func<TModel, bool>> predicate
-            , TDbContext _context = null, IDbContextTransaction _transaction = null)
+        , TDbContext _context = null, IDbContextTransaction _transaction = null)
 
         {
             TDbContext context = _context ?? InitContext();
@@ -1444,7 +1438,7 @@ namespace Swastika.Domain.Data.Repository
         /// <param name="_transaction">The transaction.</param>
         /// <returns></returns>
         public virtual RepositoryResponse<bool> RemoveModel(TModel model
-            , TDbContext _context = null, IDbContextTransaction _transaction = null)
+        , TDbContext _context = null, IDbContextTransaction _transaction = null)
 
         {
             TDbContext context = _context ?? InitContext();
@@ -1520,19 +1514,19 @@ namespace Swastika.Domain.Data.Repository
         /// <param name="_transaction">The transaction.</param>
         /// <returns></returns>
         public virtual async Task<RepositoryResponse<bool>> RemoveModelAsync(Expression<Func<TModel, bool>> predicate
-            , TDbContext _context = null, IDbContextTransaction _transaction = null)
+        , TDbContext _context = null, IDbContextTransaction _transaction = null)
 
         {
             TDbContext context = _context ?? InitContext();
             var transaction = _transaction ?? context.Database.BeginTransaction();
             try
             {
-                TModel model = await context.Set<TModel>().FirstOrDefaultAsync(predicate);
+                TModel model = await context.Set<TModel>().FirstOrDefaultAsync(predicate).ConfigureAwait(false);
                 bool result = true;
                 if (model != null && CheckIsExists(model, context, transaction))
                 {
                     context.Entry(model).State = EntityState.Deleted;
-                    result = await context.SaveChangesAsync() > 0;
+                    result = await context.SaveChangesAsync().ConfigureAwait(false) > 0;
                 }
 
                 if (result)
@@ -1597,7 +1591,7 @@ namespace Swastika.Domain.Data.Repository
         /// <param name="_transaction">The transaction.</param>
         /// <returns></returns>
         public virtual async Task<RepositoryResponse<bool>> RemoveModelAsync(TModel model
-            , TDbContext _context = null, IDbContextTransaction _transaction = null)
+        , TDbContext _context = null, IDbContextTransaction _transaction = null)
 
         {
             TDbContext context = _context ?? InitContext();
@@ -1608,7 +1602,7 @@ namespace Swastika.Domain.Data.Repository
                 if (model != null && CheckIsExists(model, context, transaction))
                 {
                     context.Entry(model).State = EntityState.Deleted;
-                    result = await context.SaveChangesAsync() > 0;
+                    result = await context.SaveChangesAsync().ConfigureAwait(false) > 0;
                 }
 
                 if (result)
@@ -1673,7 +1667,7 @@ namespace Swastika.Domain.Data.Repository
         /// <param name="_transaction">The transaction.</param>
         /// <returns></returns>
         public virtual RepositoryResponse<TView> SaveModel(TView view, bool isSaveSubModels = false
-            , TDbContext _context = null, IDbContextTransaction _transaction = null)
+        , TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
             if (CheckIsExists(view.Model, _context, _transaction))
             {
@@ -1694,7 +1688,7 @@ namespace Swastika.Domain.Data.Repository
         /// <param name="_transaction">The transaction.</param>
         /// <returns></returns>
         public virtual Task<RepositoryResponse<TView>> SaveModelAsync(TView view, bool isSaveSubModels = false
-            , TDbContext _context = null, IDbContextTransaction _transaction = null)
+        , TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
             if (CheckIsExists(view.Model, _context, _transaction))
             {
@@ -1729,7 +1723,7 @@ namespace Swastika.Domain.Data.Repository
         /// <param name="_transaction">The transaction.</param>
         /// <returns></returns>
         public virtual RepositoryResponse<int> Max(Expression<Func<TModel, int>> predicate
-            , TDbContext _context = null, IDbContextTransaction _transaction = null)
+        , TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
             var context = _context ?? InitContext();
             var transaction = _transaction ?? context.Database.BeginTransaction();
@@ -1777,14 +1771,14 @@ namespace Swastika.Domain.Data.Repository
         /// <param name="_transaction">The transaction.</param>
         /// <returns></returns>
         public virtual async Task<RepositoryResponse<int>> MaxAsync(Expression<Func<TModel, int>> predicate
-            , TDbContext _context = null, IDbContextTransaction _transaction = null)
+        , TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
             var context = _context ?? InitContext();
             var transaction = _transaction ?? context.Database.BeginTransaction();
             int total = 0;
             try
             {
-                total = await context.Set<TModel>().MaxAsync(predicate);
+                total = await context.Set<TModel>().MaxAsync(predicate).ConfigureAwait(false);
                 return new RepositoryResponse<int>()
                 {
                     IsSucceed = true,
@@ -1829,7 +1823,7 @@ namespace Swastika.Domain.Data.Repository
         /// <param name="_transaction">The transaction.</param>
         /// <returns></returns>
         public virtual RepositoryResponse<int> Count(Expression<Func<TModel, bool>> predicate
-            , TDbContext _context = null, IDbContextTransaction _transaction = null)
+        , TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
             var context = _context ?? InitContext();
             var transaction = _transaction ?? context.Database.BeginTransaction();
@@ -1877,14 +1871,14 @@ namespace Swastika.Domain.Data.Repository
         /// <param name="_transaction">The transaction.</param>
         /// <returns></returns>
         public virtual async Task<RepositoryResponse<int>> CountAsync(Expression<Func<TModel, bool>> predicate
-            , TDbContext _context = null, IDbContextTransaction _transaction = null)
+        , TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
             var context = _context ?? InitContext();
             var transaction = _transaction ?? context.Database.BeginTransaction();
             int total = 0;
             try
             {
-                total = await context.Set<TModel>().CountAsync(predicate);
+                total = await context.Set<TModel>().CountAsync(predicate).ConfigureAwait(false);
                 return new RepositoryResponse<int>()
                 {
                     IsSucceed = true,
@@ -1980,7 +1974,7 @@ namespace Swastika.Domain.Data.Repository
             int total = 0;
             try
             {
-                total = await context.Set<TModel>().CountAsync();
+                total = await context.Set<TModel>().CountAsync().ConfigureAwait(false);
                 return new RepositoryResponse<int>()
                 {
                     IsSucceed = true,
@@ -2026,8 +2020,8 @@ namespace Swastika.Domain.Data.Repository
         /// <param name="_transaction">The transaction.</param>
         /// <returns></returns>
         public RepositoryResponse<bool> UpdateFields(Expression<Func<TModel, bool>> predicate
-            , List<EntityField> fields
-            , TDbContext _context = null, IDbContextTransaction _transaction = null)
+        , List<EntityField> fields
+        , TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
             TDbContext context = _context ?? InitContext();
             var transaction = _transaction ?? context.Database.BeginTransaction();
@@ -2129,15 +2123,15 @@ namespace Swastika.Domain.Data.Repository
         /// <param name="_transaction">The transaction.</param>
         /// <returns></returns>
         public async Task<RepositoryResponse<bool>> UpdateFieldsAsync(Expression<Func<TModel, bool>> predicate
-           , List<EntityField> fields
-           , TDbContext _context = null, IDbContextTransaction _transaction = null)
+        , List<EntityField> fields
+        , TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
             TDbContext context = _context ?? InitContext();
             var transaction = _transaction ?? context.Database.BeginTransaction();
             try
             {
                 bool result = false;
-                TModel model = await context.Set<TModel>().FirstOrDefaultAsync(predicate);
+                TModel model = await context.Set<TModel>().FirstOrDefaultAsync(predicate).ConfigureAwait(false);
                 if (model != null)
                 {
                     foreach (var field in fields)
@@ -2159,7 +2153,7 @@ namespace Swastika.Domain.Data.Repository
                                 prop.CurrentValue = field.PropertyValue;
                             }
 
-                            await context.SaveChangesAsync();
+                            await context.SaveChangesAsync().ConfigureAwait(false);
                             result = true;
                         }
                         else
@@ -2235,10 +2229,10 @@ namespace Swastika.Domain.Data.Repository
         {
             var parameter = Expression.Parameter(typeof(TModel));
             var type = typeof(TModel);
-            var prop = type.GetProperties().FirstOrDefault(p => p.Name == propName);
+            var prop = Array.Find(type.GetProperties(), p => p.Name == propName);
             if (prop == null && isGetDefault)
             {
-                propName = type.GetProperties().FirstOrDefault().Name;
+                propName = type.GetProperties().FirstOrDefault()?.Name;
             }
             var memberExpression = Expression.Property(parameter, propName);
             return Expression.Lambda(memberExpression, parameter);

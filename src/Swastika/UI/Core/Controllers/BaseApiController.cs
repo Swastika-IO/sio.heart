@@ -116,8 +116,7 @@ namespace Swastika.Api.Controllers
         /// </summary>
         protected void GetLanguage()
         {
-            _lang = RouteData != null && RouteData.Values["culture"] != null
-                ? RouteData.Values["culture"].ToString() : CONST_ROUTE_DEFAULT_CULTURE;
+            _lang = RouteData?.Values["culture"] != null ? RouteData.Values["culture"].ToString() : CONST_ROUTE_DEFAULT_CULTURE;
             ViewBag.culture = _lang;
 
             _domain = string.Format("{0}://{1}", Request.Scheme, Request.Host);
@@ -141,7 +140,7 @@ namespace Swastika.Api.Controllers
         /// <returns></returns>
         protected IActionResult GetSuccessResult<TResult>(TResult data)
         {
-            var result = ApiHelper<TResult>.GetResult(1, data, Enums.ResponseKey.OK.ToString(), null);
+            var result = ApiHelper<TResult>.GetResult(1, data, nameof(Enums.ResponseKey.OK), null);
             return Ok(result);
         }
 
@@ -153,9 +152,9 @@ namespace Swastika.Api.Controllers
         /// <returns></returns>
         protected async Task<string> UploadFileAsync(IFormFile file, string folderPath)
         {
-            if (file != null && file.Length > 0)
+            if (file?.Length > 0)
             {
-                string fileName = await CommonHelper.UploadFileAsync(folderPath, file);
+                string fileName = await CommonHelper.UploadFileAsync(folderPath, file).ConfigureAwait(false);
                 if (!string.IsNullOrEmpty(fileName))
                 {
                     string filePath = string.Format("{0}/{1}", folderPath, fileName);
@@ -183,7 +182,7 @@ namespace Swastika.Api.Controllers
             var files = HttpContext.Request.Form.Files;
             foreach (var file in files)
             {
-                string fileName = await UploadFileAsync(file, folderPath);
+                string fileName = await UploadFileAsync(file, folderPath).ConfigureAwait(false);
                 if (!string.IsNullOrEmpty(fileName))
                 {
                     result.Add(fileName);
@@ -234,9 +233,9 @@ namespace Swastika.Api.Controllers
 
         protected async Task<string> UploadFileAsync(IFormFile file, string folderPath)
         {
-            if (file != null && file.Length > 0)
+            if (file?.Length > 0)
             {
-                string fileName = await CommonHelper.UploadFileAsync(System.IO.Path.Combine(_env.WebRootPath, folderPath), file);
+                string fileName = await CommonHelper.UploadFileAsync(System.IO.Path.Combine(_env.WebRootPath, folderPath), file).ConfigureAwait(false);
 
                 if (!string.IsNullOrEmpty(fileName))
                 {
@@ -272,7 +271,7 @@ namespace Swastika.Api.Controllers
                     errors.Add(error.ErrorMessage);
                 }
             }
-            var result = ApiHelper<TModel>.GetResult(0, default(TModel), Enums.ResponseKey.BadRequest.ToString(), errors);
+            var result = ApiHelper<TModel>.GetResult(0, default(TModel), nameof(Enums.ResponseKey.BadRequest), errors);
             return base.BadRequest(result);
         }
 
@@ -286,7 +285,7 @@ namespace Swastika.Api.Controllers
         /// </returns>
         public override BadRequestObjectResult BadRequest(object error)
         {
-            var result = ApiHelper<TModel>.GetResult(0, default(TModel), Enums.ResponseKey.BadRequest.ToString(), null);
+            var result = ApiHelper<TModel>.GetResult(0, default(TModel), nameof(Enums.ResponseKey.BadRequest), null);
             return base.BadRequest(result);
         }
 
@@ -300,7 +299,7 @@ namespace Swastika.Api.Controllers
         /// </returns>
         public override NotFoundObjectResult NotFound(object value)
         {
-            var result = ApiHelper<TModel>.GetResult(0, default(TModel), Enums.ResponseKey.NotFound.ToString(), null);
+            var result = ApiHelper<TModel>.GetResult(0, default(TModel), nameof(Enums.ResponseKey.NotFound), null);
             return base.NotFound(result);
         }
 
@@ -331,7 +330,7 @@ namespace Swastika.Api.Controllers
         /// </summary>
         protected void GetLanguage()
         {
-            _lang = RouteData != null && RouteData.Values["culture"] != null
+            _lang = RouteData?.Values["culture"] != null
                 ? RouteData.Values["culture"].ToString() : BaseApiController.CONST_ROUTE_DEFAULT_CULTURE;
             ViewBag.culture = _lang;
 
@@ -355,7 +354,7 @@ namespace Swastika.Api.Controllers
         /// <returns></returns>
         protected IActionResult GetSuccessResult<TResult>(TResult data)
         {
-            var result = ApiHelper<TResult>.GetResult(1, data, Enums.ResponseKey.OK.ToString(), null);
+            var result = ApiHelper<TResult>.GetResult(1, data, nameof(Enums.ResponseKey.OK), null);
             return Ok(result);
         }
     }
@@ -408,7 +407,7 @@ namespace Swastika.Api.Controllers
                     errors.Add(error.ErrorMessage);
                 }
             }
-            var result = ApiHelper<TView>.GetResult(0, default(TView), Enums.ResponseKey.BadRequest.ToString(), errors);
+            var result = ApiHelper<TView>.GetResult(0, default(TView), nameof(Enums.ResponseKey.BadRequest), errors);
             return base.BadRequest(result);
         }
 
@@ -422,7 +421,7 @@ namespace Swastika.Api.Controllers
         /// </returns>
         public override BadRequestObjectResult BadRequest(object error)
         {
-            var result = ApiHelper<TView>.GetResult(0, default(TView), Enums.ResponseKey.BadRequest.ToString(), null);
+            var result = ApiHelper<TView>.GetResult(0, default(TView), nameof(Enums.ResponseKey.BadRequest), null);
             return base.BadRequest(result);
         }
 
@@ -436,7 +435,7 @@ namespace Swastika.Api.Controllers
         /// </returns>
         public override NotFoundObjectResult NotFound(object value)
         {
-            var result = ApiHelper<TView>.GetResult(0, default(TView), Enums.ResponseKey.NotFound.ToString(), null);
+            var result = ApiHelper<TView>.GetResult(0, default(TView), nameof(Enums.ResponseKey.NotFound), null);
             return base.NotFound(result);
         }
 
@@ -467,7 +466,7 @@ namespace Swastika.Api.Controllers
         /// </summary>
         protected void GetLanguage()
         {
-            _lang = RouteData != null && RouteData.Values["culture"] != null
+            _lang = RouteData?.Values["culture"] != null
                 ? RouteData.Values["culture"].ToString() : BaseApiController.CONST_ROUTE_DEFAULT_CULTURE;
             ViewBag.culture = _lang;
         }
@@ -486,7 +485,7 @@ namespace Swastika.Api.Controllers
         /// <returns></returns>
         protected IActionResult GetSuccessResult<TResult>(TResult data)
         {
-            var result = ApiHelper<TResult>.GetResult(1, data, Enums.ResponseKey.OK.ToString(), null);
+            var result = ApiHelper<TResult>.GetResult(1, data, nameof(Enums.ResponseKey.OK), null);
             return Ok(result);
         }
     }

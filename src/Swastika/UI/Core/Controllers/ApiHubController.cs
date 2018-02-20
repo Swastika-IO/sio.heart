@@ -18,9 +18,9 @@ namespace Swastika.UI.Core.Controllers
     /// <seealso cref="Swastika.Api.Controllers.BaseApiController{TDbContext, TModel}"/>
     public abstract class ApiHubController<THub, TDbContext, TModel>
         : BaseApiController<TDbContext, TModel>
+        where THub : BaseSignalRHub
         where TDbContext : DbContext
         where TModel : class
-        where THub : BaseSignalRHub
     {
         /// <summary>
         /// The hub
@@ -61,10 +61,10 @@ namespace Swastika.UI.Core.Controllers
     /// <seealso cref="Swastika.Api.Controllers.BaseApiController{TDbContext, TModel}"/>
     public abstract class ApiHubController<THub, TDbContext, TModel, TView>
         : BaseApiController<TDbContext, TModel, TView>
+        where THub : BaseSignalRHub
         where TDbContext : DbContext
         where TModel : class
         where TView : Swastika.Domain.Data.ViewModels.ViewModelBase<TDbContext, TModel, TView>
-        where THub : BaseSignalRHub
     {
         /// <summary>
         /// The hub

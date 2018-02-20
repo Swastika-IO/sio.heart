@@ -11,7 +11,7 @@ using System.Collections.Generic;
 namespace Swastika.Domain.Core.ViewModels
 {
     /// <summary>
-    ///
+    /// Api Result
     /// </summary>
     /// <typeparam name="T"></typeparam>
     public class ApiResult<T>

@@ -63,6 +63,7 @@ namespace Swastika.UI.Core.SignalR
         /// <param name="playerId">The player identifier.</param>
         public virtual void UpdatePlayerConnectionIdAsync(string playerId)
         {
+            // TODO: is Async method? If not => Remove Async from method name!
             var player = Users.Find(p => p.UserId == playerId);
             if (player != null && player.ConnectionId != Context.ConnectionId)
             {
@@ -80,8 +81,8 @@ namespace Swastika.UI.Core.SignalR
         /// <param name="errorMsg">The error MSG.</param>
         private void FailResult(dynamic objData, string errorMsg)//AccessTokenViewModel accessToken
         {
-            string responseKey = "Failed";
-            int status = 0;
+            const string responseKey = "Failed";
+            const int status = 0;
             ApiResult<dynamic> result = new ApiResult<dynamic>()
             {
                 ResponseKey = responseKey,

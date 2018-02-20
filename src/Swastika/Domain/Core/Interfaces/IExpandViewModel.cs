@@ -7,7 +7,7 @@ using System.Collections.Generic;
 namespace Swastika.Domain.Core.Interfaces
 {
     /// <summary>
-    ///
+    /// Expand View Model Interface
     /// </summary>
     /// <typeparam name="TModel">The type of the model.</typeparam>
     public interface IExpandViewModel<TModel> where TModel : class

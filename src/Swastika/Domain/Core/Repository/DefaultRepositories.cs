@@ -25,7 +25,7 @@ namespace Swastika.Domain.Data.Repository
         /// <summary>
         /// The synchronize root
         /// </summary>
-        private static object syncRoot = new Object();
+        private static readonly object syncRoot = new Object();
 
         /// <summary>
         /// Prevents a default instance of the <see cref="DefaultRepository{TContext, TModel}"/> class from being created.
@@ -77,7 +77,7 @@ namespace Swastika.Domain.Data.Repository
         /// <summary>
         /// The synchronize root
         /// </summary>
-        private static object syncRoot = new Object();
+        private static readonly object syncRoot = new Object();
 
         /// <summary>
         /// Prevents a default instance of the <see cref="DefaultRepository{TDbContext, TModel, TView}"/> class from being created.

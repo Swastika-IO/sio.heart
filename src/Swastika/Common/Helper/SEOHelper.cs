@@ -20,7 +20,7 @@ namespace Swastika.Common.Helper
         /// <returns></returns>
         public static string DeleteSpecialCharaters(string str)
         {
-            string replaceChar = "";
+            const string replaceChar = "";
             string[] pattern = { ".", "/", "\\", "&", ":", "%" };
 
             foreach (string item in pattern)
