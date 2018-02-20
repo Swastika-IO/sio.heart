@@ -40,10 +40,8 @@ namespace Swastika.Domain.Data.Repository
         /// <value>
         /// The instance.
         /// </value>
-        public static DefaultRepository<TContext, TModel> Instance
-        {
-            get
-            {
+        public static DefaultRepository<TContext, TModel> Instance {
+            get {
                 if (instance == null)
                 {
                     lock (syncRoot)
@@ -59,7 +57,7 @@ namespace Swastika.Domain.Data.Repository
     }
 
     /// <summary>
-    ///
+    /// Default Repository with view
     /// </summary>
     /// <typeparam name="TDbContext">The type of the database context.</typeparam>
     /// <typeparam name="TModel">The type of the model.</typeparam>
@@ -94,10 +92,8 @@ namespace Swastika.Domain.Data.Repository
         /// <value>
         /// The instance.
         /// </value>
-        public static DefaultRepository<TDbContext, TModel, TView> Instance
-        {
-            get
-            {
+        public static DefaultRepository<TDbContext, TModel, TView> Instance {
+            get {
                 if (instance == null)
                 {
                     lock (syncRoot)

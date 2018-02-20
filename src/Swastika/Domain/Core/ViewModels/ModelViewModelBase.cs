@@ -77,10 +77,8 @@ namespace Swastika.Domain.Core.ViewModels
         /// The mapper.
         /// </value>
         [JsonIgnore]
-        public IMapper Mapper
-        {
-            get
-            {
+        public IMapper Mapper {
+            get {
                 if (_mapper == null)
                 {
                     _mapper = this.CreateMapper();
@@ -97,10 +95,8 @@ namespace Swastika.Domain.Core.ViewModels
         /// The model.
         /// </value>
         [JsonIgnore]
-        public TModel Model
-        {
-            get
-            {
+        public TModel Model {
+            get {
                 if (_model == null)
                 {
                     Type classType = typeof(TModel);
@@ -119,10 +115,8 @@ namespace Swastika.Domain.Core.ViewModels
         /// The model mapper.
         /// </value>
         [JsonIgnore]
-        public IMapper ModelMapper
-        {
-            get
-            {
+        public IMapper ModelMapper {
+            get {
                 if (_modelMapper == null)
                 {
                     _modelMapper = this.CreateModelMapper();
