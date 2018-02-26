@@ -2,6 +2,17 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Version>0.0.3</Version>
+    <Company>Swastika I/O</Company>
+    <Authors>Swastika I/O Team, Smileway Team</Authors>
+    <Product>Swastika I/O Heart</Product>
+    <Copyright>Swastika I/O, Smileway, Befirst.Solution</Copyright>
+    <PackageLicenseUrl>https://github.com/Swastika-IO/Swastika-Heart/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://www.swastika.io</PackageProjectUrl>
+    <PackageIconUrl>https://avatars2.githubusercontent.com/u/26378971</PackageIconUrl>
+    <RepositoryUrl>https://github.com/Swastika-IO/Swastika-Heart</RepositoryUrl>
+    <PackageTags>dotnet core, asp.net core, framework base</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
@@ -61,12 +72,10 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.0.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.0.1" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.0.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.1" />
     <PackageReference Include="System.Net.Http" Version="4.3.3" />
     <PackageReference Include="System.Net.Requests" Version="4.3.0" />
     <PackageReference Include="System.Runtime.Loader" Version="4.3.0" />
     <PackageReference Include="System.Security.Claims" Version="4.3.0" />
-    
   </ItemGroup>
-
 </Project>
