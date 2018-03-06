@@ -357,5 +357,11 @@ namespace Swastika.Domain.Core.ViewModels
         /// </value>
         [JsonProperty("userId")]
         public string UserId { get; set; }
+
+        [JsonProperty("fromDate")]
+        public DateTime? FromDate { get; set; }
+
+        [JsonProperty("toDate")]
+        public DateTime? ToDate { get; set; }
     }
 }
