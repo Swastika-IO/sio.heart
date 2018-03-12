@@ -696,12 +696,12 @@ namespace Swastika.Domain.Data.ViewModels
         /// <param name="_context">The context.</param>
         /// <param name="_transaction">The transaction.</param>
         /// <returns></returns>
-        public virtual RepositoryResponse<List<TView>> Clone(TModel model, List<SupportedCulture> cloneCultures
-            , TDbContext _context = null, IDbContextTransaction _transaction = null)
+        public virtual RepositoryResponse<List<TView>> Clone(TModel model, List<SupportedCulture> cloneCultures, TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
             bool IsRoot = _context == null;
             var context = _context ?? InitContext();
             var transaction = _transaction ?? context.Database.BeginTransaction();
+
             RepositoryResponse<List<TView>> result = new RepositoryResponse<List<TView>>()
             {
                 IsSucceed = true,
