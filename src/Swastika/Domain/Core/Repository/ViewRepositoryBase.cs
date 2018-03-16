@@ -152,9 +152,10 @@ namespace Swastika.Domain.Data.Repository
             }
             catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
             {
+                
+                LogErrorMessage(ex);
                 result.IsSucceed = false;
                 result.Exception = ex;
-                LogErrorMessage(ex);
                 if (_transaction == null)
                 {
                     transaction.Rollback();
@@ -221,10 +222,10 @@ namespace Swastika.Domain.Data.Repository
                 }
             }
             catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
-            {
+            {               
+                LogErrorMessage(ex);
                 result.IsSucceed = false;
                 result.Exception = ex;
-                LogErrorMessage(ex);
                 if (_transaction == null)
                 {
                     //if current transaction is root transaction
@@ -294,6 +295,7 @@ namespace Swastika.Domain.Data.Repository
             catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
             {
                 LogErrorMessage(ex);
+                result.IsSucceed = false;
                 result.Exception = ex;
                 if (_transaction == null)
                 {
@@ -360,10 +362,10 @@ namespace Swastika.Domain.Data.Repository
                 }
             }
             catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
-            {
+            {                
+                LogErrorMessage(ex);
                 result.IsSucceed = false;
                 result.Exception = ex;
-                LogErrorMessage(ex);
                 if (_transaction == null)
                 {
                     //if current transaction is root transaction
