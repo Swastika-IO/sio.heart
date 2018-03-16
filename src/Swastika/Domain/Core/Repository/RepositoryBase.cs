@@ -1,5 +1,5 @@
 ﻿// Licensed to the Swastika I/O Foundation under one or more agreements.
-// The Swastika I/O Foundation licenses this file to you under the GNU General Public License v3.0 license.
+// The Swastika I/O Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
 using AutoMapper;
@@ -1838,7 +1838,6 @@ namespace Swastika.Domain.Data.Repository
         /// <returns></returns>
         public virtual RepositoryResponse<bool> RemoveModel(Expression<Func<TModel, bool>> predicate
             , TContext _context = null, IDbContextTransaction _transaction = null)
-
         {
             TContext context = _context ?? InitContext();
             var transaction = _transaction ?? context.Database.BeginTransaction();
@@ -1915,7 +1914,6 @@ namespace Swastika.Domain.Data.Repository
         /// <returns></returns>
         public virtual RepositoryResponse<bool> RemoveModel(TModel model
             , TContext _context = null, IDbContextTransaction _transaction = null)
-
         {
             TContext context = _context ?? InitContext();
             var transaction = _transaction ?? context.Database.BeginTransaction();
@@ -1991,7 +1989,6 @@ namespace Swastika.Domain.Data.Repository
         /// <returns></returns>
         public virtual async Task<RepositoryResponse<bool>> RemoveModelAsync(Expression<Func<TModel, bool>> predicate
             , TContext _context = null, IDbContextTransaction _transaction = null)
-
         {
             TContext context = _context ?? InitContext();
             var transaction = _transaction ?? context.Database.BeginTransaction();
@@ -2068,7 +2065,6 @@ namespace Swastika.Domain.Data.Repository
         /// <returns></returns>
         public virtual async Task<RepositoryResponse<bool>> RemoveModelAsync(TModel model
             , TContext _context = null, IDbContextTransaction _transaction = null)
-
         {
             TContext context = _context ?? InitContext();
             var transaction = _transaction ?? context.Database.BeginTransaction();
