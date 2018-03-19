@@ -313,6 +313,15 @@ namespace Swastika.Domain.Core.ViewModels
         public string Keyword { get; set; }
 
         /// <summary>
+        /// Gets or sets the status.
+        /// </summary>
+        /// <value>
+        /// The status.
+        /// </value>
+        [JsonProperty("status")]
+        public Common.Utility.Enums.SWStatus? Status { get; set; }
+
+        /// <summary>
         /// Gets or sets the order by.
         /// </summary>
         /// <value>
