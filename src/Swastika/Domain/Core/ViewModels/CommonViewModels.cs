@@ -1,5 +1,5 @@
 ﻿// Licensed to the Swastika I/O Foundation under one or more agreements.
-// The Swastika I/O Foundation licenses this file to you under the GNU General Public License v3.0 license.
+// The Swastika I/O Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
 using Microsoft.Data.OData.Query;
@@ -208,33 +208,6 @@ namespace Swastika.Domain.Core.ViewModels
     public class RepositoryResponse<TResult>
     {
         /// <summary>
-        /// Gets or sets the data.
-        /// </summary>
-        /// <value>
-        /// The data.
-        /// </value>
-        [JsonProperty("data")]
-        public TResult Data { get; set; }
-
-        /// <summary>
-        /// Gets or sets the errors.
-        /// </summary>
-        /// <value>
-        /// The errors.
-        /// </value>
-        [JsonProperty("errors")]
-        public List<string> Errors { get; set; } = new List<string>();
-
-        /// <summary>
-        /// Gets or sets the exception.
-        /// </summary>
-        /// <value>
-        /// The exception.
-        /// </value>
-        [JsonProperty("exception")]
-        public Exception Exception { get; set; }
-
-        /// <summary>
         /// Gets or sets a value indicating whether this instance is succeed.
         /// </summary>
         /// <value>
@@ -260,6 +233,34 @@ namespace Swastika.Domain.Core.ViewModels
         /// </value>
         [JsonProperty("status")]
         public int Status { get; set; }
+
+        /// <summary>
+        /// Gets or sets the errors.
+        /// </summary>
+        /// <value>
+        /// The errors.
+        /// </value>
+        [JsonProperty("errors")]
+        public List<string> Errors { get; set; } = new List<string>();
+
+        /// <summary>
+        /// Gets or sets the exception.
+        /// </summary>
+        /// <value>
+        /// The exception.
+        /// </value>
+        [JsonProperty("exception")]
+        public Exception Exception { get; set; }
+
+        /// <summary>
+        /// Gets or sets the data.
+        /// </summary>
+        /// <value>
+        /// The data.
+        /// </value>
+        [JsonProperty("data")]
+        public TResult Data { get; set; }
+
     }
 
     /// <summary>

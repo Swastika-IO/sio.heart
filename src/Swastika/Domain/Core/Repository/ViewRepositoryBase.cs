@@ -1,5 +1,5 @@
 ﻿// Licensed to the Swastika I/O Foundation under one or more agreements.
-// The Swastika I/O Foundation licenses this file to you under the GNU General Public License v3.0 license.
+// The Swastika I/O Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
 using AutoMapper;
@@ -152,9 +152,10 @@ namespace Swastika.Domain.Data.Repository
             }
             catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
             {
+                
+                LogErrorMessage(ex);
                 result.IsSucceed = false;
                 result.Exception = ex;
-                LogErrorMessage(ex);
                 if (_transaction == null)
                 {
                     transaction.Rollback();
@@ -221,10 +222,10 @@ namespace Swastika.Domain.Data.Repository
                 }
             }
             catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
-            {
+            {               
+                LogErrorMessage(ex);
                 result.IsSucceed = false;
                 result.Exception = ex;
-                LogErrorMessage(ex);
                 if (_transaction == null)
                 {
                     //if current transaction is root transaction
@@ -294,6 +295,7 @@ namespace Swastika.Domain.Data.Repository
             catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
             {
                 LogErrorMessage(ex);
+                result.IsSucceed = false;
                 result.Exception = ex;
                 if (_transaction == null)
                 {
@@ -360,10 +362,10 @@ namespace Swastika.Domain.Data.Repository
                 }
             }
             catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
-            {
+            {                
+                LogErrorMessage(ex);
                 result.IsSucceed = false;
                 result.Exception = ex;
-                LogErrorMessage(ex);
                 if (_transaction == null)
                 {
                     //if current transaction is root transaction
@@ -1360,9 +1362,7 @@ namespace Swastika.Domain.Data.Repository
         /// <param name="_context">The context.</param>
         /// <param name="_transaction">The transaction.</param>
         /// <returns></returns>
-        public virtual RepositoryResponse<bool> RemoveModel(Expression<Func<TModel, bool>> predicate
-        , TDbContext _context = null, IDbContextTransaction _transaction = null)
-
+        public virtual RepositoryResponse<bool> RemoveModel(Expression<Func<TModel, bool>> predicate, TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
             TDbContext context = _context ?? InitContext();
             var transaction = _transaction ?? context.Database.BeginTransaction();
@@ -1437,9 +1437,7 @@ namespace Swastika.Domain.Data.Repository
         /// <param name="_context">The context.</param>
         /// <param name="_transaction">The transaction.</param>
         /// <returns></returns>
-        public virtual RepositoryResponse<bool> RemoveModel(TModel model
-        , TDbContext _context = null, IDbContextTransaction _transaction = null)
-
+        public virtual RepositoryResponse<bool> RemoveModel(TModel model, TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
             TDbContext context = _context ?? InitContext();
             var transaction = _transaction ?? context.Database.BeginTransaction();
@@ -1513,9 +1511,7 @@ namespace Swastika.Domain.Data.Repository
         /// <param name="_context">The context.</param>
         /// <param name="_transaction">The transaction.</param>
         /// <returns></returns>
-        public virtual async Task<RepositoryResponse<bool>> RemoveModelAsync(Expression<Func<TModel, bool>> predicate
-        , TDbContext _context = null, IDbContextTransaction _transaction = null)
-
+        public virtual async Task<RepositoryResponse<bool>> RemoveModelAsync(Expression<Func<TModel, bool>> predicate, TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
             TDbContext context = _context ?? InitContext();
             var transaction = _transaction ?? context.Database.BeginTransaction();
@@ -1590,9 +1586,7 @@ namespace Swastika.Domain.Data.Repository
         /// <param name="_context">The context.</param>
         /// <param name="_transaction">The transaction.</param>
         /// <returns></returns>
-        public virtual async Task<RepositoryResponse<bool>> RemoveModelAsync(TModel model
-        , TDbContext _context = null, IDbContextTransaction _transaction = null)
-
+        public virtual async Task<RepositoryResponse<bool>> RemoveModelAsync(TModel model, TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
             TDbContext context = _context ?? InitContext();
             var transaction = _transaction ?? context.Database.BeginTransaction();
