@@ -288,7 +288,19 @@ namespace Swastika.Domain.Data.ViewModels
         /// Parses the model.
         /// </summary>
         /// <returns></returns>
-        public virtual TModel ParseModel()
+        //public virtual TModel ParseModel(_context, _transaction)
+        //{
+        //    //AutoMapper.Mapper.Map<TView, TModel>((TView)this, Model);
+        //    this.Model = InitModel();
+        //    Mapper.Map<TView, TModel>((TView)this, Model);
+        //    return this.Model;
+        //}
+
+        /// <summary>
+        /// Parses the model.
+        /// </summary>
+        /// <returns></returns>
+        public virtual TModel ParseModel(TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
             //AutoMapper.Mapper.Map<TView, TModel>((TView)this, Model);
             this.Model = InitModel();
@@ -392,7 +404,7 @@ namespace Swastika.Domain.Data.ViewModels
                         view.ParseView(isExpand: false, _context: context, _transaction: transaction);
                         view.Specificulture = desSpecificulture;
 
-                        bool isExist = Repository.CheckIsExists(view.ParseModel(), _context: context, _transaction: transaction);
+                        bool isExist = Repository.CheckIsExists(view.ParseModel(_context, _transaction), _context: context, _transaction: transaction);
 
                         if (isExist)
                         {
@@ -491,7 +503,7 @@ namespace Swastika.Domain.Data.ViewModels
             RepositoryResponse<bool> result = new RepositoryResponse<bool>() { IsSucceed = true };
             try
             {
-                ParseModel();
+                ParseModel(_context, _transaction);
                 if (isRemoveRelatedModels)
                 {
                     var removeRelatedResult = await RemoveRelatedModelsAsync((TView)this, context, transaction).ConfigureAwait(false);
@@ -583,7 +595,7 @@ namespace Swastika.Domain.Data.ViewModels
             {
                 try
                 {
-                    ParseModel();
+                    ParseModel(_context, _transaction);
                     result = await Repository.SaveModelAsync((TView)this, _context: context, _transaction: transaction).ConfigureAwait(false);
 
                     // Save sub Models
@@ -721,7 +733,7 @@ namespace Swastika.Domain.Data.ViewModels
                         view.ParseView(isExpand: false, _context: context, _transaction: transaction);
                         view.Specificulture = desSpecificulture;
 
-                        bool isExist = Repository.CheckIsExists(view.ParseModel(), _context: context, _transaction: transaction);
+                        bool isExist = Repository.CheckIsExists(view.ParseModel(_context, _transaction), _context: context, _transaction: transaction);
 
                         if (isExist)
                         {
@@ -815,7 +827,7 @@ namespace Swastika.Domain.Data.ViewModels
             RepositoryResponse<bool> result = new RepositoryResponse<bool>() { IsSucceed = true };
             try
             {
-                ParseModel();
+                ParseModel(_context, _transaction);
                 if (isRemoveRelatedModels)
                 {
                     var removeRelatedResult = RemoveRelatedModels((TView)this, context, transaction);
@@ -902,7 +914,7 @@ namespace Swastika.Domain.Data.ViewModels
             {
                 try
                 {
-                    ParseModel();
+                    ParseModel(_context, _transaction);
                     result = Repository.SaveModel((TView)this, _context: context, _transaction: transaction);
 
                     // Save sub Models
