@@ -1177,6 +1177,7 @@ namespace Swastika.Domain.Data.Repository
         public virtual RepositoryResponse<bool> RemoveListModel(Expression<Func<TModel, bool>> predicate
         , TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
+            bool isRoot = _context == null;
             TDbContext context = _context ?? InitContext();
             var transaction = _transaction ?? context.Database.BeginTransaction();
             try
@@ -1198,32 +1199,13 @@ namespace Swastika.Domain.Data.Repository
                         }
                     }
 
-                    if (result)
+                    HandleTransaction(result, isRoot, transaction);
+
+                    return new RepositoryResponse<bool>()
                     {
-                        if (_transaction == null)
-                        {
-                            //if current transaction is root transaction
-                            transaction.Commit();
-                        }
-                        return new RepositoryResponse<bool>()
-                        {
-                            IsSucceed = true,
-                            Data = true
-                        };
-                    }
-                    else
-                    {
-                        if (_transaction == null)
-                        {
-                            //if current transaction is root transaction
-                            transaction.Rollback();
-                        }
-                        return new RepositoryResponse<bool>()
-                        {
-                            IsSucceed = false,
-                            Data = false
-                        };
-                    }
+                        IsSucceed = result,
+                        Data = result
+                    };
                 }
                 else
                 {
@@ -1271,6 +1253,7 @@ namespace Swastika.Domain.Data.Repository
         public virtual async Task<RepositoryResponse<bool>> RemoveListModelAsync(Expression<Func<TModel, bool>> predicate
         , TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
+            bool isRoot = _context == null;
             TDbContext context = _context ?? InitContext();
             var transaction = _transaction ?? context.Database.BeginTransaction();
             try
@@ -1292,32 +1275,13 @@ namespace Swastika.Domain.Data.Repository
                         }
                     }
 
-                    if (result)
+                    HandleTransaction(result, isRoot, transaction);
+
+                    return new RepositoryResponse<bool>()
                     {
-                        if (_transaction == null)
-                        {
-                            //if current transaction is root transaction
-                            transaction.Commit();
-                        }
-                        return new RepositoryResponse<bool>()
-                        {
-                            IsSucceed = true,
-                            Data = true
-                        };
-                    }
-                    else
-                    {
-                        if (_transaction == null)
-                        {
-                            //if current transaction is root transaction
-                            transaction.Rollback();
-                        }
-                        return new RepositoryResponse<bool>()
-                        {
-                            IsSucceed = false,
-                            Data = false
-                        };
-                    }
+                        IsSucceed = result,
+                        Data = result
+                    };
                 }
                 else
                 {
@@ -1364,6 +1328,7 @@ namespace Swastika.Domain.Data.Repository
         /// <returns></returns>
         public virtual RepositoryResponse<bool> RemoveModel(Expression<Func<TModel, bool>> predicate, TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
+            bool isRoot = _context == null;
             TDbContext context = _context ?? InitContext();
             var transaction = _transaction ?? context.Database.BeginTransaction();
             try
@@ -1376,32 +1341,13 @@ namespace Swastika.Domain.Data.Repository
                     result = context.SaveChanges() > 0;
                 }
 
-                if (result)
+                HandleTransaction(result, isRoot, transaction);
+
+                return new RepositoryResponse<bool>()
                 {
-                    if (_transaction == null)
-                    {
-                        //if current transaction is root transaction
-                        transaction.Commit();
-                    }
-                    return new RepositoryResponse<bool>()
-                    {
-                        IsSucceed = true,
-                        Data = true
-                    };
-                }
-                else
-                {
-                    if (_transaction == null)
-                    {
-                        //if current transaction is root transaction
-                        transaction.Rollback();
-                    }
-                    return new RepositoryResponse<bool>()
-                    {
-                        IsSucceed = false,
-                        Data = false
-                    };
-                }
+                    IsSucceed = result,
+                    Data = result
+                };
             }
             catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
             {
@@ -1439,6 +1385,7 @@ namespace Swastika.Domain.Data.Repository
         /// <returns></returns>
         public virtual RepositoryResponse<bool> RemoveModel(TModel model, TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
+            bool isRoot = _context == null;
             TDbContext context = _context ?? InitContext();
             var transaction = _transaction ?? context.Database.BeginTransaction();
             try
@@ -1450,32 +1397,13 @@ namespace Swastika.Domain.Data.Repository
                     result = context.SaveChanges() > 0;
                 }
 
-                if (result)
+                HandleTransaction(result, isRoot, transaction);
+
+                return new RepositoryResponse<bool>()
                 {
-                    if (_transaction == null)
-                    {
-                        //if current transaction is root transaction
-                        transaction.Commit();
-                    }
-                    return new RepositoryResponse<bool>()
-                    {
-                        IsSucceed = true,
-                        Data = true
-                    };
-                }
-                else
-                {
-                    if (_transaction == null)
-                    {
-                        //if current transaction is root transaction
-                        transaction.Rollback();
-                    }
-                    return new RepositoryResponse<bool>()
-                    {
-                        IsSucceed = false,
-                        Data = false
-                    };
-                }
+                    IsSucceed = result,
+                    Data = result
+                };
             }
             catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
             {
@@ -1513,6 +1441,7 @@ namespace Swastika.Domain.Data.Repository
         /// <returns></returns>
         public virtual async Task<RepositoryResponse<bool>> RemoveModelAsync(Expression<Func<TModel, bool>> predicate, TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
+            bool isRoot = _context == null;
             TDbContext context = _context ?? InitContext();
             var transaction = _transaction ?? context.Database.BeginTransaction();
             try
@@ -1525,32 +1454,13 @@ namespace Swastika.Domain.Data.Repository
                     result = await context.SaveChangesAsync().ConfigureAwait(false) > 0;
                 }
 
-                if (result)
+                HandleTransaction(result, isRoot, transaction);
+
+                return new RepositoryResponse<bool>()
                 {
-                    if (_transaction == null)
-                    {
-                        //if current transaction is root transaction
-                        transaction.Commit();
-                    }
-                    return new RepositoryResponse<bool>()
-                    {
-                        IsSucceed = true,
-                        Data = true
-                    };
-                }
-                else
-                {
-                    if (_transaction == null)
-                    {
-                        //if current transaction is root transaction
-                        transaction.Rollback();
-                    }
-                    return new RepositoryResponse<bool>()
-                    {
-                        IsSucceed = false,
-                        Data = false
-                    };
-                }
+                    IsSucceed = result,
+                    Data = result
+                };
             }
             catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
             {
@@ -1588,6 +1498,7 @@ namespace Swastika.Domain.Data.Repository
         /// <returns></returns>
         public virtual async Task<RepositoryResponse<bool>> RemoveModelAsync(TModel model, TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
+            bool isRoot = _context == null;
             TDbContext context = _context ?? InitContext();
             var transaction = _transaction ?? context.Database.BeginTransaction();
             try
@@ -1599,32 +1510,13 @@ namespace Swastika.Domain.Data.Repository
                     result = await context.SaveChangesAsync().ConfigureAwait(false) > 0;
                 }
 
-                if (result)
+                HandleTransaction(result, isRoot, transaction);
+
+                return new RepositoryResponse<bool>()
                 {
-                    if (_transaction == null)
-                    {
-                        //if current transaction is root transaction
-                        transaction.Commit();
-                    }
-                    return new RepositoryResponse<bool>()
-                    {
-                        IsSucceed = true,
-                        Data = true
-                    };
-                }
-                else
-                {
-                    if (_transaction == null)
-                    {
-                        //if current transaction is root transaction
-                        transaction.Rollback();
-                    }
-                    return new RepositoryResponse<bool>()
-                    {
-                        IsSucceed = false,
-                        Data = false
-                    };
-                }
+                    IsSucceed = result,
+                    Data = result
+                };
             }
             catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
             {
@@ -2017,6 +1909,7 @@ namespace Swastika.Domain.Data.Repository
         , List<EntityField> fields
         , TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
+            bool isRoot = _context == null;
             TDbContext context = _context ?? InitContext();
             var transaction = _transaction ?? context.Database.BeginTransaction();
             try
@@ -2055,32 +1948,13 @@ namespace Swastika.Domain.Data.Repository
                     }
                 }
 
-                if (result)
+                HandleTransaction(result, isRoot, transaction);
+
+                return new RepositoryResponse<bool>()
                 {
-                    if (_transaction == null)
-                    {
-                        //if current transaction is root transaction
-                        transaction.Commit();
-                    }
-                    return new RepositoryResponse<bool>()
-                    {
-                        IsSucceed = true,
-                        Data = true
-                    };
-                }
-                else
-                {
-                    if (_transaction == null)
-                    {
-                        //if current transaction is root transaction
-                        transaction.Rollback();
-                    }
-                    return new RepositoryResponse<bool>()
-                    {
-                        IsSucceed = false,
-                        Data = false
-                    };
-                }
+                    IsSucceed = result,
+                    Data = result
+                };
             }
             catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
             {
@@ -2120,6 +1994,7 @@ namespace Swastika.Domain.Data.Repository
         , List<EntityField> fields
         , TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
+            bool isRoot = _context == null;
             TDbContext context = _context ?? InitContext();
             var transaction = _transaction ?? context.Database.BeginTransaction();
             try
@@ -2158,32 +2033,13 @@ namespace Swastika.Domain.Data.Repository
                     }
                 }
 
-                if (result)
+                HandleTransaction(result, isRoot, transaction);
+
+                return new RepositoryResponse<bool>()
                 {
-                    if (_transaction == null)
-                    {
-                        //if current transaction is root transaction
-                        transaction.Commit();
-                    }
-                    return new RepositoryResponse<bool>()
-                    {
-                        IsSucceed = true,
-                        Data = true
-                    };
-                }
-                else
-                {
-                    if (_transaction == null)
-                    {
-                        //if current transaction is root transaction
-                        transaction.Rollback();
-                    }
-                    return new RepositoryResponse<bool>()
-                    {
-                        IsSucceed = false,
-                        Data = false
-                    };
-                }
+                    IsSucceed = result,
+                    Data = result
+                };
             }
             catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
             {
@@ -2213,6 +2069,26 @@ namespace Swastika.Domain.Data.Repository
 
         #endregion Update Fields
 
+        private void HandleTransaction(bool isSucceed, bool isRoot, IDbContextTransaction transaction)
+        {
+            if (isSucceed)
+            {
+                if (isRoot)
+                {
+                    //if current transaction is root transaction
+                    transaction.Commit();
+                }
+            }
+            else
+            {
+                if (isRoot)
+                {
+                    //if current transaction is root transaction
+                    transaction.Rollback();
+                }
+            }
+        }
+        
         /// <summary>
         /// Gets the lambda.
         /// </summary>
