@@ -12,6 +12,12 @@ namespace Swastika.Common
             public const string FileFolder = @"wwwroot/Uploads/Files/{0}";
         }
 
+        public enum OrderByDirection
+        {
+            Ascending = 0,
+            Descending = 1
+        }
+
         public enum SearchType
         {
             All,

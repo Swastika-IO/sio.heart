@@ -2,11 +2,11 @@
 // The Swastika I/O Foundation licenses this file to you under the GNU General Public License v3.0 license.
 // See the LICENSE file in the project root for more information.
 
-using Microsoft.Data.OData.Query;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using static Swastika.Common.Constants;
 
 namespace Swastika.Base.ViewModels
 {

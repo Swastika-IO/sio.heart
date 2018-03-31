@@ -3,7 +3,6 @@
 // See the LICENSE file in the project root for more information.
 
 using AutoMapper;
-using Microsoft.Data.OData.Query;
 using Swastika.Base.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -14,6 +13,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Threading.Tasks;
+using static Swastika.Common.Constants;
 
 namespace Swastika.Base.Repository
 {

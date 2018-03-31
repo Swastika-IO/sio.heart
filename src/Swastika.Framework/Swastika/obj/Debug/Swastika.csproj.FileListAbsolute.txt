@@ -1,0 +1,16 @@
+C:\Git\GitHub\Swastika\Swastika-Heart\src\Swastika.Framework\Swastika\obj\Debug\Swastika.csproj.CoreCompileInputs.cache
+C:\Git\GitHub\Swastika\Swastika-Heart\src\Swastika.Framework\Swastika\obj\Debug\Swastika.csprojResolveAssemblyReference.cache
+C:\Git\GitHub\Swastika\Swastika-Heart\src\Swastika.Framework\Swastika\bin\Debug\Swastika.dll.config
+C:\Git\GitHub\Swastika\Swastika-Heart\src\Swastika.Framework\Swastika\bin\Debug\Swastika.dll
+C:\Git\GitHub\Swastika\Swastika-Heart\src\Swastika.Framework\Swastika\bin\Debug\Swastika.pdb
+C:\Git\GitHub\Swastika\Swastika-Heart\src\Swastika.Framework\Swastika\bin\Debug\AutoMapper.dll
+C:\Git\GitHub\Swastika\Swastika-Heart\src\Swastika.Framework\Swastika\bin\Debug\EntityFramework.dll
+C:\Git\GitHub\Swastika\Swastika-Heart\src\Swastika.Framework\Swastika\bin\Debug\EntityFramework.SqlServer.dll
+C:\Git\GitHub\Swastika\Swastika-Heart\src\Swastika.Framework\Swastika\bin\Debug\Newtonsoft.Json.dll
+C:\Git\GitHub\Swastika\Swastika-Heart\src\Swastika.Framework\Swastika\bin\Debug\AutoMapper.xml
+C:\Git\GitHub\Swastika\Swastika-Heart\src\Swastika.Framework\Swastika\bin\Debug\EntityFramework.xml
+C:\Git\GitHub\Swastika\Swastika-Heart\src\Swastika.Framework\Swastika\bin\Debug\EntityFramework.SqlServer.xml
+C:\Git\GitHub\Swastika\Swastika-Heart\src\Swastika.Framework\Swastika\bin\Debug\Newtonsoft.Json.xml
+C:\Git\GitHub\Swastika\Swastika-Heart\src\Swastika.Framework\Swastika\obj\Debug\Swastika.csproj.CopyComplete
+C:\Git\GitHub\Swastika\Swastika-Heart\src\Swastika.Framework\Swastika\obj\Debug\Swastika.dll
+C:\Git\GitHub\Swastika\Swastika-Heart\src\Swastika.Framework\Swastika\obj\Debug\Swastika.pdb
