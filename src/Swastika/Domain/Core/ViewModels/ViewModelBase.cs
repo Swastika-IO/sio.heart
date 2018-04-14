@@ -210,7 +210,7 @@ namespace Swastika.Domain.Data.ViewModels
             var mapper = new Mapper(config);
             return mapper;
         }
-
+        [JsonIgnore]
         public List<string> Errors { get; set; } = new List<string>();
 
         #endregion Properties
@@ -518,10 +518,12 @@ namespace Swastika.Domain.Data.ViewModels
                         result.Exception = removeRelatedResult.Exception;
                     }
                 }
-
-                if (result.IsSucceed)
+                else
                 {
                     result = await Repository.RemoveModelAsync(Model, context, transaction).ConfigureAwait(false);
+                }
+                if (result.IsSucceed)
+                {
                     if (_transaction == null)
                     {
                         transaction.Commit();
@@ -842,10 +844,13 @@ namespace Swastika.Domain.Data.ViewModels
                         result.Exception = removeRelatedResult.Exception;
                     }
                 }
+                else
+                {
+                    result = Repository.RemoveModel(Model, context, transaction);
+                }
 
                 if (result.IsSucceed)
                 {
-                    result = Repository.RemoveModel(Model, context, transaction);
                     if (_transaction == null)
                     {
                         transaction.Commit();

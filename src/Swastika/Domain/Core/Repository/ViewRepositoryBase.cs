@@ -525,6 +525,7 @@ namespace Swastika.Domain.Data.Repository
         /// <param name="ex">The ex.</param>
         public virtual void LogErrorMessage(Exception ex)
         {
+            
         }
 
         /// <summary>

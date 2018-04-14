@@ -53,7 +53,6 @@
     <Compile Remove="Common\Helper\ImageHelper.cs" />
     <Compile Remove="Domain\Core\Interfaces\IRepository.cs" />
     <Compile Remove="Domain\Core\Interfaces\IUnitOfWork.cs" />
-    <Compile Remove="Domain\Core\Repository\RepositoryBase.cs" />
     <Compile Remove="Domain\Core\Repository\SWRepositoryBase.cs" />
     <Compile Remove="Domain\Core\ViewModels\SWViewModelBase.cs" />
     <Compile Remove="UI\Core\CommonModels.cs" />
