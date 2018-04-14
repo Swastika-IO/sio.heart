@@ -1343,7 +1343,6 @@ namespace Swastika.Domain.Data.Repository
         /// <returns></returns>
         public virtual RepositoryResponse<bool> RemoveModel(Expression<Func<TModel, bool>> predicate
             , TDbContext _context = null, IDbContextTransaction _transaction = null)
-
         {
             TDbContext context = _context ?? InitContext();
             var transaction = _transaction ?? context.Database.BeginTransaction();
@@ -1420,7 +1419,6 @@ namespace Swastika.Domain.Data.Repository
         /// <returns></returns>
         public virtual RepositoryResponse<bool> RemoveModel(TModel model
             , TDbContext _context = null, IDbContextTransaction _transaction = null)
-
         {
             TDbContext context = _context ?? InitContext();
             var transaction = _transaction ?? context.Database.BeginTransaction();
@@ -1496,7 +1494,6 @@ namespace Swastika.Domain.Data.Repository
         /// <returns></returns>
         public virtual async Task<RepositoryResponse<bool>> RemoveModelAsync(Expression<Func<TModel, bool>> predicate
             , TDbContext _context = null, IDbContextTransaction _transaction = null)
-
         {
             TDbContext context = _context ?? InitContext();
             var transaction = _transaction ?? context.Database.BeginTransaction();
@@ -1573,7 +1570,6 @@ namespace Swastika.Domain.Data.Repository
         /// <returns></returns>
         public virtual async Task<RepositoryResponse<bool>> RemoveModelAsync(TModel model
             , TDbContext _context = null, IDbContextTransaction _transaction = null)
-
         {
             TDbContext context = _context ?? InitContext();
             var transaction = _transaction ?? context.Database.BeginTransaction();
