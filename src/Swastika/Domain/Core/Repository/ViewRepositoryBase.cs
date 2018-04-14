@@ -152,7 +152,6 @@ namespace Swastika.Domain.Data.Repository
             }
             catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
             {
-                
                 LogErrorMessage(ex);
                 result.IsSucceed = false;
                 result.Exception = ex;
@@ -222,7 +221,7 @@ namespace Swastika.Domain.Data.Repository
                 }
             }
             catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
-            {               
+            {
                 LogErrorMessage(ex);
                 result.IsSucceed = false;
                 result.Exception = ex;
@@ -362,7 +361,7 @@ namespace Swastika.Domain.Data.Repository
                 }
             }
             catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
-            {                
+            {
                 LogErrorMessage(ex);
                 result.IsSucceed = false;
                 result.Exception = ex;
@@ -525,7 +524,6 @@ namespace Swastika.Domain.Data.Repository
         /// <param name="ex">The ex.</param>
         public virtual void LogErrorMessage(Exception ex)
         {
-            
         }
 
         /// <summary>
@@ -2089,7 +2087,7 @@ namespace Swastika.Domain.Data.Repository
                 }
             }
         }
-        
+
         /// <summary>
         /// Gets the lambda.
         /// </summary>
