@@ -1,5 +1,5 @@
 ﻿// Licensed to the Swastika I/O Foundation under one or more agreements.
-// The Swastika I/O Foundation licenses this file to you under the MIT license.
+// The Swastika I/O Foundation licenses this file to you under the GNU General Public License v3.0.
 // See the LICENSE file in the project root for more information.
 
 using AutoMapper;
@@ -152,7 +152,6 @@ namespace Swastika.Domain.Data.Repository
             }
             catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
             {
-                
                 LogErrorMessage(ex);
                 result.IsSucceed = false;
                 result.Exception = ex;
@@ -222,7 +221,7 @@ namespace Swastika.Domain.Data.Repository
                 }
             }
             catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
-            {               
+            {
                 LogErrorMessage(ex);
                 result.IsSucceed = false;
                 result.Exception = ex;
@@ -362,7 +361,7 @@ namespace Swastika.Domain.Data.Repository
                 }
             }
             catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
-            {                
+            {
                 LogErrorMessage(ex);
                 result.IsSucceed = false;
                 result.Exception = ex;
@@ -525,7 +524,6 @@ namespace Swastika.Domain.Data.Repository
         /// <param name="ex">The ex.</param>
         public virtual void LogErrorMessage(Exception ex)
         {
-            
         }
 
         /// <summary>
@@ -2089,7 +2087,7 @@ namespace Swastika.Domain.Data.Repository
                 }
             }
         }
-        
+
         /// <summary>
         /// Gets the lambda.
         /// </summary>

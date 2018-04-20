@@ -1,5 +1,5 @@
 ﻿// Licensed to the Swastika I/O Foundation under one or more agreements.
-// The Swastika I/O Foundation licenses this file to you under the MIT license.
+// The Swastika I/O Foundation licenses this file to you under the GNU General Public License v3.0.
 // See the LICENSE file in the project root for more information.
 
 using AutoMapper;
@@ -145,7 +145,6 @@ namespace Swastika.Domain.Data.Repository
                     IsSucceed = result,
                     Data = view
                 };
-
             }
             catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
             {
@@ -2034,6 +2033,7 @@ namespace Swastika.Domain.Data.Repository
         {
             throw new NotImplementedException();
         }
+
         private void HandleTransaction(bool isSucceed, bool isRoot, IDbContextTransaction transaction)
         {
             if (isSucceed)
@@ -2053,6 +2053,5 @@ namespace Swastika.Domain.Data.Repository
                 }
             }
         }
-
     }
 }
