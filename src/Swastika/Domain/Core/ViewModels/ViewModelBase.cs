@@ -940,7 +940,7 @@ namespace Swastika.Domain.Data.ViewModels
                         var cloneCultures = ListSupportedCulture.Where(c => c.Specificulture != Specificulture && c.IsSupported).ToList();
                         var cloneResult = Clone(Model, cloneCultures, _context: context, _transaction: transaction);
                         if (!cloneResult.IsSucceed)
-                        {
+                        {   
                             result.Errors.AddRange(cloneResult.Errors);
                             result.Exception = cloneResult.Exception;
                         }

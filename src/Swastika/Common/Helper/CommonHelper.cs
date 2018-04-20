@@ -114,23 +114,8 @@ namespace Swastika.Common.Helper
             try
             {
                 string imgData = strImage64.Substring(strImage64.IndexOf(',') + 1);
-                //byte[] bytes = Convert.FromBase64String(imgData);
-
-                //Image image;
-                //using (MemoryStream ms = new MemoryStream(bytes))
-                //{
-                //    image = Image.FromStream(ms);
-                //}
-
-                //return image;
                 byte[] imageBytes = Convert.FromBase64String(imgData);
-                // Convert byte[] to Image
                 return new MemoryStream(imageBytes, 0, imageBytes.Length);
-                //using (var ms = new MemoryStream(imageBytes, 0, imageBytes.Length))
-                //{
-                //    Image image = Image.FromStream(ms, true);
-                //    return image;
-                //}
             }
             catch//(Exception ex)
             {
@@ -138,7 +123,6 @@ namespace Swastika.Common.Helper
             }
         }
 
-        //private static string defaultImagePath = "http://placehold.it/200x200";
         /// <summary>
         /// Parses the name of the json property.
         /// </summary>
