@@ -7,55 +7,7 @@ using System;
 
 namespace Swastika.Domain.Data.Repository
 {
-    /// <summary>
-    /// Default Repository
-    /// </summary>
-    /// <typeparam name="TContext">The type of the context.</typeparam>
-    /// <typeparam name="TModel">The type of the model.</typeparam>
-    /// <seealso cref="Swastika.Domain.Data.Repository.ModelRepositoryBase{TContext, TModel}" />
-    public class DefaultRepository<TContext, TModel> : ModelRepositoryBase<TContext, TModel>
-        where TContext : DbContext
-        where TModel : class
-    {
-        /// <summary>
-        /// The instance
-        /// </summary>
-        private static volatile DefaultRepository<TContext, TModel> instance;
-
-        /// <summary>
-        /// The synchronize root
-        /// </summary>
-        private static readonly object syncRoot = new Object();
-
-        /// <summary>
-        /// Prevents a default instance of the <see cref="DefaultRepository{TContext, TModel}"/> class from being created.
-        /// </summary>
-        private DefaultRepository()
-        {
-        }
-
-        /// <summary>
-        /// Gets the instance.
-        /// </summary>
-        /// <value>
-        /// The instance.
-        /// </value>
-        public static DefaultRepository<TContext, TModel> Instance {
-            get {
-                if (instance == null)
-                {
-                    lock (syncRoot)
-                    {
-                        if (instance == null)
-                            instance = new DefaultRepository<TContext, TModel>();
-                    }
-                }
-
-                return instance;
-            }
-        }
-    }
-
+   
     /// <summary>
     /// Default Repository with view
     /// </summary>

@@ -50,10 +50,13 @@
 
   <ItemGroup>
     <Compile Remove="Common\Constants.cs" />
+    <Compile Remove="Common\Helper\Helper.cs" />
     <Compile Remove="Common\Helper\ImageHelper.cs" />
-    <Compile Remove="Domain\Core\Interfaces\IRepository.cs" />
-    <Compile Remove="Domain\Core\Interfaces\IUnitOfWork.cs" />
+    <Compile Remove="Domain\Core\Repository\ModelRepositoryBase.cs" />
+    <Compile Remove="Domain\Core\Repository\RepositoryBase.cs" />
     <Compile Remove="Domain\Core\Repository\SWRepositoryBase.cs" />
+    <Compile Remove="Domain\Core\ViewModels\ExpandViewModelBase.cs" />
+    <Compile Remove="Domain\Core\ViewModels\ModelViewModelBase.cs" />
     <Compile Remove="Domain\Core\ViewModels\SWViewModelBase.cs" />
     <Compile Remove="UI\Core\CommonModels.cs" />
     <Compile Remove="UI\Core\Helper.cs" />
