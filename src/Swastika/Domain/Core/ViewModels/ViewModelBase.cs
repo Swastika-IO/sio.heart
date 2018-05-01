@@ -325,7 +325,7 @@ namespace Swastika.Domain.Data.ViewModels
             Mapper.Map<TModel, TView>(Model, (TView)this);
             if (isExpand)
             {
-                bool IsRoot = _context == null;
+                bool isRoot = _context == null;
                 var context = _context ?? InitContext();
                 var transaction = _transaction ?? context.Database.BeginTransaction();
                 try
@@ -385,7 +385,7 @@ namespace Swastika.Domain.Data.ViewModels
         public virtual async Task<RepositoryResponse<List<TView>>> CloneAsync(TModel model, List<SupportedCulture> cloneCultures
             , TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
-            bool IsRoot = _context == null;
+            bool isRoot = _context == null;
             var context = _context ?? InitContext();
             var transaction = _transaction ?? context.Database.BeginTransaction();
             RepositoryResponse<List<TView>> result = new RepositoryResponse<List<TView>>()
@@ -439,14 +439,14 @@ namespace Swastika.Domain.Data.ViewModels
 
                         if (result.IsSucceed)
                         {
-                            if (_transaction == null)
+                            if (isRoot)
                             {
                                 transaction.Commit();
                             }
                         }
                         else
                         {
-                            if (_transaction == null)
+                            if (isRoot)
                             {
                                 transaction.Rollback();
                             }
@@ -467,7 +467,7 @@ namespace Swastika.Domain.Data.ViewModels
             }
             finally
             {
-                if (_context == null)
+                if (isRoot)
                 {
                     _context.Dispose();
                 }
@@ -527,7 +527,7 @@ namespace Swastika.Domain.Data.ViewModels
                 }
                 if (result.IsSucceed)
                 {
-                    if (_transaction == null)
+                    if (isRoot)
                     {
                         transaction.Commit();
                     }
@@ -536,7 +536,7 @@ namespace Swastika.Domain.Data.ViewModels
                 }
                 else
                 {
-                    if (_transaction == null)
+                    if (isRoot)
                     {
                         transaction.Rollback();
                     }
@@ -546,7 +546,7 @@ namespace Swastika.Domain.Data.ViewModels
             }
             catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
             {
-                if (_transaction == null)
+                if (isRoot)
                 {
                     //if current transaction is root transaction
                     transaction.Rollback();
@@ -557,7 +557,7 @@ namespace Swastika.Domain.Data.ViewModels
             }
             finally
             {
-                if (_context == null)
+                if (isRoot)
                 {
                     //if current Context is Root
                     context.Dispose();
@@ -591,7 +591,7 @@ namespace Swastika.Domain.Data.ViewModels
         /// <returns></returns>
         public virtual async Task<RepositoryResponse<TView>> SaveModelAsync(bool isSaveSubModels = false, TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
-            bool IsRoot = _context == null;
+            bool isRoot = _context == null;
             var context = _context ?? InitContext();
             var transaction = _transaction ?? context.Database.BeginTransaction();
             RepositoryResponse<TView> result = new RepositoryResponse<TView>() { IsSucceed = true };
@@ -715,7 +715,7 @@ namespace Swastika.Domain.Data.ViewModels
         /// <returns></returns>
         public virtual RepositoryResponse<List<TView>> Clone(TModel model, List<SupportedCulture> cloneCultures, TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
-            bool IsRoot = _context == null;
+            bool isRoot = _context == null;
             var context = _context ?? InitContext();
             var transaction = _transaction ?? context.Database.BeginTransaction();
 
@@ -770,14 +770,14 @@ namespace Swastika.Domain.Data.ViewModels
 
                         if (result.IsSucceed)
                         {
-                            if (_transaction == null)
+                            if (isRoot)
                             {
                                 transaction.Commit();
                             }
                         }
                         else
                         {
-                            if (_transaction == null)
+                            if (isRoot)
                             {
                                 transaction.Rollback();
                             }
@@ -798,7 +798,7 @@ namespace Swastika.Domain.Data.ViewModels
             }
             finally
             {
-                if (_context == null)
+                if (isRoot)
                 {
                     _context.Dispose();
                 }
@@ -854,7 +854,7 @@ namespace Swastika.Domain.Data.ViewModels
 
                 if (result.IsSucceed)
                 {
-                    if (_transaction == null)
+                    if (isRoot)
                     {
                         transaction.Commit();
                     }
@@ -863,7 +863,7 @@ namespace Swastika.Domain.Data.ViewModels
                 }
                 else
                 {
-                    if (_transaction == null)
+                    if (isRoot)
                     {
                         transaction.Rollback();
                     }
@@ -873,7 +873,7 @@ namespace Swastika.Domain.Data.ViewModels
             }
             catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
             {
-                if (_transaction == null)
+                if (isRoot)
                 {
                     //if current transaction is root transaction
                     transaction.Rollback();
@@ -884,7 +884,7 @@ namespace Swastika.Domain.Data.ViewModels
             }
             finally
             {
-                if (_context == null)
+                if (isRoot)
                 {
                     //if current Context is Root
                     context.Dispose();
@@ -913,7 +913,7 @@ namespace Swastika.Domain.Data.ViewModels
         /// <returns></returns>
         public virtual RepositoryResponse<TView> SaveModel(bool isSaveSubModels = false, TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
-            bool IsRoot = _context == null;
+            bool isRoot = _context == null;
             var context = _context ?? InitContext();
             var transaction = _transaction ?? context.Database.BeginTransaction();
             RepositoryResponse<TView> result = new RepositoryResponse<TView>() { IsSucceed = true };
