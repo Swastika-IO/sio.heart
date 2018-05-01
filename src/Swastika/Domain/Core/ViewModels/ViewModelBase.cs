@@ -469,7 +469,7 @@ namespace Swastika.Domain.Data.ViewModels
             {
                 if (isRoot)
                 {
-                    _context.Dispose();
+                    context.Dispose();
                 }
             }
         }
@@ -802,7 +802,7 @@ namespace Swastika.Domain.Data.ViewModels
             {
                 if (isRoot)
                 {
-                    _context.Dispose();
+                    context.Dispose();
                 }
             }
         }
