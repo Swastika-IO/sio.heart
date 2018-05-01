@@ -14,5 +14,12 @@ namespace Swastika.Common.Utility
             Draft = 3,
             Schedule = 4
         }
+        public enum ResponseKey
+        {
+            NotFound,
+            OK,
+            BadRequest
+        }
     }
+
 }

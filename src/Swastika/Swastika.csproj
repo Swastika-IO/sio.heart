@@ -50,7 +50,6 @@
 
   <ItemGroup>
     <Compile Remove="Common\Constants.cs" />
-    <Compile Remove="Common\Helper\Helper.cs" />
     <Compile Remove="Common\Helper\ImageHelper.cs" />
     <Compile Remove="Domain\Core\Repository\ModelRepositoryBase.cs" />
     <Compile Remove="Domain\Core\Repository\RepositoryBase.cs" />
@@ -59,6 +58,7 @@
     <Compile Remove="Domain\Core\ViewModels\ModelViewModelBase.cs" />
     <Compile Remove="Domain\Core\ViewModels\SWViewModelBase.cs" />
     <Compile Remove="UI\Core\CommonModels.cs" />
+    <Compile Remove="UI\Core\Controllers\ApiHubController.cs" />
     <Compile Remove="UI\Core\Helper.cs" />
   </ItemGroup>
 
