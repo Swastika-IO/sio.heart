@@ -19,7 +19,7 @@ namespace Swastika.Common.Helper
     /// <summary>
     /// Common helper
     /// </summary>
-    public class CommonHelper
+    public static class CommonHelper
     {
         /// <summary>
         /// The base62chars
@@ -183,8 +183,9 @@ namespace Swastika.Common.Helper
                     result = true;
                 }
             }
-            catch
+            catch (Exception e)
             {
+                throw;
             }
             return result;
         }
