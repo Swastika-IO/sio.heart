@@ -335,7 +335,7 @@ namespace Swastika.Domain.Data.ViewModels
                 catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
                 {
                     Repository.LogErrorMessage(ex);
-                    if (IsRoot)
+                    if (isRoot)
                     {
                         //if current transaction is root transaction
                         transaction.Rollback();
@@ -343,7 +343,7 @@ namespace Swastika.Domain.Data.ViewModels
                 }
                 finally
                 {
-                    if (IsRoot)
+                    if (isRoot)
                     {
                         //if current Context is Root
                         context.Dispose();
@@ -501,8 +501,10 @@ namespace Swastika.Domain.Data.ViewModels
         /// <returns></returns>
         public virtual async Task<RepositoryResponse<bool>> RemoveModelAsync(bool isRemoveRelatedModels = false, TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
+            bool isRoot = _context == null;
             var context = _context ?? InitContext();
             var transaction = _transaction ?? context.Database.BeginTransaction();
+            
             RepositoryResponse<bool> result = new RepositoryResponse<bool>() { IsSucceed = true };
             try
             {
@@ -616,7 +618,7 @@ namespace Swastika.Domain.Data.ViewModels
                     }
 
                     // Clone Models
-                    if (result.IsSucceed && IsClone && IsRoot)
+                    if (result.IsSucceed && IsClone && isRoot)
                     {
                         var cloneCultures = ListSupportedCulture.Where(c => c.Specificulture != Specificulture && c.IsSupported).ToList();
                         var cloneResult = await CloneAsync(Model, cloneCultures, _context: context, _transaction: transaction).ConfigureAwait(false);
@@ -631,7 +633,7 @@ namespace Swastika.Domain.Data.ViewModels
                     //Commit context
                     if (result.IsSucceed)
                     {
-                        if (IsRoot)
+                        if (isRoot)
                         {
                             //if current transaction is root transaction
                             transaction.Commit();
@@ -641,7 +643,7 @@ namespace Swastika.Domain.Data.ViewModels
                     }
                     else
                     {
-                        if (IsRoot)
+                        if (isRoot)
                         {
                             //if current transaction is root transaction
                             transaction.Rollback();
@@ -652,7 +654,7 @@ namespace Swastika.Domain.Data.ViewModels
                 catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
                 {
                     Repository.LogErrorMessage(ex);
-                    if (IsRoot)
+                    if (isRoot)
                     {
                         //if current transaction is root transaction
                         transaction.Rollback();
@@ -663,7 +665,7 @@ namespace Swastika.Domain.Data.ViewModels
                 }
                 finally
                 {
-                    if (IsRoot)
+                    if (isRoot)
                     {
                         //if current Context is Root
                         context.Dispose();
@@ -827,6 +829,7 @@ namespace Swastika.Domain.Data.ViewModels
         /// <returns></returns>
         public virtual RepositoryResponse<bool> RemoveModel(bool isRemoveRelatedModels = false, TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
+            bool isRoot = _context == null;
             var context = _context ?? InitContext();
             var transaction = _transaction ?? context.Database.BeginTransaction();
             RepositoryResponse<bool> result = new RepositoryResponse<bool>() { IsSucceed = true };
@@ -938,7 +941,7 @@ namespace Swastika.Domain.Data.ViewModels
                     }
 
                     // Clone Models
-                    if (result.IsSucceed && IsClone && IsRoot)
+                    if (result.IsSucceed && IsClone && isRoot)
                     {
                         var cloneCultures = ListSupportedCulture.Where(c => c.Specificulture != Specificulture && c.IsSupported).ToList();
                         var cloneResult = Clone(Model, cloneCultures, _context: context, _transaction: transaction);
@@ -953,7 +956,7 @@ namespace Swastika.Domain.Data.ViewModels
                     //Commit context
                     if (result.IsSucceed)
                     {
-                        if (IsRoot)
+                        if (isRoot)
                         {
                             //if current transaction is root transaction
                             transaction.Commit();
@@ -963,7 +966,7 @@ namespace Swastika.Domain.Data.ViewModels
                     }
                     else
                     {
-                        if (IsRoot)
+                        if (isRoot)
                         {
                             //if current transaction is root transaction
                             transaction.Rollback();
@@ -974,7 +977,7 @@ namespace Swastika.Domain.Data.ViewModels
                 catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
                 {
                     Repository.LogErrorMessage(ex);
-                    if (IsRoot)
+                    if (isRoot)
                     {
                         //if current transaction is root transaction
                         transaction.Rollback();
@@ -985,7 +988,7 @@ namespace Swastika.Domain.Data.ViewModels
                 }
                 finally
                 {
-                    if (IsRoot)
+                    if (isRoot)
                     {
                         //if current Context is Root
                         context.Dispose();
