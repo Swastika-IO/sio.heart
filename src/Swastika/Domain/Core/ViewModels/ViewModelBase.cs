@@ -36,7 +36,7 @@ namespace Swastika.Domain.Data.ViewModels
         /// Returns true if ... is valid.
         /// </summary>
         [JsonIgnore]
-        public bool IsValid = true;
+        private bool isValid = true;
 
         /// <summary>
         /// The repo
@@ -210,8 +210,11 @@ namespace Swastika.Domain.Data.ViewModels
             var mapper = new Mapper(config);
             return mapper;
         }
+
         [JsonIgnore]
         public List<string> Errors { get; set; } = new List<string>();
+
+        public bool IsValid { get => isValid; set => isValid = value; }
 
         #endregion Properties
 
@@ -940,7 +943,7 @@ namespace Swastika.Domain.Data.ViewModels
                         var cloneCultures = ListSupportedCulture.Where(c => c.Specificulture != Specificulture && c.IsSupported).ToList();
                         var cloneResult = Clone(Model, cloneCultures, _context: context, _transaction: transaction);
                         if (!cloneResult.IsSucceed)
-                        {   
+                        {
                             result.Errors.AddRange(cloneResult.Errors);
                             result.Exception = cloneResult.Exception;
                         }
