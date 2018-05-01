@@ -7,7 +7,6 @@ using System;
 
 namespace Swastika.Domain.Data.Repository
 {
-   
     /// <summary>
     /// Default Repository with view
     /// </summary>
