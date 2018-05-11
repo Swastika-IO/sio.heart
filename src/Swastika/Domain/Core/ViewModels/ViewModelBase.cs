@@ -504,7 +504,7 @@ namespace Swastika.Domain.Data.ViewModels
             bool isRoot = _context == null;
             var context = _context ?? InitContext();
             var transaction = _transaction ?? context.Database.BeginTransaction();
-            
+
             RepositoryResponse<bool> result = new RepositoryResponse<bool>() { IsSucceed = true };
             try
             {

@@ -2,7 +2,6 @@
 // The Swastika I/O Foundation licenses this file to you under the GNU General Public License v3.0.
 // See the LICENSE file in the project root for more information.
 
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -10,7 +9,6 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
 using Swastika.Common.Helper;
 using Swastika.Common.Utility;
-using Swastika.Domain.Core.Models;
 using Swastika.Domain.Data.Repository;
 using Swastika.UI.Base;
 using System.Collections.Generic;
