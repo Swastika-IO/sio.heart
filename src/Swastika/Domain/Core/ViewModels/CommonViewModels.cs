@@ -174,6 +174,15 @@ namespace Swastika.Domain.Core.ViewModels
         public int PageIndex { get; set; }
 
         /// <summary>
+        /// Gets or sets the index of the page.
+        /// </summary>
+        /// <value>
+        /// The index of the page.
+        /// </value>
+        [JsonProperty("page")]
+        public int Page{ get { return PageIndex + 1; } }
+
+        /// <summary>
         /// Gets or sets the size of the page.
         /// </summary>
         /// <value>

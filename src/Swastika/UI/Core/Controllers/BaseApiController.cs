@@ -11,8 +11,10 @@ using Microsoft.EntityFrameworkCore;
 using Swastika.Common.Helper;
 using Swastika.Common.Utility;
 using Swastika.Domain.Core.Models;
+using Swastika.Domain.Core.ViewModels;
 using Swastika.Domain.Data.Repository;
 using Swastika.UI.Base;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -143,6 +145,15 @@ namespace Swastika.Api.Controllers
         {
             var result = ApiHelper<TResult>.GetResult(1, data, nameof(Enums.ResponseKey.OK), null);
             return Ok(result);
+        }
+
+
+        protected void ParseRequestPagingDate(RequestPaging request)
+        {
+            request.FromDate = request.FromDate.HasValue ? new DateTime(request.FromDate.Value.Year, request.FromDate.Value.Month, request.FromDate.Value.Day).ToUniversalTime()
+                : default(DateTime?);
+            request.ToDate = request.ToDate.HasValue ? new DateTime(request.ToDate.Value.Year, request.ToDate.Value.Month, request.ToDate.Value.Day).ToUniversalTime().AddDays(1)
+                : default(DateTime?);
         }
 
         /// <summary>
@@ -488,6 +499,15 @@ namespace Swastika.Api.Controllers
         {
             var result = ApiHelper<TResult>.GetResult(1, data, nameof(Enums.ResponseKey.OK), null);
             return Ok(result);
+        }
+
+        protected void ParseRequestPagingDate(RequestPaging request)
+        {
+            request.FromDate = request.FromDate.HasValue ? new DateTime(request.FromDate.Value.Year, request.FromDate.Value.Month, request.FromDate.Value.Day).ToUniversalTime()
+                : default(DateTime?);
+            request.ToDate = request.ToDate.HasValue ? new DateTime(request.ToDate.Value.Year, request.ToDate.Value.Month, request.ToDate.Value.Day).ToUniversalTime().AddDays(1)
+                : default(DateTime?);
+
         }
     }
 }

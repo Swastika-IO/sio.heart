@@ -405,7 +405,7 @@ namespace Swastika.Domain.Data.Repository
             var transaction = _transaction ?? context.Database.BeginTransaction();
             try
             {
-                TModel model = context.Set<TModel>().FirstOrDefault(predicate);
+                TModel model = context.Set<TModel>().SingleOrDefault(predicate);
                 if (model != null)
                 {
                     context.Entry(model).State = EntityState.Detached;
@@ -467,7 +467,7 @@ namespace Swastika.Domain.Data.Repository
 
             try
             {
-                TModel model = await context.Set<TModel>().FirstOrDefaultAsync(predicate).ConfigureAwait(false);
+                TModel model = await context.Set<TModel>().SingleOrDefaultAsync(predicate).ConfigureAwait(false);
                 if (model != null)
                 {
                     context.Entry(model).State = EntityState.Detached;

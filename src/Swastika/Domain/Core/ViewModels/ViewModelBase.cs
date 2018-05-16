@@ -228,6 +228,18 @@ namespace Swastika.Domain.Data.ViewModels
         public virtual void ExpandView(TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
         }
+        
+        /// <summary>
+        /// Expands the view.
+        /// </summary>
+        /// <param name="_context">The context.</param>
+        /// <param name="_transaction">The transaction.</param>
+        public virtual Task<bool> ExpandViewAsync(TDbContext _context = null, IDbContextTransaction _transaction = null)
+        {
+            var taskSource = new TaskCompletionSource<bool>();
+            taskSource.SetResult(true);
+            return taskSource.Task;
+        }
 
         /// <summary>
         /// Initializes the context.
@@ -286,6 +298,44 @@ namespace Swastika.Domain.Data.ViewModels
                 }
             }
         }
+        
+        /// <summary>
+        /// Initializes the view.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <param name="isLazyLoad">if set to <c>true</c> [is lazy load].</param>
+        /// <param name="_context">The context.</param>
+        /// <param name="_transaction">The transaction.</param>
+        /// <returns></returns>
+        public static async Task<TView> InitAsync(TModel model = null, bool isLazyLoad = true, TDbContext _context = null, IDbContextTransaction _transaction = null)
+        {
+            Type classType = typeof(TView);
+
+            ConstructorInfo classConstructor = classType.GetConstructor(new Type[] { });
+            if (model == null && classConstructor != null)
+            {
+                var view = (TView)classConstructor.Invoke(new object[] { });
+                await view.ParseViewAsync(true, _context, _transaction);
+                return view;
+            }
+            else
+            {
+                classConstructor = classType.GetConstructor(new Type[] { typeof(TModel), typeof(bool), typeof(TDbContext), typeof(IDbContextTransaction) });
+                if (classConstructor != null)
+                {
+                    var view = (TView)classConstructor.Invoke(new object[] { model, isLazyLoad, _context, _transaction });
+                    await view.ParseViewAsync(isLazyLoad, _context, _transaction);
+                    return view;
+                }
+                else
+                {
+                    classConstructor = classType.GetConstructor(new Type[] { typeof(TModel), typeof(TDbContext), typeof(IDbContextTransaction) });
+                    var view = (TView)classConstructor.Invoke(new object[] { model, _context, _transaction });
+                    await view.ParseViewAsync(isLazyLoad, _context, _transaction);
+                    return view;
+                }
+            }
+        }
 
         /// <summary>
         /// Parses the model.
@@ -331,6 +381,55 @@ namespace Swastika.Domain.Data.ViewModels
                 try
                 {
                     ExpandView(context, transaction);
+                }
+                catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
+                {
+                    Repository.LogErrorMessage(ex);
+                    if (isRoot)
+                    {
+                        //if current transaction is root transaction
+                        transaction.Rollback();
+                    }
+                }
+                finally
+                {
+                    if (isRoot)
+                    {
+                        //if current Context is Root
+                        context.Dispose();
+                    }
+                }
+            }
+            return (TView)this;
+        }
+        
+        /// <summary>
+        /// Parses the view.
+        /// </summary>
+        /// <param name="isExpand">if set to <c>true</c> [is expand].</param>
+        /// <param name="_context">The context.</param>
+        /// <param name="_transaction">The transaction.</param>
+        /// <returns></returns>
+        public virtual async Task<TView> ParseViewAsync(bool isExpand = true, TDbContext _context = null, IDbContextTransaction _transaction = null
+                                                    )
+        {
+            Mapper.Map<TModel, TView>(Model, (TView)this);
+            if (isExpand)
+            {
+                bool isRoot = _context == null;
+                var context = _context ?? InitContext();
+                var transaction = _transaction ?? context.Database.BeginTransaction();
+                try
+                {
+                     var expandResult = await ExpandViewAsync(context, transaction);
+                    if (expandResult)
+                    {
+                        return this as TView;
+                    }
+                    else
+                    {
+                        return null;
+                    }
                 }
                 catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
                 {
