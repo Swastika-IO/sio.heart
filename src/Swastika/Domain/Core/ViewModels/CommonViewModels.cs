@@ -180,7 +180,7 @@ namespace Swastika.Domain.Core.ViewModels
         /// The index of the page.
         /// </value>
         [JsonProperty("page")]
-        public int Page{ get { return PageIndex + 1; } }
+        public int Page { get { return PageIndex + 1; } }
 
         /// <summary>
         /// Gets or sets the size of the page.
@@ -270,12 +270,64 @@ namespace Swastika.Domain.Core.ViewModels
         [JsonProperty("data")]
         public TResult Data { get; set; }
     }
+    
+    /// <summary>
+    ///
+    /// </summary>
+    public class RequestObject
+    {
+        /// <summary>
+        /// Gets or sets the view type.
+        /// </summary>
+        /// <value>
+        /// The view Type.
+        /// </value>
+        [JsonProperty("viewType")]
+        public string ViewType { get; set; }
+        
+        /// <summary>
+        /// Gets or sets the key.
+        /// </summary>
+        /// <value>
+        /// The key.
+        /// </value>
+        [JsonProperty("key")]
+        public string Key { get; set; }
+
+        /// <summary>
+        /// Gets or sets the keyword.
+        /// </summary>
+        /// <value>
+        /// The keyword.
+        /// </value>
+        [JsonProperty("keyword")]
+        public string Keyword { get; set; }
+
+        /// <summary>
+        /// Gets or sets the status.
+        /// </summary>
+        /// <value>
+        /// The status.
+        /// </value>
+        [JsonProperty("status")]
+        public Common.Utility.Enums.SWStatus? Status { get; set; }
+
+    }
 
     /// <summary>
     ///
     /// </summary>
     public class RequestPaging
     {
+        /// <summary>
+        /// Gets or sets the view type.
+        /// </summary>
+        /// <value>
+        /// The view Type.
+        /// </value>
+        [JsonProperty("viewType")]
+        public string ViewType { get; set; }
+
         /// <summary>
         /// Gets or sets the country identifier.
         /// </summary>

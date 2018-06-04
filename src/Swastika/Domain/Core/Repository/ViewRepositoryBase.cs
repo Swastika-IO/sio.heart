@@ -204,7 +204,7 @@ namespace Swastika.Domain.Data.Repository
                 //}
                 if (result.IsSucceed)
                 {
-                    //var data = ParseView(view.Model, context, transaction);
+                    var data = ParseView(view.Model, context, transaction);
                     result.Data = view;
                     if (isRoot)
                     {
