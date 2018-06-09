@@ -214,6 +214,7 @@ namespace Swastika.Domain.Data.ViewModels
         [JsonIgnore]
         public List<string> Errors { get; set; } = new List<string>();
 
+        [JsonProperty("isValid")]
         public bool IsValid { get => isValid; set => isValid = value; }
 
         #endregion Properties
