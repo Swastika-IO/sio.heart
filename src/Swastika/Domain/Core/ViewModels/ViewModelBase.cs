@@ -145,24 +145,6 @@ namespace Swastika.Domain.Data.ViewModels
         }
 
         /// <summary>
-        /// Gets or sets the index of the page.
-        /// </summary>
-        /// <value>
-        /// The index of the page.
-        /// </value>
-        [JsonIgnore]
-        public int PageIndex { get; set; } = 0;
-
-        /// <summary>
-        /// Gets or sets the size of the page.
-        /// </summary>
-        /// <value>
-        /// The size of the page.
-        /// </value>
-        [JsonIgnore]
-        public int PageSize { get; set; } = 1000;
-
-        /// <summary>
         /// Gets or sets the priority.
         /// </summary>
         /// <value>

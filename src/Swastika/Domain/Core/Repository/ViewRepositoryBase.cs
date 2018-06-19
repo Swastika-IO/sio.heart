@@ -401,10 +401,13 @@ namespace Swastika.Domain.Data.Repository
         , TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
             bool isRoot = _context == null;
-            var context = _context ?? InitContext();
-            var transaction = _transaction ?? context.Database.BeginTransaction();
+            TDbContext context = null;
+            IDbContextTransaction transaction = null;
             try
             {
+                context = _context ?? InitContext();
+                transaction = _transaction ?? context.Database.BeginTransaction();
+
                 TModel model = context.Set<TModel>().SingleOrDefault(predicate);
                 if (model != null)
                 {
@@ -431,7 +434,7 @@ namespace Swastika.Domain.Data.Repository
                 if (isRoot)
                 {
                     //if current transaction is root transaction
-                    transaction.Rollback();
+                    transaction?.Rollback();
                 }
 
                 return new RepositoryResponse<TView>()
@@ -445,7 +448,7 @@ namespace Swastika.Domain.Data.Repository
                 if (isRoot)
                 {
                     //if current Context is Root
-                    context.Dispose();
+                    context?.Dispose();
                 }
             }
         }
@@ -527,7 +530,7 @@ namespace Swastika.Domain.Data.Repository
         }
 
         /// <summary>
-        /// Logs the error message.
+        /// Logs the error message.		User.Claims.ToList()	error CS0103: The name 'User' does not exist in the current context	
         /// </summary>
         /// <param name="ex">The ex.</param>
         public virtual void LogErrorMessage(Exception ex)

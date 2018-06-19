@@ -59,6 +59,7 @@
     <Compile Remove="Domain\Core\ViewModels\SWViewModelBase.cs" />
     <Compile Remove="UI\Core\CommonModels.cs" />
     <Compile Remove="UI\Core\Controllers\ApiHubController.cs" />
+    <Compile Remove="UI\Core\Controllers\BaseApiController.cs" />
     <Compile Remove="UI\Core\Helper.cs" />
   </ItemGroup>
 
