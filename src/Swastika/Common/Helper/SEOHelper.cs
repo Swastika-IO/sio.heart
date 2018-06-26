@@ -37,7 +37,7 @@ namespace Swastika.Common.Helper
         /// <returns></returns>
         public static string GetSEOString(string s)
         {
-            return WhiteSpaceToHyphen(ConvertToUnSign(DeleteSpecialCharaters(s)));
+            return !string.IsNullOrEmpty(s) ? WhiteSpaceToHyphen(ConvertToUnSign(DeleteSpecialCharaters(s))) : s;
         }
 
         // Chuyển tiếng việt có dấu thành không dấu
