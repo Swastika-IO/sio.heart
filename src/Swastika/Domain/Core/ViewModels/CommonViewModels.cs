@@ -189,7 +189,7 @@ namespace Swastika.Domain.Core.ViewModels
         /// The size of the page.
         /// </value>
         [JsonProperty("pageSize")]
-        public int PageSize { get; set; }
+        public int? PageSize { get; set; }
 
         /// <summary>
         /// Gets or sets the total items.
