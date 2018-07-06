@@ -35,7 +35,7 @@ namespace Swastika.Domain.Data.ViewModels
         /// <summary>
         /// Returns true if ... is valid.
         /// </summary>
-        [JsonIgnore]
+        
         private bool isValid = true;
 
         /// <summary>
@@ -196,6 +196,7 @@ namespace Swastika.Domain.Data.ViewModels
         [JsonIgnore]
         public List<string> Errors { get; set; } = new List<string>();
 
+        [JsonIgnore]
         [JsonProperty("isValid")]
         public bool IsValid { get => isValid; set => isValid = value; }
 
