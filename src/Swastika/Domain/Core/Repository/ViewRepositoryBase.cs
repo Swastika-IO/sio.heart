@@ -9,6 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage;
 using Swastika.Domain.Core.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -132,26 +134,10 @@ namespace Swastika.Domain.Data.Repository
             try
             {
                 context.Entry(view.Model).State = EntityState.Added;
-                context.SaveChanges();
-                if (result.IsSucceed)
-                {
-                    result.Data = view;
-                    if (isRoot)
-                    {
-                        transaction.Commit();
-                    }
+                result.IsSucceed = context.SaveChanges() > 0;
 
-                    return result;
-                }
-                else
-                {
-                    if (isRoot)
-                    {
-                        transaction.Rollback();
-                    }
-
-                    return result;
-                }
+                HandleTransaction(result.IsSucceed, isRoot, transaction);
+                return result;
             }
             catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
             {
@@ -192,7 +178,7 @@ namespace Swastika.Domain.Data.Repository
             try
             {
                 context.Entry(view.Model).State = EntityState.Added;
-                await context.SaveChangesAsync().ConfigureAwait(false);
+                result.IsSucceed = await context.SaveChangesAsync().ConfigureAwait(false) > 0;
                 //if (result.IsSucceed && isSaveSubModels)
                 //{
                 //    var saveResult = await view.SaveSubModelsAsync(view.Model, context, transaction);
@@ -202,27 +188,21 @@ namespace Swastika.Domain.Data.Repository
                 //    }
                 //    result.IsSucceed = saveResult.IsSucceed;
                 //}
-                if (result.IsSucceed)
+                HandleTransaction(result.IsSucceed, isRoot, transaction);
+                return result;
+            }
+            catch (ValidationException ex)
+            {
+                LogErrorMessage(ex);
+                result.IsSucceed = false;
+                result.Exception = ex;
+                if (isRoot)
                 {
-                    var data = ParseView(view.Model, context, transaction);
-                    result.Data = view;
-                    if (isRoot)
-                    {
-                        //if current transaction is root transaction
-                        transaction.Commit();
-                    }
+                    //if current transaction is root transaction
+                    transaction.Rollback();
+                }
 
-                    return result;
-                }
-                else
-                {
-                    if (isRoot)
-                    {
-                        //if current transaction is root transaction
-                        transaction.Rollback();
-                    }
-                    return result;
-                }
+                return result;
             }
             catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
             {
@@ -266,7 +246,7 @@ namespace Swastika.Domain.Data.Repository
             {
                 //context.Entry(view.Model).State = EntityState.Modified;
                 context.Set<TModel>().Update(view.Model);
-                context.SaveChanges();
+                result.IsSucceed = context.SaveChanges() > 0;
                 //if (result.IsSucceed && isSaveSubModels)
                 //{
                 //    var saveResult = view.SaveSubModels(view.Model, context, transaction);
@@ -276,25 +256,10 @@ namespace Swastika.Domain.Data.Repository
                 //    }
                 //    result.IsSucceed = saveResult.IsSucceed;
                 //}
-                if (result.IsSucceed)
-                {
-                    result.Data = view;
-                    if (isRoot)
-                    {
-                        //if current transaction is root transaction
-                        transaction.Commit();
-                    }
-                    return result;
-                }
-                else
-                {
-                    if (isRoot)
-                    {
-                        //if current transaction is root transaction
-                        transaction.Rollback();
-                    }
-                    return result;
-                }
+
+                HandleTransaction(result.IsSucceed, isRoot, transaction);
+                result.Data = view;
+                return result;
             }
             catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
             {
@@ -336,7 +301,7 @@ namespace Swastika.Domain.Data.Repository
             {
                 //context.Entry(view.Model).State = EntityState.Modified;
                 context.Set<TModel>().Update(view.Model);
-                await context.SaveChangesAsync().ConfigureAwait(false);
+                result.IsSucceed = await context.SaveChangesAsync().ConfigureAwait(false) > 0;
                 //if (result.IsSucceed && isSaveSubModels)
                 //{
                 //    var saveResult = await view.SaveSubModelsAsync(view.Model, context, transaction);
@@ -346,25 +311,10 @@ namespace Swastika.Domain.Data.Repository
                 //    }
                 //    result.IsSucceed = saveResult.IsSucceed;
                 //}
-                if (result.IsSucceed)
-                {
-                    result.Data = view;
-                    if (isRoot)
-                    {
-                        //if current transaction is root transaction
-                        transaction.Commit();
-                    }
-                    return result;
-                }
-                else
-                {
-                    if (isRoot)
-                    {
-                        //if current transaction is root transaction
-                        transaction.Rollback();
-                    }
-                    return result;
-                }
+
+                HandleTransaction(result.IsSucceed, isRoot, transaction);
+                result.Data = view;
+                return result;
             }
             catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
             {

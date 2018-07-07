@@ -35,7 +35,6 @@ namespace Swastika.Domain.Data.ViewModels
         /// <summary>
         /// Returns true if ... is valid.
         /// </summary>
-        
         private bool isValid = true;
 
         /// <summary>
@@ -519,21 +518,7 @@ namespace Swastika.Domain.Data.ViewModels
                                 result.Exception = cloneResult.Exception;
                             }
                         }
-
-                        if (result.IsSucceed)
-                        {
-                            if (isRoot)
-                            {
-                                transaction.Commit();
-                            }
-                        }
-                        else
-                        {
-                            if (isRoot)
-                            {
-                                transaction.Rollback();
-                            }
-                        }
+                        HandleTransaction(result.IsSucceed, isRoot, transaction);
                     }
                     return result;
                 }
@@ -557,8 +542,6 @@ namespace Swastika.Domain.Data.ViewModels
             }
         }
 
-#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
-
         /// <summary>
         /// Clones the sub models asynchronous.
         /// </summary>
@@ -568,11 +551,10 @@ namespace Swastika.Domain.Data.ViewModels
         /// <param name="_transaction">The transaction.</param>
         /// <returns></returns>
         public virtual async Task<RepositoryResponse<bool>> CloneSubModelsAsync(TView parent, List<SupportedCulture> cloneCultures, TDbContext _context = null, IDbContextTransaction _transaction = null)
-#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         {
             var taskSource = new TaskCompletionSource<RepositoryResponse<bool>>();
             taskSource.SetResult(new RepositoryResponse<bool>() { IsSucceed = true, Data = true });
-            return taskSource.Task.Result;
+            return await taskSource.Task;
         }
 
         /// <summary>
@@ -610,24 +592,8 @@ namespace Swastika.Domain.Data.ViewModels
                 {
                     result = await Repository.RemoveModelAsync(Model, context, transaction).ConfigureAwait(false);
                 }
-                if (result.IsSucceed)
-                {
-                    if (isRoot)
-                    {
-                        transaction.Commit();
-                    }
-
-                    return result;
-                }
-                else
-                {
-                    if (isRoot)
-                    {
-                        transaction.Rollback();
-                    }
-                    result.IsSucceed = false;
-                    return result;
-                }
+                HandleTransaction(result.IsSucceed, isRoot, transaction);
+                return result;
             }
             catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
             {
@@ -650,8 +616,6 @@ namespace Swastika.Domain.Data.ViewModels
             }
         }
 
-#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
-
         /// <summary>
         /// Removes the related models asynchronous.
         /// </summary>
@@ -660,11 +624,10 @@ namespace Swastika.Domain.Data.ViewModels
         /// <param name="_transaction">The transaction.</param>
         /// <returns></returns>
         public virtual async Task<RepositoryResponse<bool>> RemoveRelatedModelsAsync(TView view, TDbContext _context = null, IDbContextTransaction _transaction = null)
-#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         {
             var taskSource = new TaskCompletionSource<RepositoryResponse<bool>>();
             taskSource.SetResult(new RepositoryResponse<bool>() { IsSucceed = true });
-            return taskSource.Task.Result;
+            return await taskSource.Task;
         }
 
         /// <summary>
@@ -713,26 +676,8 @@ namespace Swastika.Domain.Data.ViewModels
                         result.IsSucceed = result.IsSucceed && cloneResult.IsSucceed;
                     }
 
-                    //Commit context
-                    if (result.IsSucceed)
-                    {
-                        if (isRoot)
-                        {
-                            //if current transaction is root transaction
-                            transaction.Commit();
-                        }
-                        result.Data = this as TView;
-                        return result;
-                    }
-                    else
-                    {
-                        if (isRoot)
-                        {
-                            //if current transaction is root transaction
-                            transaction.Rollback();
-                        }
-                        return result;
-                    }
+                    HandleTransaction(result.IsSucceed, isRoot, transaction);
+                    return result;
                 }
                 catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
                 {
@@ -766,9 +711,6 @@ namespace Swastika.Domain.Data.ViewModels
             }
         }
 
-#pragma warning disable CS1998 // Override optional
-#pragma warning disable CS1998 // Override optional
-
         /// <summary>
         /// Saves the sub models asynchronous.
         /// </summary>
@@ -777,14 +719,11 @@ namespace Swastika.Domain.Data.ViewModels
         /// <param name="_transaction">The transaction.</param>
         /// <returns></returns>
         public virtual async Task<RepositoryResponse<bool>> SaveSubModelsAsync(TModel parent, TDbContext _context = null, IDbContextTransaction _transaction = null)
-#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         {
             var taskSource = new TaskCompletionSource<RepositoryResponse<bool>>();
             taskSource.SetResult(new RepositoryResponse<bool>() { IsSucceed = true });
-            return taskSource.Task.Result;
+            return await taskSource.Task;
         }
-
-#pragma warning disable CS1998 // Override optional
 
         #endregion Async
 
@@ -852,22 +791,8 @@ namespace Swastika.Domain.Data.ViewModels
                                 result.Exception = cloneResult.Exception;
                             }
                         }
-
-                        if (result.IsSucceed)
-                        {
-                            if (isRoot)
-                            {
-                                transaction.Commit();
-                            }
-                        }
-                        else
-                        {
-                            if (isRoot)
-                            {
-                                transaction.Rollback();
-                            }
-                        }
                     }
+                    HandleTransaction(result.IsSucceed, isRoot, transaction);
                     return result;
                 }
                 else
@@ -938,24 +863,8 @@ namespace Swastika.Domain.Data.ViewModels
                     result = Repository.RemoveModel(Model, context, transaction);
                 }
 
-                if (result.IsSucceed)
-                {
-                    if (isRoot)
-                    {
-                        transaction.Commit();
-                    }
-
-                    return result;
-                }
-                else
-                {
-                    if (isRoot)
-                    {
-                        transaction.Rollback();
-                    }
-                    result.IsSucceed = false;
-                    return result;
-                }
+                HandleTransaction(result.IsSucceed, isRoot, transaction);
+                return result;
             }
             catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
             {
@@ -1036,26 +945,8 @@ namespace Swastika.Domain.Data.ViewModels
                         result.IsSucceed = result.IsSucceed && cloneResult.IsSucceed;
                     }
 
-                    //Commit context
-                    if (result.IsSucceed)
-                    {
-                        if (isRoot)
-                        {
-                            //if current transaction is root transaction
-                            transaction.Commit();
-                        }
-                        result.Data = this as TView;
-                        return result;
-                    }
-                    else
-                    {
-                        if (isRoot)
-                        {
-                            //if current transaction is root transaction
-                            transaction.Rollback();
-                        }
-                        return result;
-                    }
+                    HandleTransaction(result.IsSucceed, isRoot, transaction);
+                    return result;
                 }
                 catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
                 {
@@ -1141,5 +1032,25 @@ namespace Swastika.Domain.Data.ViewModels
         }
 
         #endregion Contructor
+
+        private void HandleTransaction(bool isSucceed, bool isRoot, IDbContextTransaction transaction)
+        {
+            if (isSucceed)
+            {   
+                if (isRoot)
+                {
+                    //if current transaction is root transaction
+                    transaction.Commit();
+                }
+            }
+            else
+            {
+                if (isRoot)
+                {
+                    //if current transaction is root transaction
+                    transaction.Rollback();
+                }
+            }
+        }
     }
 }
