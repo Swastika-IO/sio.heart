@@ -546,11 +546,11 @@ namespace Swastika.Domain.Data.ViewModels
         /// <param name="_context">The context.</param>
         /// <param name="_transaction">The transaction.</param>
         /// <returns></returns>
-        public virtual async Task<RepositoryResponse<bool>> RemoveModelAsync(bool isRemoveRelatedModels = false, TDbContext _context = null, IDbContextTransaction _transaction = null)
+        public virtual async Task<RepositoryResponse<TModel>> RemoveModelAsync(bool isRemoveRelatedModels = false, TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
             UnitOfWorkHelper<TDbContext>.InitUnitOfWork(_context, _transaction, out TDbContext context, out IDbContextTransaction transaction, out bool isRoot);
 
-            RepositoryResponse<bool> result = new RepositoryResponse<bool>() { IsSucceed = true };
+            RepositoryResponse<TModel> result = new RepositoryResponse<TModel>() { IsSucceed = true };
             try
             {
                 ParseModel(_context, _transaction);
@@ -811,10 +811,10 @@ namespace Swastika.Domain.Data.ViewModels
         /// <param name="_context">The context.</param>
         /// <param name="_transaction">The transaction.</param>
         /// <returns></returns>
-        public virtual RepositoryResponse<bool> RemoveModel(bool isRemoveRelatedModels = false, TDbContext _context = null, IDbContextTransaction _transaction = null)
+        public virtual RepositoryResponse<TModel> RemoveModel(bool isRemoveRelatedModels = false, TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
             UnitOfWorkHelper<TDbContext>.InitUnitOfWork(_context, _transaction, out TDbContext context, out IDbContextTransaction transaction, out bool isRoot);
-            RepositoryResponse<bool> result = new RepositoryResponse<bool>() { IsSucceed = true };
+            RepositoryResponse<TModel> result = new RepositoryResponse<TModel>() { IsSucceed = true };
             try
             {
                 ParseModel(_context, _transaction);
