@@ -6,6 +6,7 @@ using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using Newtonsoft.Json;
+using Swastika.Common.Helper;
 using Swastika.Domain.Core.Models;
 using Swastika.Domain.Core.ViewModels;
 using Swastika.Domain.Data.Repository;
@@ -225,19 +226,6 @@ namespace Swastika.Domain.Data.ViewModels
         }
 
         /// <summary>
-        /// Initializes the context.
-        /// </summary>
-        /// <returns></returns>
-        public virtual TDbContext InitContext()
-        {
-            Type classType = typeof(TDbContext);
-            ConstructorInfo classConstructor = classType.GetConstructor(new Type[] { });
-            TDbContext context = (TDbContext)classConstructor.Invoke(new object[] { });
-
-            return context;
-        }
-
-        /// <summary>
         /// Initializes the model.
         /// </summary>
         /// <returns></returns>
@@ -358,7 +346,7 @@ namespace Swastika.Domain.Data.ViewModels
             Mapper.Map<TModel, TView>(Model, (TView)this);
             if (isExpand)
             {
-                InitUnitOfWork(_context, _transaction, out TDbContext context, out IDbContextTransaction transaction, out bool isRoot);
+                UnitOfWorkHelper<TDbContext>.InitUnitOfWork(_context, _transaction, out TDbContext context, out IDbContextTransaction transaction, out bool isRoot);
                 try
                 {
                     ExpandView(context, transaction);
@@ -397,7 +385,7 @@ namespace Swastika.Domain.Data.ViewModels
             Mapper.Map<TModel, TView>(Model, (TView)this);
             if (isExpand)
             {
-                InitUnitOfWork(_context, _transaction, out TDbContext context, out IDbContextTransaction transaction, out bool isRoot);
+                UnitOfWorkHelper<TDbContext>.InitUnitOfWork(_context, _transaction, out TDbContext context, out IDbContextTransaction transaction, out bool isRoot);
                 try
                 {
                      var expandResult = await ExpandViewAsync(context, transaction);
@@ -463,7 +451,7 @@ namespace Swastika.Domain.Data.ViewModels
         public virtual async Task<RepositoryResponse<List<TView>>> CloneAsync(TModel model, List<SupportedCulture> cloneCultures
             , TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
-            InitUnitOfWork(_context, _transaction, out TDbContext context, out IDbContextTransaction transaction, out bool isRoot);
+            UnitOfWorkHelper<TDbContext>.InitUnitOfWork(_context, _transaction, out TDbContext context, out IDbContextTransaction transaction, out bool isRoot);
             RepositoryResponse<List<TView>> result = new RepositoryResponse<List<TView>>()
             {
                 IsSucceed = true,
@@ -512,7 +500,7 @@ namespace Swastika.Domain.Data.ViewModels
                                 result.Exception = cloneResult.Exception;
                             }
                         }
-                        HandleTransaction(result.IsSucceed, isRoot, transaction);
+                        UnitOfWorkHelper<TDbContext>.HandleTransaction(result.IsSucceed, isRoot, transaction);
                     }
                     return result;
                 }
@@ -560,7 +548,7 @@ namespace Swastika.Domain.Data.ViewModels
         /// <returns></returns>
         public virtual async Task<RepositoryResponse<bool>> RemoveModelAsync(bool isRemoveRelatedModels = false, TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
-            InitUnitOfWork(_context, _transaction, out TDbContext context, out IDbContextTransaction transaction, out bool isRoot);
+            UnitOfWorkHelper<TDbContext>.InitUnitOfWork(_context, _transaction, out TDbContext context, out IDbContextTransaction transaction, out bool isRoot);
 
             RepositoryResponse<bool> result = new RepositoryResponse<bool>() { IsSucceed = true };
             try
@@ -584,7 +572,7 @@ namespace Swastika.Domain.Data.ViewModels
                 {
                     result = await Repository.RemoveModelAsync(Model, context, transaction).ConfigureAwait(false);
                 }
-                HandleTransaction(result.IsSucceed, isRoot, transaction);
+                UnitOfWorkHelper<TDbContext>.HandleTransaction(result.IsSucceed, isRoot, transaction);
                 return result;
             }
             catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
@@ -631,7 +619,7 @@ namespace Swastika.Domain.Data.ViewModels
         /// <returns></returns>
         public virtual async Task<RepositoryResponse<TView>> SaveModelAsync(bool isSaveSubModels = false, TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
-            InitUnitOfWork(_context, _transaction, out TDbContext context, out IDbContextTransaction transaction, out bool isRoot);
+            UnitOfWorkHelper<TDbContext>.InitUnitOfWork(_context, _transaction, out TDbContext context, out IDbContextTransaction transaction, out bool isRoot);
             RepositoryResponse<TView> result = new RepositoryResponse<TView>() { IsSucceed = true };
             Validate();
             if (IsValid)
@@ -666,7 +654,7 @@ namespace Swastika.Domain.Data.ViewModels
                         result.IsSucceed = result.IsSucceed && cloneResult.IsSucceed;
                     }
 
-                    HandleTransaction(result.IsSucceed, isRoot, transaction);
+                    UnitOfWorkHelper<TDbContext>.HandleTransaction(result.IsSucceed, isRoot, transaction);
                     return result;
                 }
                 catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
@@ -729,7 +717,7 @@ namespace Swastika.Domain.Data.ViewModels
         /// <returns></returns>
         public virtual RepositoryResponse<List<TView>> Clone(TModel model, List<SupportedCulture> cloneCultures, TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
-            InitUnitOfWork(_context, _transaction, out TDbContext context, out IDbContextTransaction transaction, out bool isRoot);
+            UnitOfWorkHelper<TDbContext>.InitUnitOfWork(_context, _transaction, out TDbContext context, out IDbContextTransaction transaction, out bool isRoot);
 
             RepositoryResponse<List<TView>> result = new RepositoryResponse<List<TView>>()
             {
@@ -780,7 +768,7 @@ namespace Swastika.Domain.Data.ViewModels
                             }
                         }
                     }
-                    HandleTransaction(result.IsSucceed, isRoot, transaction);
+                    UnitOfWorkHelper<TDbContext>.HandleTransaction(result.IsSucceed, isRoot, transaction);
                     return result;
                 }
                 else
@@ -825,7 +813,7 @@ namespace Swastika.Domain.Data.ViewModels
         /// <returns></returns>
         public virtual RepositoryResponse<bool> RemoveModel(bool isRemoveRelatedModels = false, TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
-            InitUnitOfWork(_context, _transaction, out TDbContext context, out IDbContextTransaction transaction, out bool isRoot);
+            UnitOfWorkHelper<TDbContext>.InitUnitOfWork(_context, _transaction, out TDbContext context, out IDbContextTransaction transaction, out bool isRoot);
             RepositoryResponse<bool> result = new RepositoryResponse<bool>() { IsSucceed = true };
             try
             {
@@ -849,7 +837,7 @@ namespace Swastika.Domain.Data.ViewModels
                     result = Repository.RemoveModel(Model, context, transaction);
                 }
 
-                HandleTransaction(result.IsSucceed, isRoot, transaction);
+                UnitOfWorkHelper<TDbContext>.HandleTransaction(result.IsSucceed, isRoot, transaction);
                 return result;
             }
             catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
@@ -894,7 +882,7 @@ namespace Swastika.Domain.Data.ViewModels
         /// <returns></returns>
         public virtual RepositoryResponse<TView> SaveModel(bool isSaveSubModels = false, TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
-            InitUnitOfWork(_context, _transaction, out TDbContext context, out IDbContextTransaction transaction, out bool isRoot);
+            UnitOfWorkHelper<TDbContext>.InitUnitOfWork(_context, _transaction, out TDbContext context, out IDbContextTransaction transaction, out bool isRoot);
             RepositoryResponse<TView> result = new RepositoryResponse<TView>() { IsSucceed = true };
             Validate();
             if (IsValid)
@@ -929,7 +917,7 @@ namespace Swastika.Domain.Data.ViewModels
                         result.IsSucceed = result.IsSucceed && cloneResult.IsSucceed;
                     }
 
-                    HandleTransaction(result.IsSucceed, isRoot, transaction);
+                    UnitOfWorkHelper<TDbContext>.HandleTransaction(result.IsSucceed, isRoot, transaction);
                     return result;
                 }
                 catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
@@ -1017,31 +1005,6 @@ namespace Swastika.Domain.Data.ViewModels
 
         #endregion Contructor
 
-        private void HandleTransaction(bool isSucceed, bool isRoot, IDbContextTransaction transaction)
-        {
-            if (isSucceed)
-            {   
-                if (isRoot)
-                {
-                    //if current transaction is root transaction
-                    transaction.Commit();
-                }
-            }
-            else
-            {
-                if (isRoot)
-                {
-                    //if current transaction is root transaction
-                    transaction.Rollback();
-                }
-            }
-        }
-
-        private void InitUnitOfWork(TDbContext _context, IDbContextTransaction _transaction, out TDbContext context, out IDbContextTransaction transaction, out bool isRoot)
-        {
-            isRoot = _context == null;
-            context = _context ?? InitContext();
-            transaction = _transaction ?? context.Database.BeginTransaction();
-        }
+        
     }
 }

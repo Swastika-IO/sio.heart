@@ -6,6 +6,7 @@ using AutoMapper;
 using Microsoft.Data.OData.Query;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
+using Swastika.Common.Helper;
 using Swastika.Domain.Core.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -46,7 +47,7 @@ namespace Swastika.Domain.Data.Repository
         /// <returns></returns>
         public virtual bool CheckIsExists(TModel entity, TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
-            InitUnitOfWork(_context, _transaction, out TDbContext context, out IDbContextTransaction transaction, out bool isRoot);
+            UnitOfWorkHelper<TDbContext>.InitUnitOfWork(_context, _transaction, out TDbContext context, out IDbContextTransaction transaction, out bool isRoot);
             try
             {
                 //For the former case use:
@@ -84,7 +85,7 @@ namespace Swastika.Domain.Data.Repository
         /// <returns></returns>
         public bool CheckIsExists(System.Func<TModel, bool> predicate, TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
-            InitUnitOfWork(_context, _transaction, out TDbContext context, out IDbContextTransaction transaction, out bool isRoot);
+            UnitOfWorkHelper<TDbContext>.InitUnitOfWork(_context, _transaction, out TDbContext context, out IDbContextTransaction transaction, out bool isRoot);
             try
             {
                 //For the former case use:
@@ -132,7 +133,7 @@ namespace Swastika.Domain.Data.Repository
                 context.Entry(view.Model).State = EntityState.Added;
                 result.IsSucceed = context.SaveChanges() > 0;
 
-                HandleTransaction(result.IsSucceed, isRoot, transaction);
+                UnitOfWorkHelper<TDbContext>.HandleTransaction(result.IsSucceed, isRoot, transaction);
                 return result;
             }
             catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
@@ -167,7 +168,7 @@ namespace Swastika.Domain.Data.Repository
         public virtual async Task<RepositoryResponse<TView>> CreateModelAsync(TView view
         , TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
-            InitUnitOfWork(_context, _transaction, out TDbContext context, out IDbContextTransaction transaction, out bool isRoot);
+            UnitOfWorkHelper<TDbContext>.InitUnitOfWork(_context, _transaction, out TDbContext context, out IDbContextTransaction transaction, out bool isRoot);
             RepositoryResponse<TView> result = new RepositoryResponse<TView>() { IsSucceed = true };
             try
             {
@@ -182,7 +183,7 @@ namespace Swastika.Domain.Data.Repository
                 //    }
                 //    result.IsSucceed = saveResult.IsSucceed;
                 //}
-                HandleTransaction(result.IsSucceed, isRoot, transaction);
+                UnitOfWorkHelper<TDbContext>.HandleTransaction(result.IsSucceed, isRoot, transaction);
                 return result;
             }
             catch (ValidationException ex)
@@ -232,7 +233,7 @@ namespace Swastika.Domain.Data.Repository
         public virtual RepositoryResponse<TView> EditModel(TView view
         , TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
-            InitUnitOfWork(_context, _transaction, out TDbContext context, out IDbContextTransaction transaction, out bool isRoot);
+            UnitOfWorkHelper<TDbContext>.InitUnitOfWork(_context, _transaction, out TDbContext context, out IDbContextTransaction transaction, out bool isRoot);
             RepositoryResponse<TView> result = new RepositoryResponse<TView>() { IsSucceed = true };
             try
             {
@@ -249,7 +250,7 @@ namespace Swastika.Domain.Data.Repository
                 //    result.IsSucceed = saveResult.IsSucceed;
                 //}
 
-                HandleTransaction(result.IsSucceed, isRoot, transaction);
+                UnitOfWorkHelper<TDbContext>.HandleTransaction(result.IsSucceed, isRoot, transaction);
                 result.Data = view;
                 return result;
             }
@@ -285,7 +286,7 @@ namespace Swastika.Domain.Data.Repository
         /// <returns></returns>
         public virtual async Task<RepositoryResponse<TView>> EditModelAsync(TView view, TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
-            InitUnitOfWork(_context, _transaction, out TDbContext context, out IDbContextTransaction transaction, out bool isRoot);
+            UnitOfWorkHelper<TDbContext>.InitUnitOfWork(_context, _transaction, out TDbContext context, out IDbContextTransaction transaction, out bool isRoot);
             RepositoryResponse<TView> result = new RepositoryResponse<TView>() { IsSucceed = true };
             try
             {
@@ -302,7 +303,7 @@ namespace Swastika.Domain.Data.Repository
                 //    result.IsSucceed = saveResult.IsSucceed;
                 //}
 
-                HandleTransaction(result.IsSucceed, isRoot, transaction);
+                UnitOfWorkHelper<TDbContext>.HandleTransaction(result.IsSucceed, isRoot, transaction);
                 result.Data = view;
                 return result;
             }
@@ -340,7 +341,7 @@ namespace Swastika.Domain.Data.Repository
         Expression<Func<TModel, bool>> predicate
         , TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
-            InitUnitOfWork(_context, _transaction, out TDbContext context, out IDbContextTransaction transaction, out bool isRoot);
+            UnitOfWorkHelper<TDbContext>.InitUnitOfWork(_context, _transaction, out TDbContext context, out IDbContextTransaction transaction, out bool isRoot);
             try
             {
                 context = _context ?? InitContext();
@@ -402,7 +403,7 @@ namespace Swastika.Domain.Data.Repository
         Expression<Func<TModel, bool>> predicate
         , TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
-            InitUnitOfWork(_context, _transaction, out TDbContext context, out IDbContextTransaction transaction, out bool isRoot);
+            UnitOfWorkHelper<TDbContext>.InitUnitOfWork(_context, _transaction, out TDbContext context, out IDbContextTransaction transaction, out bool isRoot);
             try
             {
                 TModel model = await context.Set<TModel>().SingleOrDefaultAsync(predicate).ConfigureAwait(false);
@@ -1130,7 +1131,7 @@ namespace Swastika.Domain.Data.Repository
         public virtual RepositoryResponse<bool> RemoveListModel(Expression<Func<TModel, bool>> predicate
         , TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
-            InitUnitOfWork(_context, _transaction, out TDbContext context, out IDbContextTransaction transaction, out bool isRoot);
+            UnitOfWorkHelper<TDbContext>.InitUnitOfWork(_context, _transaction, out TDbContext context, out IDbContextTransaction transaction, out bool isRoot);
             try
             {
                 var Items = context.Set<TModel>().Where(predicate).ToList();
@@ -1150,7 +1151,7 @@ namespace Swastika.Domain.Data.Repository
                         }
                     }
 
-                    HandleTransaction(result, isRoot, transaction);
+                    UnitOfWorkHelper<TDbContext>.HandleTransaction(result, isRoot, transaction);
 
                     return new RepositoryResponse<bool>()
                     {
@@ -1204,7 +1205,7 @@ namespace Swastika.Domain.Data.Repository
         public virtual async Task<RepositoryResponse<bool>> RemoveListModelAsync(Expression<Func<TModel, bool>> predicate
         , TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
-            InitUnitOfWork(_context, _transaction, out TDbContext context, out IDbContextTransaction transaction, out bool isRoot);
+            UnitOfWorkHelper<TDbContext>.InitUnitOfWork(_context, _transaction, out TDbContext context, out IDbContextTransaction transaction, out bool isRoot);
             try
             {
                 var Items = await context.Set<TModel>().Where(predicate).ToListAsync().ConfigureAwait(false);
@@ -1224,7 +1225,7 @@ namespace Swastika.Domain.Data.Repository
                         }
                     }
 
-                    HandleTransaction(result, isRoot, transaction);
+                    UnitOfWorkHelper<TDbContext>.HandleTransaction(result, isRoot, transaction);
 
                     return new RepositoryResponse<bool>()
                     {
@@ -1277,7 +1278,7 @@ namespace Swastika.Domain.Data.Repository
         /// <returns></returns>
         public virtual RepositoryResponse<bool> RemoveModel(Expression<Func<TModel, bool>> predicate, TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
-            InitUnitOfWork(_context, _transaction, out TDbContext context, out IDbContextTransaction transaction, out bool isRoot);
+            UnitOfWorkHelper<TDbContext>.InitUnitOfWork(_context, _transaction, out TDbContext context, out IDbContextTransaction transaction, out bool isRoot);
             try
             {
                 TModel model = context.Set<TModel>().FirstOrDefault(predicate);
@@ -1288,7 +1289,7 @@ namespace Swastika.Domain.Data.Repository
                     result = context.SaveChanges() > 0;
                 }
 
-                HandleTransaction(result, isRoot, transaction);
+                UnitOfWorkHelper<TDbContext>.HandleTransaction(result, isRoot, transaction);
 
                 return new RepositoryResponse<bool>()
                 {
@@ -1332,7 +1333,7 @@ namespace Swastika.Domain.Data.Repository
         /// <returns></returns>
         public virtual RepositoryResponse<bool> RemoveModel(TModel model, TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
-            InitUnitOfWork(_context, _transaction, out TDbContext context, out IDbContextTransaction transaction, out bool isRoot);
+            UnitOfWorkHelper<TDbContext>.InitUnitOfWork(_context, _transaction, out TDbContext context, out IDbContextTransaction transaction, out bool isRoot);
             try
             {
                 bool result = true;
@@ -1342,7 +1343,7 @@ namespace Swastika.Domain.Data.Repository
                     result = context.SaveChanges() > 0;
                 }
 
-                HandleTransaction(result, isRoot, transaction);
+                UnitOfWorkHelper<TDbContext>.HandleTransaction(result, isRoot, transaction);
 
                 return new RepositoryResponse<bool>()
                 {
@@ -1386,7 +1387,7 @@ namespace Swastika.Domain.Data.Repository
         /// <returns></returns>
         public virtual async Task<RepositoryResponse<bool>> RemoveModelAsync(Expression<Func<TModel, bool>> predicate, TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
-            InitUnitOfWork(_context, _transaction, out TDbContext context, out IDbContextTransaction transaction, out bool isRoot);
+            UnitOfWorkHelper<TDbContext>.InitUnitOfWork(_context, _transaction, out TDbContext context, out IDbContextTransaction transaction, out bool isRoot);
             try
             {
                 TModel model = await context.Set<TModel>().FirstOrDefaultAsync(predicate).ConfigureAwait(false);
@@ -1397,7 +1398,7 @@ namespace Swastika.Domain.Data.Repository
                     result = await context.SaveChangesAsync().ConfigureAwait(false) > 0;
                 }
 
-                HandleTransaction(result, isRoot, transaction);
+                UnitOfWorkHelper<TDbContext>.HandleTransaction(result, isRoot, transaction);
 
                 return new RepositoryResponse<bool>()
                 {
@@ -1441,7 +1442,7 @@ namespace Swastika.Domain.Data.Repository
         /// <returns></returns>
         public virtual async Task<RepositoryResponse<bool>> RemoveModelAsync(TModel model, TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
-            InitUnitOfWork(_context, _transaction, out TDbContext context, out IDbContextTransaction transaction, out bool isRoot);
+            UnitOfWorkHelper<TDbContext>.InitUnitOfWork(_context, _transaction, out TDbContext context, out IDbContextTransaction transaction, out bool isRoot);
             try
             {
                 bool result = true;
@@ -1451,7 +1452,7 @@ namespace Swastika.Domain.Data.Repository
                     result = await context.SaveChangesAsync().ConfigureAwait(false) > 0;
                 }
 
-                HandleTransaction(result, isRoot, transaction);
+                UnitOfWorkHelper<TDbContext>.HandleTransaction(result, isRoot, transaction);
 
                 return new RepositoryResponse<bool>()
                 {
@@ -1552,7 +1553,7 @@ namespace Swastika.Domain.Data.Repository
         public virtual RepositoryResponse<int> Max(Expression<Func<TModel, int>> predicate
         , TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
-            InitUnitOfWork(_context, _transaction, out TDbContext context, out IDbContextTransaction transaction, out bool isRoot);
+            UnitOfWorkHelper<TDbContext>.InitUnitOfWork(_context, _transaction, out TDbContext context, out IDbContextTransaction transaction, out bool isRoot);
             int total = 0;
             try
             {
@@ -1599,7 +1600,7 @@ namespace Swastika.Domain.Data.Repository
         public virtual async Task<RepositoryResponse<int>> MaxAsync(Expression<Func<TModel, int>> predicate
         , TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
-            InitUnitOfWork(_context, _transaction, out TDbContext context, out IDbContextTransaction transaction, out bool isRoot);
+            UnitOfWorkHelper<TDbContext>.InitUnitOfWork(_context, _transaction, out TDbContext context, out IDbContextTransaction transaction, out bool isRoot);
             int total = 0;
             try
             {
@@ -1650,7 +1651,7 @@ namespace Swastika.Domain.Data.Repository
         public virtual RepositoryResponse<int> Count(Expression<Func<TModel, bool>> predicate
         , TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
-            InitUnitOfWork(_context, _transaction, out TDbContext context, out IDbContextTransaction transaction, out bool isRoot);
+            UnitOfWorkHelper<TDbContext>.InitUnitOfWork(_context, _transaction, out TDbContext context, out IDbContextTransaction transaction, out bool isRoot);
             int total = 0;
             try
             {
@@ -1697,7 +1698,7 @@ namespace Swastika.Domain.Data.Repository
         public virtual async Task<RepositoryResponse<int>> CountAsync(Expression<Func<TModel, bool>> predicate
         , TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
-            InitUnitOfWork(_context, _transaction, out TDbContext context, out IDbContextTransaction transaction, out bool isRoot);
+            UnitOfWorkHelper<TDbContext>.InitUnitOfWork(_context, _transaction, out TDbContext context, out IDbContextTransaction transaction, out bool isRoot);
             int total = 0;
             try
             {
@@ -1746,7 +1747,7 @@ namespace Swastika.Domain.Data.Repository
         /// <returns></returns>
         public virtual RepositoryResponse<int> Count(TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
-            InitUnitOfWork(_context, _transaction, out TDbContext context, out IDbContextTransaction transaction, out bool isRoot);
+            UnitOfWorkHelper<TDbContext>.InitUnitOfWork(_context, _transaction, out TDbContext context, out IDbContextTransaction transaction, out bool isRoot);
             int total = 0;
             try
             {
@@ -1791,7 +1792,7 @@ namespace Swastika.Domain.Data.Repository
         /// <returns></returns>
         public virtual async Task<RepositoryResponse<int>> CountAsync(TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
-            InitUnitOfWork(_context, _transaction, out TDbContext context, out IDbContextTransaction transaction, out bool isRoot);
+            UnitOfWorkHelper<TDbContext>.InitUnitOfWork(_context, _transaction, out TDbContext context, out IDbContextTransaction transaction, out bool isRoot);
             int total = 0;
             try
             {
@@ -1844,7 +1845,7 @@ namespace Swastika.Domain.Data.Repository
         , List<EntityField> fields
         , TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
-            InitUnitOfWork(_context, _transaction, out TDbContext context, out IDbContextTransaction transaction, out bool isRoot);
+            UnitOfWorkHelper<TDbContext>.InitUnitOfWork(_context, _transaction, out TDbContext context, out IDbContextTransaction transaction, out bool isRoot);
             try
             {
                 bool result = false;
@@ -1881,7 +1882,7 @@ namespace Swastika.Domain.Data.Repository
                     }
                 }
 
-                HandleTransaction(result, isRoot, transaction);
+                UnitOfWorkHelper<TDbContext>.HandleTransaction(result, isRoot, transaction);
 
                 return new RepositoryResponse<bool>()
                 {
@@ -1927,7 +1928,7 @@ namespace Swastika.Domain.Data.Repository
         , List<EntityField> fields
         , TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
-            InitUnitOfWork(_context, _transaction, out TDbContext context, out IDbContextTransaction transaction, out bool isRoot);
+            UnitOfWorkHelper<TDbContext>.InitUnitOfWork(_context, _transaction, out TDbContext context, out IDbContextTransaction transaction, out bool isRoot);
             try
             {
                 bool result = false;
@@ -1964,7 +1965,7 @@ namespace Swastika.Domain.Data.Repository
                     }
                 }
 
-                HandleTransaction(result, isRoot, transaction);
+                UnitOfWorkHelper<TDbContext>.HandleTransaction(result, isRoot, transaction);
 
                 return new RepositoryResponse<bool>()
                 {
@@ -2000,33 +2001,7 @@ namespace Swastika.Domain.Data.Repository
 
         #endregion Update Fields
 
-        private void HandleTransaction(bool isSucceed, bool isRoot, IDbContextTransaction transaction)
-        {
-            if (isSucceed)
-            {
-                if (isRoot)
-                {
-                    //if current transaction is root transaction
-                    transaction.Commit();
-                }
-            }
-            else
-            {
-                if (isRoot)
-                {
-                    //if current transaction is root transaction
-                    transaction.Rollback();
-                }
-            }
-        }
-
-        private void InitUnitOfWork(TDbContext _context, IDbContextTransaction _transaction, out TDbContext context, out IDbContextTransaction transaction, out bool isRoot)
-        {
-            isRoot = _context == null;
-            context = _context ?? InitContext();
-            transaction = _transaction ?? context.Database.BeginTransaction();
-        }
-
+       
         /// <summary>
         /// Gets the lambda.
         /// </summary>
