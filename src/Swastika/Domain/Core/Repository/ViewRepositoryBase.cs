@@ -46,9 +46,7 @@ namespace Swastika.Domain.Data.Repository
         /// <returns></returns>
         public virtual bool CheckIsExists(TModel entity, TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
-            bool isRoot = _context == null;
-            TDbContext context = _context ?? InitContext();
-            var transaction = _transaction ?? context.Database.BeginTransaction();
+            InitUnitOfWork(_context, _transaction, out TDbContext context, out IDbContextTransaction transaction, out bool isRoot);
             try
             {
                 //For the former case use:
@@ -86,9 +84,7 @@ namespace Swastika.Domain.Data.Repository
         /// <returns></returns>
         public bool CheckIsExists(System.Func<TModel, bool> predicate, TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
-            bool isRoot = _context == null;
-            TDbContext context = _context ?? InitContext();
-            var transaction = _transaction ?? context.Database.BeginTransaction();
+            InitUnitOfWork(_context, _transaction, out TDbContext context, out IDbContextTransaction transaction, out bool isRoot);
             try
             {
                 //For the former case use:
@@ -171,9 +167,7 @@ namespace Swastika.Domain.Data.Repository
         public virtual async Task<RepositoryResponse<TView>> CreateModelAsync(TView view
         , TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
-            bool isRoot = _context == null;
-            TDbContext context = _context ?? InitContext();
-            var transaction = _transaction ?? context.Database.BeginTransaction();
+            InitUnitOfWork(_context, _transaction, out TDbContext context, out IDbContextTransaction transaction, out bool isRoot);
             RepositoryResponse<TView> result = new RepositoryResponse<TView>() { IsSucceed = true };
             try
             {
@@ -238,9 +232,7 @@ namespace Swastika.Domain.Data.Repository
         public virtual RepositoryResponse<TView> EditModel(TView view
         , TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
-            bool isRoot = _context == null;
-            TDbContext context = _context ?? InitContext();
-            var transaction = _transaction ?? context.Database.BeginTransaction();
+            InitUnitOfWork(_context, _transaction, out TDbContext context, out IDbContextTransaction transaction, out bool isRoot);
             RepositoryResponse<TView> result = new RepositoryResponse<TView>() { IsSucceed = true };
             try
             {
@@ -293,9 +285,7 @@ namespace Swastika.Domain.Data.Repository
         /// <returns></returns>
         public virtual async Task<RepositoryResponse<TView>> EditModelAsync(TView view, TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
-            bool isRoot = _context == null;
-            var context = _context ?? InitContext();
-            var transaction = _transaction ?? context.Database.BeginTransaction();
+            InitUnitOfWork(_context, _transaction, out TDbContext context, out IDbContextTransaction transaction, out bool isRoot);
             RepositoryResponse<TView> result = new RepositoryResponse<TView>() { IsSucceed = true };
             try
             {
@@ -350,9 +340,7 @@ namespace Swastika.Domain.Data.Repository
         Expression<Func<TModel, bool>> predicate
         , TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
-            bool isRoot = _context == null;
-            TDbContext context = null;
-            IDbContextTransaction transaction = null;
+            InitUnitOfWork(_context, _transaction, out TDbContext context, out IDbContextTransaction transaction, out bool isRoot);
             try
             {
                 context = _context ?? InitContext();
@@ -414,10 +402,7 @@ namespace Swastika.Domain.Data.Repository
         Expression<Func<TModel, bool>> predicate
         , TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
-            bool isRoot = _context == null;
-            var context = _context ?? InitContext();
-            var transaction = _transaction ?? context.Database.BeginTransaction();
-
+            InitUnitOfWork(_context, _transaction, out TDbContext context, out IDbContextTransaction transaction, out bool isRoot);
             try
             {
                 TModel model = await context.Set<TModel>().SingleOrDefaultAsync(predicate).ConfigureAwait(false);
@@ -1145,9 +1130,7 @@ namespace Swastika.Domain.Data.Repository
         public virtual RepositoryResponse<bool> RemoveListModel(Expression<Func<TModel, bool>> predicate
         , TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
-            bool isRoot = _context == null;
-            TDbContext context = _context ?? InitContext();
-            var transaction = _transaction ?? context.Database.BeginTransaction();
+            InitUnitOfWork(_context, _transaction, out TDbContext context, out IDbContextTransaction transaction, out bool isRoot);
             try
             {
                 var Items = context.Set<TModel>().Where(predicate).ToList();
@@ -1221,9 +1204,7 @@ namespace Swastika.Domain.Data.Repository
         public virtual async Task<RepositoryResponse<bool>> RemoveListModelAsync(Expression<Func<TModel, bool>> predicate
         , TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
-            bool isRoot = _context == null;
-            TDbContext context = _context ?? InitContext();
-            var transaction = _transaction ?? context.Database.BeginTransaction();
+            InitUnitOfWork(_context, _transaction, out TDbContext context, out IDbContextTransaction transaction, out bool isRoot);
             try
             {
                 var Items = await context.Set<TModel>().Where(predicate).ToListAsync().ConfigureAwait(false);
@@ -1296,9 +1277,7 @@ namespace Swastika.Domain.Data.Repository
         /// <returns></returns>
         public virtual RepositoryResponse<bool> RemoveModel(Expression<Func<TModel, bool>> predicate, TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
-            bool isRoot = _context == null;
-            TDbContext context = _context ?? InitContext();
-            var transaction = _transaction ?? context.Database.BeginTransaction();
+            InitUnitOfWork(_context, _transaction, out TDbContext context, out IDbContextTransaction transaction, out bool isRoot);
             try
             {
                 TModel model = context.Set<TModel>().FirstOrDefault(predicate);
@@ -1353,9 +1332,7 @@ namespace Swastika.Domain.Data.Repository
         /// <returns></returns>
         public virtual RepositoryResponse<bool> RemoveModel(TModel model, TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
-            bool isRoot = _context == null;
-            TDbContext context = _context ?? InitContext();
-            var transaction = _transaction ?? context.Database.BeginTransaction();
+            InitUnitOfWork(_context, _transaction, out TDbContext context, out IDbContextTransaction transaction, out bool isRoot);
             try
             {
                 bool result = true;
@@ -1409,9 +1386,7 @@ namespace Swastika.Domain.Data.Repository
         /// <returns></returns>
         public virtual async Task<RepositoryResponse<bool>> RemoveModelAsync(Expression<Func<TModel, bool>> predicate, TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
-            bool isRoot = _context == null;
-            TDbContext context = _context ?? InitContext();
-            var transaction = _transaction ?? context.Database.BeginTransaction();
+            InitUnitOfWork(_context, _transaction, out TDbContext context, out IDbContextTransaction transaction, out bool isRoot);
             try
             {
                 TModel model = await context.Set<TModel>().FirstOrDefaultAsync(predicate).ConfigureAwait(false);
@@ -1466,9 +1441,7 @@ namespace Swastika.Domain.Data.Repository
         /// <returns></returns>
         public virtual async Task<RepositoryResponse<bool>> RemoveModelAsync(TModel model, TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
-            bool isRoot = _context == null;
-            TDbContext context = _context ?? InitContext();
-            var transaction = _transaction ?? context.Database.BeginTransaction();
+            InitUnitOfWork(_context, _transaction, out TDbContext context, out IDbContextTransaction transaction, out bool isRoot);
             try
             {
                 bool result = true;
@@ -1579,9 +1552,7 @@ namespace Swastika.Domain.Data.Repository
         public virtual RepositoryResponse<int> Max(Expression<Func<TModel, int>> predicate
         , TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
-            bool isRoot = _context == null;
-            var context = _context ?? InitContext();
-            var transaction = _transaction ?? context.Database.BeginTransaction();
+            InitUnitOfWork(_context, _transaction, out TDbContext context, out IDbContextTransaction transaction, out bool isRoot);
             int total = 0;
             try
             {
@@ -1628,9 +1599,7 @@ namespace Swastika.Domain.Data.Repository
         public virtual async Task<RepositoryResponse<int>> MaxAsync(Expression<Func<TModel, int>> predicate
         , TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
-            bool isRoot = _context == null;
-            var context = _context ?? InitContext();
-            var transaction = _transaction ?? context.Database.BeginTransaction();
+            InitUnitOfWork(_context, _transaction, out TDbContext context, out IDbContextTransaction transaction, out bool isRoot);
             int total = 0;
             try
             {
@@ -1681,9 +1650,7 @@ namespace Swastika.Domain.Data.Repository
         public virtual RepositoryResponse<int> Count(Expression<Func<TModel, bool>> predicate
         , TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
-            bool isRoot = _context == null;
-            var context = _context ?? InitContext();
-            var transaction = _transaction ?? context.Database.BeginTransaction();
+            InitUnitOfWork(_context, _transaction, out TDbContext context, out IDbContextTransaction transaction, out bool isRoot);
             int total = 0;
             try
             {
@@ -1730,9 +1697,7 @@ namespace Swastika.Domain.Data.Repository
         public virtual async Task<RepositoryResponse<int>> CountAsync(Expression<Func<TModel, bool>> predicate
         , TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
-            bool isRoot = _context == null;
-            var context = _context ?? InitContext();
-            var transaction = _transaction ?? context.Database.BeginTransaction();
+            InitUnitOfWork(_context, _transaction, out TDbContext context, out IDbContextTransaction transaction, out bool isRoot);
             int total = 0;
             try
             {
@@ -1781,9 +1746,7 @@ namespace Swastika.Domain.Data.Repository
         /// <returns></returns>
         public virtual RepositoryResponse<int> Count(TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
-            bool isRoot = _context == null;
-            var context = _context ?? InitContext();
-            var transaction = _transaction ?? context.Database.BeginTransaction();
+            InitUnitOfWork(_context, _transaction, out TDbContext context, out IDbContextTransaction transaction, out bool isRoot);
             int total = 0;
             try
             {
@@ -1828,9 +1791,7 @@ namespace Swastika.Domain.Data.Repository
         /// <returns></returns>
         public virtual async Task<RepositoryResponse<int>> CountAsync(TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
-            bool isRoot = _context == null;
-            var context = _context ?? InitContext();
-            var transaction = _transaction ?? context.Database.BeginTransaction();
+            InitUnitOfWork(_context, _transaction, out TDbContext context, out IDbContextTransaction transaction, out bool isRoot);
             int total = 0;
             try
             {
@@ -1883,9 +1844,7 @@ namespace Swastika.Domain.Data.Repository
         , List<EntityField> fields
         , TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
-            bool isRoot = _context == null;
-            TDbContext context = _context ?? InitContext();
-            var transaction = _transaction ?? context.Database.BeginTransaction();
+            InitUnitOfWork(_context, _transaction, out TDbContext context, out IDbContextTransaction transaction, out bool isRoot);
             try
             {
                 bool result = false;
@@ -1968,9 +1927,7 @@ namespace Swastika.Domain.Data.Repository
         , List<EntityField> fields
         , TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
-            bool isRoot = _context == null;
-            TDbContext context = _context ?? InitContext();
-            var transaction = _transaction ?? context.Database.BeginTransaction();
+            InitUnitOfWork(_context, _transaction, out TDbContext context, out IDbContextTransaction transaction, out bool isRoot);
             try
             {
                 bool result = false;
@@ -2061,6 +2018,13 @@ namespace Swastika.Domain.Data.Repository
                     transaction.Rollback();
                 }
             }
+        }
+
+        private void InitUnitOfWork(TDbContext _context, IDbContextTransaction _transaction, out TDbContext context, out IDbContextTransaction transaction, out bool isRoot)
+        {
+            isRoot = _context == null;
+            context = _context ?? InitContext();
+            transaction = _transaction ?? context.Database.BeginTransaction();
         }
 
         /// <summary>
