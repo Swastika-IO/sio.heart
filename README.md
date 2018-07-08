@@ -7,6 +7,10 @@
 ## License
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FSwastika-IO%2FSwastika-IO-Heart.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2FSwastika-IO%2FSwastika-IO-Heart?ref=badge_large)
 
+## Reference
+https://github.com/Swastika-IO/Swastika-IO-Heart-Sample
+
+## Sample Code
 *Create Models*
 
 ```c#
@@ -151,6 +155,12 @@ namespace SimpleBlog.ViewModels
 ```c#
 var saveResult = await post.SaveModelAsync();
 ```
+*Get Single*
+```c#
+var getPosts = await PostViewModel.Repository.GetSingleModelAsync(p=>p.Id==1);
+return View(getPosts.Data);
+```
+
 *Get All*
 ```c#
 var getPosts = await PostViewModel.Repository.GetModelListAsync();
