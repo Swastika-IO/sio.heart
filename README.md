@@ -62,47 +62,27 @@ public class BlogContext : DbContext
 
 ```
 
-*Create ViewModel Using Heart*
+*Using Heart*
 
+### Create ViewModel Class
 ```c#
 namespace SimpleBlog.ViewModels
 {
-    public class PostViewModel: ViewModelBase<BlogContext, Post, PostViewModel>
-    {
-        #region Properties
+    // Create ViewModel using Heart 
+    public class PostViewModel: ViewModelBase<BlogContext, Post, PostViewModel>    
+```
 
-        #region Model Properties
-        //Declare properties that this viewmodel need from post edm
-
-        [JsonProperty("id")]
+### Declare properties mapping from model to view
+```c# 
+        //Declare properties that this viewmodel need         
         public string Id { get; set; }
-
-        [Required(ErrorMessage = "Title is required")]
-        [JsonProperty("title")]
-        public string Title { get; set; }
-
-        [JsonProperty("createdDateUTC")]
+        [Required(ErrorMessage = "Title is required")]        
+        public string Title { get; set; }        
         public DateTime CreatedDateUTC { get; set; }
-
-        ...
-
-        #endregion
-
-        #region View Properties
-
-        //Declare properties need for view or convert from model to view
-
-        [JsonProperty("createdDateLocal")]
-        public DateTime CreatedDateLocal { get { return CreatedDateUTC.ToLocalTime(); } }
-
-        [JsonProperty("comments")]
+        
+        //Declare properties need for view or convert from model to view        
+        public DateTime CreatedDateLocal { get { return CreatedDateUTC.ToLocalTime(); } }        
         public PaginationModel<CommentViewModel> Comments { get; set; }        
-
-        #endregion
-
-        #endregion
-
-        #region Contrutors
 
         public PostViewModel()
         {
@@ -111,11 +91,10 @@ namespace SimpleBlog.ViewModels
         public PostViewModel(Post model, BlogContext _context = null, IDbContextTransaction _transaction = null) : base(model, _context, _transaction)
         {
         }
+```
 
-        #endregion
-
-        #region overrides
-        
+### Override methods
+```c#
         //This method execute before this view saved to db
         public override Post ParseModel(BlogContext _context = null, IDbContextTransaction _transaction = null)
         {
@@ -143,11 +122,7 @@ namespace SimpleBlog.ViewModels
                 Comments = getComments.Data;
             }
             return view;
-        }
-        #endregion
-    }
-}
-
+        }   
 ```
 
 ## Using
