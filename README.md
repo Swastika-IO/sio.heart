@@ -30,22 +30,9 @@ namespace SimpleBlog.Data.Blog
     }
 }
 
-namespace SimpleBlog.Data.Blog
-{
-    public class Comment
-    {
-        public string Id { get; set; }
-        public string PostId { get; set; }
-        public string Author { get; set; }
-        public string Content { get; set; }
-        public DateTime CreatedDateUTC { get; set; }
-    }
-}
-
 public class BlogContext : DbContext
 {
     public DbSet<Post> Post { get; set; }
-    public DbSet<Comment> Comment { get; set; }
     public BlogContext()
     { }
 
@@ -70,10 +57,7 @@ namespace SimpleBlog.ViewModels
 {
     // Create ViewModel using Heart 
     public class PostViewModel: ViewModelBase<BlogContext, Post, PostViewModel>    
-```
-
-### Declare properties mapping from model to view
-```c# 
+    {
         //Declare properties that this viewmodel need         
         public string Id { get; set; }
         [Required(ErrorMessage = "Title is required")]        
@@ -82,8 +66,7 @@ namespace SimpleBlog.ViewModels
         
         //Declare properties need for view or convert from model to view        
         public DateTime CreatedDateLocal { get { return CreatedDateUTC.ToLocalTime(); } }        
-        public PaginationModel<CommentViewModel> Comments { get; set; }        
-
+        
         public PostViewModel()
         {
         }
@@ -91,38 +74,7 @@ namespace SimpleBlog.ViewModels
         public PostViewModel(Post model, BlogContext _context = null, IDbContextTransaction _transaction = null) : base(model, _context, _transaction)
         {
         }
-```
-
-### Override methods
-```c#
-        //This method execute before this view saved to db
-        public override Post ParseModel(BlogContext _context = null, IDbContextTransaction _transaction = null)
-        {
-            if (string.IsNullOrEmpty(Id))
-            {
-                Id = Guid.NewGuid().ToString();
-                CreatedDateUTC = DateTime.UtcNow;
-            }
-            GenerateSEO(_context, _transaction);
-            return base.ParseModel(_context, _transaction);
-        }
-        
-        // This method execute before load data to client view
-        public override PostViewModel ParseView(bool isExpand = true, BlogContext _context = null, IDbContextTransaction _transaction = null)
-        {
-            // For example: We need list comments of this post for this view
-            var getComments = CommentViewModel.Repository.GetModelListBy(
-                    c => c.PostId == Id, // Conditions
-                    "CreatedDate", OrderByDirection.Descending, // Order By
-                    pageSize: 5, pageIndex: 0, // Pagination
-                    _context: _context, _transaction: _transaction // Transaction
-                    );
-            if (getComments.IsSucceed)
-            {
-                Comments = getComments.Data;
-            }
-            return view;
-        }   
+    }
 ```
 
 ## Using
