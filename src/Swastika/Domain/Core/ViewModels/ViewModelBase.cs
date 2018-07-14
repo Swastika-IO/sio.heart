@@ -346,7 +346,7 @@ namespace Swastika.Domain.Data.ViewModels
             Mapper.Map<TModel, TView>(Model, (TView)this);
             if (isExpand)
             {
-                UnitOfWorkHelper<TDbContext>.InitUnitOfWork(_context, _transaction, out TDbContext context, out IDbContextTransaction transaction, out bool isRoot);
+                UnitOfWorkHelper<TDbContext>.InitTransaction(_context, _transaction, out TDbContext context, out IDbContextTransaction transaction, out bool isRoot);
                 try
                 {
                     ExpandView(context, transaction);
@@ -385,7 +385,7 @@ namespace Swastika.Domain.Data.ViewModels
             Mapper.Map<TModel, TView>(Model, (TView)this);
             if (isExpand)
             {
-                UnitOfWorkHelper<TDbContext>.InitUnitOfWork(_context, _transaction, out TDbContext context, out IDbContextTransaction transaction, out bool isRoot);
+                UnitOfWorkHelper<TDbContext>.InitTransaction(_context, _transaction, out TDbContext context, out IDbContextTransaction transaction, out bool isRoot);
                 try
                 {
                      var expandResult = await ExpandViewAsync(context, transaction);
@@ -451,7 +451,7 @@ namespace Swastika.Domain.Data.ViewModels
         public virtual async Task<RepositoryResponse<List<TView>>> CloneAsync(TModel model, List<SupportedCulture> cloneCultures
             , TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
-            UnitOfWorkHelper<TDbContext>.InitUnitOfWork(_context, _transaction, out TDbContext context, out IDbContextTransaction transaction, out bool isRoot);
+            UnitOfWorkHelper<TDbContext>.InitTransaction(_context, _transaction, out TDbContext context, out IDbContextTransaction transaction, out bool isRoot);
             RepositoryResponse<List<TView>> result = new RepositoryResponse<List<TView>>()
             {
                 IsSucceed = true,
@@ -548,7 +548,7 @@ namespace Swastika.Domain.Data.ViewModels
         /// <returns></returns>
         public virtual async Task<RepositoryResponse<TModel>> RemoveModelAsync(bool isRemoveRelatedModels = false, TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
-            UnitOfWorkHelper<TDbContext>.InitUnitOfWork(_context, _transaction, out TDbContext context, out IDbContextTransaction transaction, out bool isRoot);
+            UnitOfWorkHelper<TDbContext>.InitTransaction(_context, _transaction, out TDbContext context, out IDbContextTransaction transaction, out bool isRoot);
 
             RepositoryResponse<TModel> result = new RepositoryResponse<TModel>() { IsSucceed = true };
             try
@@ -619,7 +619,7 @@ namespace Swastika.Domain.Data.ViewModels
         /// <returns></returns>
         public virtual async Task<RepositoryResponse<TView>> SaveModelAsync(bool isSaveSubModels = false, TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
-            UnitOfWorkHelper<TDbContext>.InitUnitOfWork(_context, _transaction, out TDbContext context, out IDbContextTransaction transaction, out bool isRoot);
+            UnitOfWorkHelper<TDbContext>.InitTransaction(_context, _transaction, out TDbContext context, out IDbContextTransaction transaction, out bool isRoot);
             RepositoryResponse<TView> result = new RepositoryResponse<TView>() { IsSucceed = true };
             Validate();
             if (IsValid)
@@ -717,7 +717,7 @@ namespace Swastika.Domain.Data.ViewModels
         /// <returns></returns>
         public virtual RepositoryResponse<List<TView>> Clone(TModel model, List<SupportedCulture> cloneCultures, TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
-            UnitOfWorkHelper<TDbContext>.InitUnitOfWork(_context, _transaction, out TDbContext context, out IDbContextTransaction transaction, out bool isRoot);
+            UnitOfWorkHelper<TDbContext>.InitTransaction(_context, _transaction, out TDbContext context, out IDbContextTransaction transaction, out bool isRoot);
 
             RepositoryResponse<List<TView>> result = new RepositoryResponse<List<TView>>()
             {
@@ -813,7 +813,7 @@ namespace Swastika.Domain.Data.ViewModels
         /// <returns></returns>
         public virtual RepositoryResponse<TModel> RemoveModel(bool isRemoveRelatedModels = false, TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
-            UnitOfWorkHelper<TDbContext>.InitUnitOfWork(_context, _transaction, out TDbContext context, out IDbContextTransaction transaction, out bool isRoot);
+            UnitOfWorkHelper<TDbContext>.InitTransaction(_context, _transaction, out TDbContext context, out IDbContextTransaction transaction, out bool isRoot);
             RepositoryResponse<TModel> result = new RepositoryResponse<TModel>() { IsSucceed = true };
             try
             {
@@ -882,7 +882,7 @@ namespace Swastika.Domain.Data.ViewModels
         /// <returns></returns>
         public virtual RepositoryResponse<TView> SaveModel(bool isSaveSubModels = false, TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
-            UnitOfWorkHelper<TDbContext>.InitUnitOfWork(_context, _transaction, out TDbContext context, out IDbContextTransaction transaction, out bool isRoot);
+            UnitOfWorkHelper<TDbContext>.InitTransaction(_context, _transaction, out TDbContext context, out IDbContextTransaction transaction, out bool isRoot);
             RepositoryResponse<TView> result = new RepositoryResponse<TView>() { IsSucceed = true };
             Validate();
             if (IsValid)

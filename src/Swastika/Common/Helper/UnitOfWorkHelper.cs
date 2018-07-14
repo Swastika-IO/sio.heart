@@ -18,7 +18,6 @@ namespace Swastika.Common.Helper
             Type classType = typeof(TDbContext);
             ConstructorInfo classConstructor = classType.GetConstructor(new Type[] { });
             TDbContext context = (TDbContext)classConstructor.Invoke(new object[] { });
-
             return context;
         }
 
@@ -42,7 +41,7 @@ namespace Swastika.Common.Helper
             }
         }
 
-        public static void InitUnitOfWork(TDbContext _context, IDbContextTransaction _transaction, out TDbContext context, out IDbContextTransaction transaction, out bool isRoot)
+        public static void InitTransaction(TDbContext _context, IDbContextTransaction _transaction, out TDbContext context, out IDbContextTransaction transaction, out bool isRoot)
         {
             isRoot = _context == null;
             context = _context ?? InitContext();
