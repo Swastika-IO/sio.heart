@@ -2,6 +2,8 @@
 // The Swastika I/O Foundation licenses this file to you under the GNU General Public License v3.0.
 // See the LICENSE file in the project root for more information.
 
+using Newtonsoft.Json;
+
 namespace Swastika.Domain.Core.Models
 {
     /// <summary>
@@ -15,6 +17,7 @@ namespace Swastika.Domain.Core.Models
         /// <value>
         /// The identifier.
         /// </value>
+        [JsonProperty("id")]
         public int Id { get; set; }
 
         /// <summary>
@@ -23,6 +26,7 @@ namespace Swastika.Domain.Core.Models
         /// <value>
         /// The specificulture.
         /// </value>
+        [JsonProperty("specificulture")]
         public string Specificulture { get; set; }
 
         /// <summary>
@@ -31,6 +35,7 @@ namespace Swastika.Domain.Core.Models
         /// <value>
         /// The lcid.
         /// </value>
+        [JsonProperty("lcid")]
         public string Lcid { get; set; }
 
         /// <summary>
@@ -39,6 +44,7 @@ namespace Swastika.Domain.Core.Models
         /// <value>
         /// The alias.
         /// </value>
+        [JsonProperty("alias")]
         public string Alias { get; set; }
 
         /// <summary>
@@ -47,6 +53,7 @@ namespace Swastika.Domain.Core.Models
         /// <value>
         /// The full name.
         /// </value>
+        [JsonProperty("fullName")]
         public string FullName { get; set; }
 
         /// <summary>
@@ -55,6 +62,7 @@ namespace Swastika.Domain.Core.Models
         /// <value>
         /// The description.
         /// </value>
+        [JsonProperty("description")]
         public string Description { get; set; }
 
         /// <summary>
@@ -63,6 +71,7 @@ namespace Swastika.Domain.Core.Models
         /// <value>
         /// The icon.
         /// </value>
+        [JsonProperty("icon")]
         public string Icon { get; set; }
 
         /// <summary>
@@ -71,6 +80,7 @@ namespace Swastika.Domain.Core.Models
         /// <value>
         ///   <c>true</c> if this instance is supported; otherwise, <c>false</c>.
         /// </value>
+        [JsonProperty("isSupported")]
         public bool IsSupported { get; set; }
     }
 }

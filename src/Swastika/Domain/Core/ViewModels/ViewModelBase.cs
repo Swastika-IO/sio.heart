@@ -79,8 +79,8 @@ namespace Swastika.Domain.Data.ViewModels
         /// <value>
         ///   <c>true</c> if this instance is clone; otherwise, <c>false</c>.
         /// </value>
-        [JsonIgnore]
-        public bool IsClone { get; set; } = false;
+        [JsonProperty("isClone")]
+        public bool IsClone { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether this instance is lazy load.
@@ -97,7 +97,7 @@ namespace Swastika.Domain.Data.ViewModels
         /// <value>
         /// The list supported culture.
         /// </value>
-        [JsonIgnore]
+        [JsonProperty("cultures")]
         public List<SupportedCulture> ListSupportedCulture { get; set; }
 
         /// <summary>
@@ -471,7 +471,7 @@ namespace Swastika.Domain.Data.ViewModels
                         view.ParseView(isExpand: false, _context: context, _transaction: transaction);
                         view.Specificulture = desSpecificulture;
 
-                        bool isExist = Repository.CheckIsExists(view.ParseModel(_context, _transaction), _context: context, _transaction: transaction);
+                        bool isExist = Repository.CheckIsExists(view.ParseModel(context, transaction), _context: context, _transaction: transaction);
 
                         if (isExist)
                         {
@@ -491,7 +491,7 @@ namespace Swastika.Domain.Data.ViewModels
                                 }
 
                                 result.IsSucceed = result.IsSucceed && cloneResult.IsSucceed && cloneSubResult.IsSucceed;
-                                result.Data.Add(cloneResult.Data);
+                                //result.Data.Add(cloneResult.Data);
                             }
                             else
                             {
