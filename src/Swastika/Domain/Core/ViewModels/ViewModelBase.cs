@@ -889,7 +889,7 @@ namespace Swastika.Domain.Data.ViewModels
             {
                 try
                 {
-                    ParseModel(_context, _transaction);
+                    ParseModel(context, transaction);
                     result = Repository.SaveModel((TView)this, _context: context, _transaction: transaction);
 
                     // Save sub Models
