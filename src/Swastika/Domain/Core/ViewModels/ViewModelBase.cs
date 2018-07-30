@@ -621,7 +621,7 @@ namespace Swastika.Domain.Data.ViewModels
         {
             UnitOfWorkHelper<TDbContext>.InitTransaction(_context, _transaction, out TDbContext context, out IDbContextTransaction transaction, out bool isRoot);
             RepositoryResponse<TView> result = new RepositoryResponse<TView>() { IsSucceed = true };
-            Validate();
+            Validate(context, transaction);
             if (IsValid)
             {
                 try
@@ -680,6 +680,11 @@ namespace Swastika.Domain.Data.ViewModels
             }
             else
             {
+                if (isRoot)
+                {
+                    //if current Context is Root
+                    context.Dispose();
+                }
                 return new RepositoryResponse<TView>()
                 {
                     IsSucceed = false,
@@ -718,7 +723,6 @@ namespace Swastika.Domain.Data.ViewModels
         public virtual RepositoryResponse<List<TView>> Clone(TModel model, List<SupportedCulture> cloneCultures, TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
             UnitOfWorkHelper<TDbContext>.InitTransaction(_context, _transaction, out TDbContext context, out IDbContextTransaction transaction, out bool isRoot);
-
             RepositoryResponse<List<TView>> result = new RepositoryResponse<List<TView>>()
             {
                 IsSucceed = true,
@@ -738,7 +742,7 @@ namespace Swastika.Domain.Data.ViewModels
                         view.ParseView(isExpand: false, _context: context, _transaction: transaction);
                         view.Specificulture = desSpecificulture;
 
-                        bool isExist = Repository.CheckIsExists(view.ParseModel(_context, _transaction), _context: context, _transaction: transaction);
+                        bool isExist = Repository.CheckIsExists(view.ParseModel(context, transaction), _context: context, _transaction: transaction);
 
                         if (isExist)
                         {
@@ -758,7 +762,7 @@ namespace Swastika.Domain.Data.ViewModels
                                 }
 
                                 result.IsSucceed = result.IsSucceed && cloneResult.IsSucceed && cloneSubResult.IsSucceed;
-                                result.Data.Add(cloneResult.Data);
+                                //result.Data.Add(cloneResult.Data);
                             }
                             else
                             {
@@ -767,8 +771,8 @@ namespace Swastika.Domain.Data.ViewModels
                                 result.Exception = cloneResult.Exception;
                             }
                         }
+                        UnitOfWorkHelper<TDbContext>.HandleTransaction(result.IsSucceed, isRoot, transaction);
                     }
-                    UnitOfWorkHelper<TDbContext>.HandleTransaction(result.IsSucceed, isRoot, transaction);
                     return result;
                 }
                 else
@@ -884,7 +888,7 @@ namespace Swastika.Domain.Data.ViewModels
         {
             UnitOfWorkHelper<TDbContext>.InitTransaction(_context, _transaction, out TDbContext context, out IDbContextTransaction transaction, out bool isRoot);
             RepositoryResponse<TView> result = new RepositoryResponse<TView>() { IsSucceed = true };
-            Validate();
+            Validate(context, transaction);
             if (IsValid)
             {
                 try
@@ -943,6 +947,11 @@ namespace Swastika.Domain.Data.ViewModels
             }
             else
             {
+                if (isRoot)
+                {
+                    //if current Context is Root
+                    context.Dispose();
+                }
                 return new RepositoryResponse<TView>()
                 {
                     IsSucceed = false,
