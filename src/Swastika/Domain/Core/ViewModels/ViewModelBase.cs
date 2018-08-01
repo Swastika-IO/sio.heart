@@ -205,27 +205,6 @@ namespace Swastika.Domain.Data.ViewModels
         #region Common
 
         /// <summary>
-        /// Expands the view.
-        /// </summary>
-        /// <param name="_context">The context.</param>
-        /// <param name="_transaction">The transaction.</param>
-        public virtual void ExpandView(TDbContext _context = null, IDbContextTransaction _transaction = null)
-        {
-        }
-        
-        /// <summary>
-        /// Expands the view.
-        /// </summary>
-        /// <param name="_context">The context.</param>
-        /// <param name="_transaction">The transaction.</param>
-        public virtual Task<bool> ExpandViewAsync(TDbContext _context = null, IDbContextTransaction _transaction = null)
-        {
-            var taskSource = new TaskCompletionSource<bool>();
-            taskSource.SetResult(true);
-            return taskSource.Task;
-        }
-
-        /// <summary>
         /// Initializes the model.
         /// </summary>
         /// <returns></returns>
@@ -239,37 +218,51 @@ namespace Swastika.Domain.Data.ViewModels
         }
 
         /// <summary>
-        /// Initializes the view.
+        /// Parses the model.
         /// </summary>
-        /// <param name="model">The model.</param>
-        /// <param name="isLazyLoad">if set to <c>true</c> [is lazy load].</param>
+        /// <returns></returns>
+        public virtual TModel ParseModel(TDbContext _context = null, IDbContextTransaction _transaction = null)
+        {
+            //AutoMapper.Mapper.Map<TView, TModel>((TView)this, Model);
+            this.Model = InitModel();
+            Mapper.Map<TView, TModel>((TView)this, Model);
+            return this.Model;
+        }
+       
+        /// <summary>
+        /// Validates the specified context.
+        /// </summary>
         /// <param name="_context">The context.</param>
         /// <param name="_transaction">The transaction.</param>
-        /// <returns></returns>
-        public virtual TView InitView(TModel model = null, bool isLazyLoad = true, TDbContext _context = null, IDbContextTransaction _transaction = null)
+        public virtual void Validate(TDbContext _context, IDbContextTransaction _transaction)
         {
-            Type classType = typeof(TView);
+            var validateContext = new System.ComponentModel.DataAnnotations.ValidationContext(this, serviceProvider: null, items: null);
+            var results = new List<ValidationResult>();
 
-            ConstructorInfo classConstructor = classType.GetConstructor(new Type[] { });
-            if (model == null && classConstructor != null)
+            IsValid = Validator.TryValidateObject(this, validateContext, results);
+            if (!IsValid)
             {
-                return (TView)classConstructor.Invoke(new object[] { });
-            }
-            else
-            {
-                classConstructor = classType.GetConstructor(new Type[] { typeof(TModel), typeof(bool), typeof(TDbContext), typeof(IDbContextTransaction) });
-                if (classConstructor != null)
-                {
-                    return (TView)classConstructor.Invoke(new object[] { model, isLazyLoad, _context, _transaction });
-                }
-                else
-                {
-                    classConstructor = classType.GetConstructor(new Type[] { typeof(TModel), typeof(TDbContext), typeof(IDbContextTransaction) });
-                    return (TView)classConstructor.Invoke(new object[] { model, _context, _transaction });
-                }
+                Errors.AddRange(results.Select(e => e.ErrorMessage));
             }
         }
-        
+
+        #endregion Common
+
+        #region Async
+
+        /// <summary>
+        /// Expands the view.
+        /// </summary>
+        /// <param name="_context">The context.</param>
+        /// <param name="_transaction">The transaction.</param>
+        public virtual Task<bool> ExpandViewAsync(TDbContext _context = null, IDbContextTransaction _transaction = null)
+        {
+            var taskSource = new TaskCompletionSource<bool>();
+            taskSource.SetResult(true);
+            return taskSource.Task;
+        }
+
+
         /// <summary>
         /// Initializes the view.
         /// </summary>
@@ -278,7 +271,7 @@ namespace Swastika.Domain.Data.ViewModels
         /// <param name="_context">The context.</param>
         /// <param name="_transaction">The transaction.</param>
         /// <returns></returns>
-        public static async Task<TView> InitAsync(TModel model = null, bool isLazyLoad = true, TDbContext _context = null, IDbContextTransaction _transaction = null)
+        public static async Task<TView> InitViewAsync(TModel model = null, bool isLazyLoad = true, TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
             Type classType = typeof(TView);
 
@@ -309,70 +302,6 @@ namespace Swastika.Domain.Data.ViewModels
         }
 
         /// <summary>
-        /// Parses the model.
-        /// </summary>
-        /// <returns></returns>
-        //public virtual TModel ParseModel(_context, _transaction)
-        //{
-        //    //AutoMapper.Mapper.Map<TView, TModel>((TView)this, Model);
-        //    this.Model = InitModel();
-        //    Mapper.Map<TView, TModel>((TView)this, Model);
-        //    return this.Model;
-        //}
-
-        /// <summary>
-        /// Parses the model.
-        /// </summary>
-        /// <returns></returns>
-        public virtual TModel ParseModel(TDbContext _context = null, IDbContextTransaction _transaction = null)
-        {
-            //AutoMapper.Mapper.Map<TView, TModel>((TView)this, Model);
-            this.Model = InitModel();
-            Mapper.Map<TView, TModel>((TView)this, Model);
-            return this.Model;
-        }
-
-        /// <summary>
-        /// Parses the view.
-        /// </summary>
-        /// <param name="isExpand">if set to <c>true</c> [is expand].</param>
-        /// <param name="_context">The context.</param>
-        /// <param name="_transaction">The transaction.</param>
-        /// <returns></returns>
-        public virtual TView ParseView(bool isExpand = true, TDbContext _context = null, IDbContextTransaction _transaction = null
-                                                    )
-        {
-            //AutoMapper.Mapper.Map<TModel, TView>(Model, (TView)this);
-            Mapper.Map<TModel, TView>(Model, (TView)this);
-            if (isExpand)
-            {
-                UnitOfWorkHelper<TDbContext>.InitTransaction(_context, _transaction, out TDbContext context, out IDbContextTransaction transaction, out bool isRoot);
-                try
-                {
-                    ExpandView(context, transaction);
-                }
-                catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
-                {
-                    Repository.LogErrorMessage(ex);
-                    if (isRoot)
-                    {
-                        //if current transaction is root transaction
-                        transaction.Rollback();
-                    }
-                }
-                finally
-                {
-                    if (isRoot)
-                    {
-                        //if current Context is Root
-                        context.Dispose();
-                    }
-                }
-            }
-            return (TView)this;
-        }
-        
-        /// <summary>
         /// Parses the view.
         /// </summary>
         /// <param name="isExpand">if set to <c>true</c> [is expand].</param>
@@ -388,7 +317,7 @@ namespace Swastika.Domain.Data.ViewModels
                 UnitOfWorkHelper<TDbContext>.InitTransaction(_context, _transaction, out TDbContext context, out IDbContextTransaction transaction, out bool isRoot);
                 try
                 {
-                     var expandResult = await ExpandViewAsync(context, transaction);
+                    var expandResult = await ExpandViewAsync(context, transaction);
                     if (expandResult)
                     {
                         return this as TView;
@@ -418,27 +347,6 @@ namespace Swastika.Domain.Data.ViewModels
             }
             return (TView)this;
         }
-
-        /// <summary>
-        /// Validates the specified context.
-        /// </summary>
-        /// <param name="_context">The context.</param>
-        /// <param name="_transaction">The transaction.</param>
-        public virtual void Validate(TDbContext _context = null, IDbContextTransaction _transaction = null)
-        {
-            var validateContext = new System.ComponentModel.DataAnnotations.ValidationContext(this, serviceProvider: null, items: null);
-            var results = new List<ValidationResult>();
-
-            IsValid = Validator.TryValidateObject(this, validateContext, results);
-            if (!IsValid)
-            {
-                Errors.AddRange(results.Select(e => e.ErrorMessage));
-            }
-        }
-
-        #endregion Common
-
-        #region Async
 
         /// <summary>
         /// Clones the asynchronous.
@@ -511,9 +419,7 @@ namespace Swastika.Domain.Data.ViewModels
             }
             catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
             {
-                result.IsSucceed = false;
-                result.Exception = ex;
-                return result;
+                return UnitOfWorkHelper<TDbContext>.HandleException<List<TView>>(ex, isRoot, transaction);                
             }
             finally
             {
@@ -577,14 +483,7 @@ namespace Swastika.Domain.Data.ViewModels
             }
             catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
             {
-                if (isRoot)
-                {
-                    //if current transaction is root transaction
-                    transaction.Rollback();
-                }
-                result.IsSucceed = false;
-                result.Exception = ex;
-                return result;
+                return UnitOfWorkHelper<TDbContext>.HandleException<TModel>(ex, isRoot, transaction);
             }
             finally
             {
@@ -659,15 +558,7 @@ namespace Swastika.Domain.Data.ViewModels
                 }
                 catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
                 {
-                    Repository.LogErrorMessage(ex);
-                    if (isRoot)
-                    {
-                        //if current transaction is root transaction
-                        transaction.Rollback();
-                    }
-                    result.IsSucceed = false;
-                    result.Exception = ex;
-                    return result;
+                    return UnitOfWorkHelper<TDbContext>.HandleException<TView>(ex, isRoot, transaction);                    
                 }
                 finally
                 {
@@ -701,7 +592,7 @@ namespace Swastika.Domain.Data.ViewModels
         /// <param name="_context">The context.</param>
         /// <param name="_transaction">The transaction.</param>
         /// <returns></returns>
-        public virtual async Task<RepositoryResponse<bool>> SaveSubModelsAsync(TModel parent, TDbContext _context = null, IDbContextTransaction _transaction = null)
+        public virtual async Task<RepositoryResponse<bool>> SaveSubModelsAsync(TModel parent, TDbContext _context, IDbContextTransaction _transaction)
         {
             var taskSource = new TaskCompletionSource<RepositoryResponse<bool>>();
             taskSource.SetResult(new RepositoryResponse<bool>() { IsSucceed = true });
@@ -711,6 +602,88 @@ namespace Swastika.Domain.Data.ViewModels
         #endregion Async
 
         #region Sync
+
+        /// <summary>
+        /// Initializes the view.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <param name="isLazyLoad">if set to <c>true</c> [is lazy load].</param>
+        /// <param name="_context">The context.</param>
+        /// <param name="_transaction">The transaction.</param>
+        /// <returns></returns>
+        public virtual TView InitView(TModel model = null, bool isLazyLoad = true, TDbContext _context = null, IDbContextTransaction _transaction = null)
+        {
+            Type classType = typeof(TView);
+
+            ConstructorInfo classConstructor = classType.GetConstructor(new Type[] { });
+            if (model == null && classConstructor != null)
+            {
+                return (TView)classConstructor.Invoke(new object[] { });
+            }
+            else
+            {
+                classConstructor = classType.GetConstructor(new Type[] { typeof(TModel), typeof(bool), typeof(TDbContext), typeof(IDbContextTransaction) });
+                if (classConstructor != null)
+                {
+                    return (TView)classConstructor.Invoke(new object[] { model, isLazyLoad, _context, _transaction });
+                }
+                else
+                {
+                    classConstructor = classType.GetConstructor(new Type[] { typeof(TModel), typeof(TDbContext), typeof(IDbContextTransaction) });
+                    return (TView)classConstructor.Invoke(new object[] { model, _context, _transaction });
+                }
+            }
+        }
+
+
+        /// <summary>
+        /// Parses the view.
+        /// </summary>
+        /// <param name="isExpand">if set to <c>true</c> [is expand].</param>
+        /// <param name="_context">The context.</param>
+        /// <param name="_transaction">The transaction.</param>
+        /// <returns></returns>
+        public virtual TView ParseView(bool isExpand = true, TDbContext _context = null, IDbContextTransaction _transaction = null
+                                                    )
+        {
+            //AutoMapper.Mapper.Map<TModel, TView>(Model, (TView)this);
+            Mapper.Map<TModel, TView>(Model, (TView)this);
+            if (isExpand)
+            {
+                UnitOfWorkHelper<TDbContext>.InitTransaction(_context, _transaction, out TDbContext context, out IDbContextTransaction transaction, out bool isRoot);
+                try
+                {
+                    ExpandView(context, transaction);
+                }
+                catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
+                {
+                    Repository.LogErrorMessage(ex);
+                    if (isRoot)
+                    {
+                        //if current transaction is root transaction
+                        transaction.Rollback();
+                    }
+                }
+                finally
+                {
+                    if (isRoot)
+                    {
+                        //if current Context is Root
+                        context.Dispose();
+                    }
+                }
+            }
+            return (TView)this;
+        }
+
+        /// <summary>
+        /// Expands the view.
+        /// </summary>
+        /// <param name="_context">The context.</param>
+        /// <param name="_transaction">The transaction.</param>
+        public virtual void ExpandView(TDbContext _context = null, IDbContextTransaction _transaction = null)
+        {
+        }
 
         /// <summary>
         /// Clones the specified clone cultures.
@@ -846,14 +819,8 @@ namespace Swastika.Domain.Data.ViewModels
             }
             catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
             {
-                if (isRoot)
-                {
-                    //if current transaction is root transaction
-                    transaction.Rollback();
-                }
-                result.IsSucceed = false;
-                result.Exception = ex;
-                return result;
+                return UnitOfWorkHelper<TDbContext>.HandleException<TModel>(ex, isRoot, transaction);
+
             }
             finally
             {
@@ -926,15 +893,7 @@ namespace Swastika.Domain.Data.ViewModels
                 }
                 catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
                 {
-                    Repository.LogErrorMessage(ex);
-                    if (isRoot)
-                    {
-                        //if current transaction is root transaction
-                        transaction.Rollback();
-                    }
-                    result.IsSucceed = false;
-                    result.Exception = ex;
-                    return result;
+                    return UnitOfWorkHelper<TDbContext>.HandleException<TView>(ex, isRoot, transaction);
                 }
                 finally
                 {
@@ -968,7 +927,7 @@ namespace Swastika.Domain.Data.ViewModels
         /// <param name="_context">The context.</param>
         /// <param name="_transaction">The transaction.</param>
         /// <returns></returns>
-        public virtual RepositoryResponse<bool> SaveSubModels(TModel parent, TDbContext _context = null, IDbContextTransaction _transaction = null)
+        public virtual RepositoryResponse<bool> SaveSubModels(TModel parent, TDbContext _context, IDbContextTransaction _transaction)
         {
             return new RepositoryResponse<bool>() { IsSucceed = true };
         }

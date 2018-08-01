@@ -180,7 +180,7 @@ namespace Swastika.Domain.Data.Repository
             }
             catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
             {
-                return HandleException<TView>(ex, isRoot, transaction);
+                return UnitOfWorkHelper<TDbContext>.HandleException<TView>(ex, isRoot, transaction);
             }
             finally
             {
@@ -212,12 +212,12 @@ namespace Swastika.Domain.Data.Repository
                 result.IsSucceed = context.SaveChanges() > 0;
                 result.Data = view;
                 UnitOfWorkHelper<TDbContext>.HandleTransaction(result.IsSucceed, isRoot, transaction);
-                
+
                 return result;
             }
             catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
             {
-                return HandleException<TView>(ex, isRoot, transaction);
+                return UnitOfWorkHelper<TDbContext>.HandleException<TView>(ex, isRoot, transaction);
             }
             finally
             {
@@ -252,7 +252,7 @@ namespace Swastika.Domain.Data.Repository
             }
             catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
             {
-                return HandleException<TView>(ex, isRoot, transaction);
+                return UnitOfWorkHelper<TDbContext>.HandleException<TView>(ex, isRoot, transaction);
             }
             finally
             {
@@ -303,7 +303,7 @@ namespace Swastika.Domain.Data.Repository
             }
             catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
             {
-                return HandleException<TView>(ex, isRoot, transaction);
+                return UnitOfWorkHelper<TDbContext>.HandleException<TView>(ex, isRoot, transaction);
             }
             finally
             {
@@ -352,7 +352,7 @@ namespace Swastika.Domain.Data.Repository
             }
             catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
             {
-                return HandleException<TView>(ex, isRoot, transaction);
+                return UnitOfWorkHelper<TDbContext>.HandleException<TView>(ex, isRoot, transaction);
             }
             finally
             {
@@ -619,7 +619,7 @@ namespace Swastika.Domain.Data.Repository
             }
             catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
             {
-                return HandleException<List<TView>>(ex, isRoot, transaction);
+                return UnitOfWorkHelper<TDbContext>.HandleException<List<TView>>(ex, isRoot, transaction);
             }
             finally
             {
@@ -664,7 +664,7 @@ namespace Swastika.Domain.Data.Repository
             }
             catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
             {
-                return HandleException<PaginationModel<TView>>(ex, isRoot, transaction);
+                return UnitOfWorkHelper<TDbContext>.HandleException<PaginationModel<TView>>(ex, isRoot, transaction);
             }
             finally
             {
@@ -702,7 +702,7 @@ namespace Swastika.Domain.Data.Repository
             }
             catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
             {
-                return HandleException<List<TView>>(ex, isRoot, transaction);
+                return UnitOfWorkHelper<TDbContext>.HandleException<List<TView>>(ex, isRoot, transaction);
             }
             finally
             {
@@ -745,7 +745,7 @@ namespace Swastika.Domain.Data.Repository
             }
             catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
             {
-                return HandleException<PaginationModel<TView>>(ex, isRoot, transaction);
+                return UnitOfWorkHelper<TDbContext>.HandleException<PaginationModel<TView>>(ex, isRoot, transaction);
             }
             finally
             {
@@ -785,7 +785,7 @@ namespace Swastika.Domain.Data.Repository
             }
             catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
             {
-                return HandleException<List<TView>>(ex, isRoot, transaction);
+                return UnitOfWorkHelper<TDbContext>.HandleException<List<TView>>(ex, isRoot, transaction);
             }
             finally
             {
@@ -828,7 +828,7 @@ namespace Swastika.Domain.Data.Repository
             }
             catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
             {
-                return HandleException<PaginationModel<TView>>(ex, isRoot, transaction);
+                return UnitOfWorkHelper<TDbContext>.HandleException<PaginationModel<TView>>(ex, isRoot, transaction);
             }
             finally
             {
@@ -866,7 +866,7 @@ namespace Swastika.Domain.Data.Repository
             }
             catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
             {
-                return HandleException<List<TView>>(ex, isRoot, transaction);
+                return UnitOfWorkHelper<TDbContext>.HandleException<List<TView>>(ex, isRoot, transaction);
             }
             finally
             {
@@ -911,7 +911,7 @@ namespace Swastika.Domain.Data.Repository
             }
             catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
             {
-                return HandleException<PaginationModel<TView>>(ex, isRoot, transaction);
+                return UnitOfWorkHelper<TDbContext>.HandleException<PaginationModel<TView>>(ex, isRoot, transaction);
             }
             finally
             {
@@ -975,7 +975,7 @@ namespace Swastika.Domain.Data.Repository
             }
             catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
             {
-                return HandleException<List<TModel>>(ex, isRoot, transaction);
+                return UnitOfWorkHelper<TDbContext>.HandleException<List<TModel>>(ex, isRoot, transaction);
             }
             finally
             {
@@ -1037,7 +1037,7 @@ namespace Swastika.Domain.Data.Repository
             }
             catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
             {
-                return HandleException<List<TModel>>(ex, isRoot, transaction);
+                return UnitOfWorkHelper<TDbContext>.HandleException<List<TModel>>(ex, isRoot, transaction);
             }
             finally
             {
@@ -1080,7 +1080,7 @@ namespace Swastika.Domain.Data.Repository
             }
             catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
             {
-                return HandleException<TModel>(ex, isRoot, transaction);
+                return UnitOfWorkHelper<TDbContext>.HandleException<TModel>(ex, isRoot, transaction);
             }
             finally
             {
@@ -1122,7 +1122,7 @@ namespace Swastika.Domain.Data.Repository
             }
             catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
             {
-                return HandleException<TModel>(ex, isRoot, transaction);
+                return UnitOfWorkHelper<TDbContext>.HandleException<TModel>(ex, isRoot, transaction);
             }
             finally
             {
@@ -1165,7 +1165,7 @@ namespace Swastika.Domain.Data.Repository
             }
             catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
             {
-                return HandleException<TModel>(ex, isRoot, transaction);
+                return UnitOfWorkHelper<TDbContext>.HandleException<TModel>(ex, isRoot, transaction);
             }
             finally
             {
@@ -1207,7 +1207,7 @@ namespace Swastika.Domain.Data.Repository
             }
             catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
             {
-                return HandleException<TModel>(ex, isRoot, transaction);
+                return UnitOfWorkHelper<TDbContext>.HandleException<TModel>(ex, isRoot, transaction);
             }
             finally
             {
@@ -1288,23 +1288,20 @@ namespace Swastika.Domain.Data.Repository
         {
             UnitOfWorkHelper<TDbContext>.InitTransaction(_context, _transaction, out TDbContext context, out IDbContextTransaction transaction, out bool isRoot);
             int total = 0;
+            var result = new RepositoryResponse<int>()
+            {
+                IsSucceed = true,
+                Data = total
+            };
             try
             {
                 total = context.Set<TModel>().Max(predicate);
-                return new RepositoryResponse<int>()
-                {
-                    IsSucceed = true,
-                    Data = total
-                };
+                result.Data = total;
+                return result;
             }
             catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
             {
-                HandleException<List<TModel>>(ex, isRoot, transaction);
-                return new RepositoryResponse<int>()
-                {
-                    IsSucceed = true,
-                    Data = total
-                };
+                return UnitOfWorkHelper<TDbContext>.HandleObjectException<int>(ex, isRoot, transaction);
             }
             finally
             {
@@ -1339,12 +1336,7 @@ namespace Swastika.Domain.Data.Repository
             }
             catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
             {
-                HandleException<List<TModel>>(ex, isRoot, transaction);
-                return new RepositoryResponse<int>()
-                {
-                    IsSucceed = true,
-                    Data = total
-                };
+                return UnitOfWorkHelper<TDbContext>.HandleObjectException<int>(ex, isRoot, transaction);
             }
             finally
             {
@@ -1383,12 +1375,7 @@ namespace Swastika.Domain.Data.Repository
             }
             catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
             {
-                HandleException<List<TModel>>(ex, isRoot, transaction);
-                return new RepositoryResponse<int>()
-                {
-                    IsSucceed = true,
-                    Data = total
-                };
+                return UnitOfWorkHelper<TDbContext>.HandleObjectException<int>(ex, isRoot, transaction);
             }
             finally
             {
@@ -1423,7 +1410,7 @@ namespace Swastika.Domain.Data.Repository
             }
             catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
             {
-                HandleException<List<TModel>>(ex, isRoot, transaction);
+                UnitOfWorkHelper<TDbContext>.HandleException<List<TModel>>(ex, isRoot, transaction);
                 return new RepositoryResponse<int>()
                 {
                     IsSucceed = true,
@@ -1465,12 +1452,7 @@ namespace Swastika.Domain.Data.Repository
             }
             catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
             {
-                HandleException<List<TModel>>(ex, isRoot, transaction);
-                return new RepositoryResponse<int>()
-                {
-                    IsSucceed = true,
-                    Data = total
-                };
+                return UnitOfWorkHelper<TDbContext>.HandleObjectException<int>(ex, isRoot, transaction);
             }
             finally
             {
@@ -1503,12 +1485,7 @@ namespace Swastika.Domain.Data.Repository
             }
             catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
             {
-                HandleException<List<TModel>>(ex, isRoot, transaction);
-                return new RepositoryResponse<int>()
-                {
-                    IsSucceed = true,
-                    Data = total
-                };
+                return UnitOfWorkHelper<TDbContext>.HandleObjectException<int>(ex, isRoot, transaction);
             }
             finally
             {
@@ -1583,7 +1560,7 @@ namespace Swastika.Domain.Data.Repository
             }
             catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
             {
-                return HandleException<TModel>(ex, isRoot, transaction);
+                return UnitOfWorkHelper<TDbContext>.HandleException<TModel>(ex, isRoot, transaction);
             }
             finally
             {
@@ -1654,7 +1631,7 @@ namespace Swastika.Domain.Data.Repository
             }
             catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
             {
-                return HandleException<TModel>(ex, isRoot, transaction);
+                return UnitOfWorkHelper<TDbContext>.HandleException<TModel>(ex, isRoot, transaction);
             }
             finally
             {
@@ -1667,27 +1644,6 @@ namespace Swastika.Domain.Data.Repository
         }
 
         #endregion Update Fields
-
-        private RepositoryResponse<TResult> HandleException<TResult>(Exception ex, bool isRoot, IDbContextTransaction transaction)
-            where TResult : class
-        {
-            LogErrorMessage(ex);
-            if (isRoot)
-            {
-                //if current transaction is root transaction
-                transaction.Rollback();
-            }
-            List<string> errors = new List<string>();
-            errors.Add(ex.InnerException != null ? ex.InnerException.Message : ex.Message);
-            return new RepositoryResponse<TResult>()
-            {
-                IsSucceed = false,
-                Data = null,
-                Exception = (ex.InnerException != null ? ex.InnerException : ex),
-                Errors = errors
-            };
-        }
-
 
         /// <summary>
         /// Gets the lambda.

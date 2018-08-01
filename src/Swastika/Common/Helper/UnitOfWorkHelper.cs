@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
+using Swastika.Domain.Core.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -39,6 +40,46 @@ namespace Swastika.Common.Helper
                     transaction.Rollback();
                 }
             }
+        }
+
+        public static RepositoryResponse<TResult> HandleException<TResult>(Exception ex, bool isRoot, IDbContextTransaction transaction)
+            where TResult : class
+        {
+            // LogErrorMessage(ex);
+            if (isRoot)
+            {
+                //if current transaction is root transaction
+                transaction.Rollback();
+            }
+            List<string> errors = new List<string>();
+            errors.Add(ex.InnerException != null ? ex.InnerException.Message : ex.Message);
+            return new RepositoryResponse<TResult>()
+            {
+                IsSucceed = false,
+                Data = null,
+                Exception = (ex.InnerException != null ? ex.InnerException : ex),
+                Errors = errors
+            };
+        }
+
+        public static RepositoryResponse<TResult> HandleObjectException<TResult>(Exception ex, bool isRoot, IDbContextTransaction transaction)
+            where TResult : IConvertible
+        {
+            // LogErrorMessage(ex);
+            if (isRoot)
+            {
+                //if current transaction is root transaction
+                transaction.Rollback();
+            }
+            List<string> errors = new List<string>();
+            errors.Add(ex.InnerException != null ? ex.InnerException.Message : ex.Message);
+            return new RepositoryResponse<TResult>()
+            {
+                IsSucceed = false,
+                Data = default(TResult),
+                Exception = (ex.InnerException != null ? ex.InnerException : ex),
+                Errors = errors
+            };
         }
 
         public static void InitTransaction(TDbContext _context, IDbContextTransaction _transaction, out TDbContext context, out IDbContextTransaction transaction, out bool isRoot)
