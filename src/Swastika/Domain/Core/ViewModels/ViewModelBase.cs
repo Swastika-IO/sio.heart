@@ -972,7 +972,6 @@ namespace Swastika.Domain.Data.ViewModels
         }
 
         #endregion Contructor
-
         
     }
 }

@@ -90,7 +90,7 @@ namespace Swastika.UI.Core.SignalR
                 Data = objData,
                 //authData = accessToken,
             };
-            Clients.Client(Context.ConnectionId).InvokeAsync("receiveMessage", result);
+            Clients.Client(Context.ConnectionId).SendAsync("receiveMessage", result);
         }
     }
 }
