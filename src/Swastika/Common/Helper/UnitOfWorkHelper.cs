@@ -1,8 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
+using Newtonsoft.Json.Linq;
 using Swastika.Domain.Core.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Reflection;
 using System.Text;
 
@@ -52,6 +54,7 @@ namespace Swastika.Common.Helper
                 transaction.Rollback();
             }
             List<string> errors = new List<string>();
+            LogException(ex);
             errors.Add(ex.InnerException != null ? ex.InnerException.Message : ex.Message);
             return new RepositoryResponse<TResult>()
             {
@@ -72,6 +75,7 @@ namespace Swastika.Common.Helper
                 transaction.Rollback();
             }
             List<string> errors = new List<string>();
+            LogException(ex);
             errors.Add(ex.InnerException != null ? ex.InnerException.Message : ex.Message);
             return new RepositoryResponse<TResult>()
             {
@@ -81,7 +85,47 @@ namespace Swastika.Common.Helper
                 Errors = errors
             };
         }
+        public static void LogException(Exception ex)
+        {
+            string fullPath = string.Format($"{Environment.CurrentDirectory}/logs");
+            if (!string.IsNullOrEmpty(fullPath) && !Directory.Exists(fullPath))
+            {
+                Directory.CreateDirectory(fullPath);
+            }
+            string filePath = $"{fullPath}/log_exceptions.txt";
 
+            try
+            {
+                FileInfo file = new FileInfo(filePath);
+                string content = "[]";
+                if (file.Exists)
+                {
+                    using (StreamReader s = file.OpenText())
+                    {
+                        content = s.ReadToEnd();
+                        s.Dispose();
+                    }
+                    File.Delete(filePath);
+                }
+
+                JArray arrExceptions = JArray.Parse(content);
+                JObject jex = new JObject();
+                jex.Add(new JProperty("CreatedDateTime", DateTime.UtcNow));
+                jex.Add(new JProperty("Details", JObject.FromObject(ex)));
+                arrExceptions.Add(jex);
+                content = arrExceptions.ToString();
+
+                using (var writer = File.CreateText(filePath))
+                {
+                    writer.WriteLine(content); //or .Write(), if you wish
+                    writer.Dispose();
+                }
+            }
+            catch
+            {
+                // File invalid
+            }
+        }
         public static void InitTransaction(TDbContext _context, IDbContextTransaction _transaction, out TDbContext context, out IDbContextTransaction transaction, out bool isRoot)
         {
             isRoot = _context == null;
