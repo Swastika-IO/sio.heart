@@ -39,11 +39,6 @@ namespace Swastika.Domain.Data.ViewModels
         private bool isValid = true;
 
         /// <summary>
-        /// The repo
-        /// </summary>
-        private static DefaultRepository<TDbContext, TModel, TView> _repo;
-
-        /// <summary>
         /// The mapper
         /// </summary>
         private IMapper _mapper;
@@ -59,9 +54,11 @@ namespace Swastika.Domain.Data.ViewModels
         private IMapper _modelMapper;
 
         [JsonIgnore]
-        public static DefaultRepository<TDbContext, TModel, TView> Repository {
-            get { return _repo ?? (_repo = DefaultRepository<TDbContext, TModel, TView>.Instance); }
-            set => _repo = value;
+        public static readonly DefaultRepository<TDbContext, TModel, TView> Repository;        
+
+        static ViewModelBase()
+        {
+            Repository = DefaultRepository<TDbContext, TModel, TView>.Instance;
         }
 
         /// <summary>
@@ -98,7 +95,7 @@ namespace Swastika.Domain.Data.ViewModels
         /// The list supported culture.
         /// </value>
         [JsonProperty("cultures")]
-        public List<SupportedCulture> ListSupportedCulture { get; set; }
+        public List<SupportedCulture> Cultures { get; set; }
 
         /// <summary>
         /// Gets or sets the mapper.
@@ -107,7 +104,8 @@ namespace Swastika.Domain.Data.ViewModels
         /// The mapper.
         /// </value>
         [JsonIgnore]
-        public IMapper Mapper {
+        public IMapper Mapper
+        {
             get { return _mapper ?? (_mapper = this.CreateMapper()); }
             set => _mapper = value;
         }
@@ -119,8 +117,10 @@ namespace Swastika.Domain.Data.ViewModels
         /// The model.
         /// </value>
         [JsonIgnore]
-        public TModel Model {
-            get {
+        public TModel Model
+        {
+            get
+            {
                 if (_model == null)
                 {
                     Type classType = typeof(TModel);
@@ -139,7 +139,8 @@ namespace Swastika.Domain.Data.ViewModels
         /// The model mapper.
         /// </value>
         [JsonIgnore]
-        public IMapper ModelMapper {
+        public IMapper ModelMapper
+        {
             get { return _modelMapper ?? (_modelMapper = this.CreateModelMapper()); }
             set => _modelMapper = value;
         }
@@ -228,7 +229,7 @@ namespace Swastika.Domain.Data.ViewModels
             Mapper.Map<TView, TModel>((TView)this, Model);
             return this.Model;
         }
-       
+
         /// <summary>
         /// Validates the specified context.
         /// </summary>
@@ -419,7 +420,7 @@ namespace Swastika.Domain.Data.ViewModels
             }
             catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
             {
-                return UnitOfWorkHelper<TDbContext>.HandleException<List<TView>>(ex, isRoot, transaction);                
+                return UnitOfWorkHelper<TDbContext>.HandleException<List<TView>>(ex, isRoot, transaction);
             }
             finally
             {
@@ -525,7 +526,7 @@ namespace Swastika.Domain.Data.ViewModels
             {
                 try
                 {
-                    ParseModel(_context, _transaction);
+                    ParseModel(context, transaction);
                     result = await Repository.SaveModelAsync((TView)this, _context: context, _transaction: transaction).ConfigureAwait(false);
 
                     // Save sub Models
@@ -541,9 +542,9 @@ namespace Swastika.Domain.Data.ViewModels
                     }
 
                     // Clone Models
-                    if (result.IsSucceed && IsClone && isRoot)
+                    if (result.IsSucceed && IsClone)// && isRoot)
                     {
-                        var cloneCultures = ListSupportedCulture.Where(c => c.Specificulture != Specificulture && c.IsSupported).ToList();
+                        var cloneCultures = Cultures.Where(c => c.Specificulture != Specificulture && c.IsSupported).ToList();
                         var cloneResult = await CloneAsync(Model, cloneCultures, _context: context, _transaction: transaction).ConfigureAwait(false);
                         if (!cloneResult.IsSucceed)
                         {
@@ -558,7 +559,7 @@ namespace Swastika.Domain.Data.ViewModels
                 }
                 catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
                 {
-                    return UnitOfWorkHelper<TDbContext>.HandleException<TView>(ex, isRoot, transaction);                    
+                    return UnitOfWorkHelper<TDbContext>.HandleException<TView>(ex, isRoot, transaction);
                 }
                 finally
                 {
@@ -878,7 +879,7 @@ namespace Swastika.Domain.Data.ViewModels
                     // Clone Models
                     if (result.IsSucceed && IsClone && isRoot)
                     {
-                        var cloneCultures = ListSupportedCulture.Where(c => c.Specificulture != Specificulture && c.IsSupported).ToList();
+                        var cloneCultures = Cultures.Where(c => c.Specificulture != Specificulture && c.IsSupported).ToList();
                         var cloneResult = Clone(Model, cloneCultures, _context: context, _transaction: transaction);
                         if (!cloneResult.IsSucceed)
                         {
@@ -968,10 +969,10 @@ namespace Swastika.Domain.Data.ViewModels
         protected ViewModelBase()
         {
             this.Model = InitModel();
-            ParseView();
+            ParseView(isExpand: false);
         }
 
         #endregion Contructor
-        
+
     }
 }

@@ -2,7 +2,6 @@
 // The Swastika I/O Foundation licenses this file to you under the GNU General Public License v3.0.
 // See the LICENSE file in the project root for more information.
 
-using Microsoft.Data.OData.Query;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -353,7 +352,7 @@ namespace Swastika.Domain.Core.ViewModels
         /// The direction.
         /// </value>
         [JsonProperty("direction")]
-        public OrderByDirection Direction { get; set; } = OrderByDirection.Ascending;
+        public int Direction { get; set; } = 0;
 
         /// <summary>
         /// Gets or sets the key.
@@ -380,7 +379,7 @@ namespace Swastika.Domain.Core.ViewModels
         /// The status.
         /// </value>
         [JsonProperty("status")]
-        public Common.Utility.Enums.SWStatus? Status { get; set; }
+        public int? Status { get; set; }
 
         /// <summary>
         /// Gets or sets the order by.

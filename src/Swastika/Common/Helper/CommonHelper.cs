@@ -179,7 +179,7 @@ namespace Swastika.Common.Helper
                     result = true;
                 }
             }
-            catch (Exception e)
+            catch
             {
                 throw;
             }

@@ -10,8 +10,6 @@ using Swastika.Common.Helper;
 using Swastika.Domain.Core.ViewModels;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Data.SqlClient;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -297,7 +295,7 @@ namespace Swastika.Domain.Data.Repository
                     return new RepositoryResponse<TView>()
                     {
                         IsSucceed = false,
-                        Data = default(TView)
+                        Data = default
                     };
                 }
             }
@@ -346,7 +344,7 @@ namespace Swastika.Domain.Data.Repository
                     return new RepositoryResponse<TView>()
                     {
                         IsSucceed = false,
-                        Data = default(TView)
+                        Data = default
                     };
                 }
             }
@@ -397,7 +395,7 @@ namespace Swastika.Domain.Data.Repository
         /// <param name="transaction">The transaction.</param>
         /// <returns></returns>
         public virtual PaginationModel<TView> ParsePagingQuery(IQueryable<TModel> query
-        , string orderByPropertyName, OrderByDirection direction
+        , string orderByPropertyName, int direction
         , int? pageSize, int? pageIndex
         , TDbContext context, IDbContextTransaction transaction)
         {
@@ -421,7 +419,7 @@ namespace Swastika.Domain.Data.Repository
 
                 switch (direction)
                 {
-                    case OrderByDirection.Descending:
+                    case 1:
                         sorted = Queryable.OrderByDescending(query, orderBy);
                         if (pageSize.HasValue)
                         {
@@ -474,7 +472,7 @@ namespace Swastika.Domain.Data.Repository
         /// <param name="transaction">The transaction.</param>
         /// <returns></returns>
         public virtual async Task<PaginationModel<TView>> ParsePagingQueryAsync(IQueryable<TModel> query
-        , string orderByPropertyName, OrderByDirection direction
+        , string orderByPropertyName, int direction
         , int? pageSize, int? pageIndex
         , TDbContext context, IDbContextTransaction transaction)
         {
@@ -498,7 +496,7 @@ namespace Swastika.Domain.Data.Repository
 
                 switch (direction)
                 {
-                    case OrderByDirection.Descending:
+                    case 1:
                         sorted = Queryable.OrderByDescending(query, orderBy);
                         if (pageSize.HasValue)
                         {
@@ -642,7 +640,7 @@ namespace Swastika.Domain.Data.Repository
         /// <param name="_transaction">The transaction.</param>
         /// <returns></returns>
         public virtual RepositoryResponse<PaginationModel<TView>> GetModelList(
-        string orderByPropertyName, OrderByDirection direction, int? pageSize, int? pageIndex
+        string orderByPropertyName, int direction, int? pageSize, int? pageIndex
         , TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
             bool isRoot = _context == null;
@@ -725,7 +723,7 @@ namespace Swastika.Domain.Data.Repository
         /// <param name="_transaction">The transaction.</param>
         /// <returns></returns>
         public virtual async Task<RepositoryResponse<PaginationModel<TView>>> GetModelListAsync(
-        string orderByPropertyName, OrderByDirection direction, int? pageSize, int? pageIndex
+        string orderByPropertyName, int direction, int? pageSize, int? pageIndex
         , TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
             bool isRoot = _context == null;
@@ -809,7 +807,7 @@ namespace Swastika.Domain.Data.Repository
         /// <param name="_transaction">The transaction.</param>
         /// <returns></returns>
         public virtual RepositoryResponse<PaginationModel<TView>> GetModelListBy(
-        Expression<Func<TModel, bool>> predicate, string orderByPropertyName, OrderByDirection direction, int? pageSize, int? pageIndex
+        Expression<Func<TModel, bool>> predicate, string orderByPropertyName, int direction, int? pageSize, int? pageIndex
         , TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
             UnitOfWorkHelper<TDbContext>.InitTransaction(_context, _transaction, out TDbContext context, out IDbContextTransaction transaction, out bool isRoot);
@@ -891,7 +889,7 @@ namespace Swastika.Domain.Data.Repository
         /// <returns></returns>
         public virtual async Task<RepositoryResponse<PaginationModel<TView>>> GetModelListByAsync(
         Expression<Func<TModel, bool>> predicate, string orderByPropertyName
-        , OrderByDirection direction, int? pageSize, int? pageIndex
+        , int direction, int? pageSize, int? pageIndex
         , TDbContext _context = null, IDbContextTransaction _transaction = null)
         {
             UnitOfWorkHelper<TDbContext>.InitTransaction(_context, _transaction, out TDbContext context, out IDbContextTransaction transaction, out bool isRoot);

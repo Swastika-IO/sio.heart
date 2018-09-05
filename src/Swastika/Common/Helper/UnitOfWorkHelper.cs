@@ -60,7 +60,7 @@ namespace Swastika.Common.Helper
             {
                 IsSucceed = false,
                 Data = null,
-                Exception = (ex.InnerException != null ? ex.InnerException : ex),
+                Exception = (ex.InnerException ?? ex),
                 Errors = errors
             };
         }
@@ -80,8 +80,8 @@ namespace Swastika.Common.Helper
             return new RepositoryResponse<TResult>()
             {
                 IsSucceed = false,
-                Data = default(TResult),
-                Exception = (ex.InnerException != null ? ex.InnerException : ex),
+                Data = default,
+                Exception = (ex.InnerException ?? ex),
                 Errors = errors
             };
         }
@@ -109,9 +109,11 @@ namespace Swastika.Common.Helper
                 }
 
                 JArray arrExceptions = JArray.Parse(content);
-                JObject jex = new JObject();
-                jex.Add(new JProperty("CreatedDateTime", DateTime.UtcNow));
-                jex.Add(new JProperty("Details", JObject.FromObject(ex)));
+                JObject jex = new JObject
+                {
+                    new JProperty("CreatedDateTime", DateTime.UtcNow),
+                    new JProperty("Details", JObject.FromObject(ex))
+                };
                 arrExceptions.Add(jex);
                 content = arrExceptions.ToString();
 
