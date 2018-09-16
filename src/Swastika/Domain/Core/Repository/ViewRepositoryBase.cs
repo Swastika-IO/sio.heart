@@ -406,7 +406,7 @@ namespace Swastika.Domain.Data.Repository
                 TotalItems = query.Count(),
                 PageIndex = pageIndex ?? 0
             };
-            dynamic orderBy = GetLambda(orderByPropertyName);
+            dynamic orderBy = GetLambda(CommonHelper.ConvertCaseString(orderByPropertyName, CommonHelper.Case.CamelCase));
             IQueryable<TModel> sorted = null;
             try
             {
@@ -483,7 +483,7 @@ namespace Swastika.Domain.Data.Repository
                 TotalItems = query.Count(),
                 PageIndex = pageIndex ?? 0
             };
-            dynamic orderBy = GetLambda(orderByPropertyName);
+            dynamic orderBy = GetLambda(CommonHelper.ConvertCaseString(orderByPropertyName, CommonHelper.Case.CamelCase));
             IQueryable<TModel> sorted = null;
             try
             {
@@ -1520,6 +1520,7 @@ namespace Swastika.Domain.Data.Repository
                 {
                     foreach (var field in fields)
                     {
+                        field.PropertyName = CommonHelper.ConvertCaseString(field.PropertyName, CommonHelper.Case.CamelCase);
                         var lamda = GetLambda(field.PropertyName, false);
                         if (lamda != null)
                         {
@@ -1591,6 +1592,7 @@ namespace Swastika.Domain.Data.Repository
                 {
                     foreach (var field in fields)
                     {
+                        field.PropertyName = CommonHelper.ConvertCaseString(field.PropertyName, CommonHelper.Case.CamelCase);
                         var lamda = GetLambda(field.PropertyName, false);
                         if (lamda != null)
                         {
@@ -1651,9 +1653,10 @@ namespace Swastika.Domain.Data.Repository
         /// <returns></returns>
         protected LambdaExpression GetLambda(string propName, bool isGetDefault = true)
         {
+            
             var parameter = Expression.Parameter(typeof(TModel));
             var type = typeof(TModel);
-            var prop = Array.Find(type.GetProperties(), p => p.Name == propName);
+            var prop = Array.Find(type.GetProperties(), p => p.Name.ToLower() == propName.ToLower());
             if (prop == null && isGetDefault)
             {
                 propName = type.GetProperties().FirstOrDefault()?.Name;

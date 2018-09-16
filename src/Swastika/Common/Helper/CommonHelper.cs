@@ -302,31 +302,35 @@ namespace Swastika.Common.Helper
             }
         }
 
-        //TODO: Still need?
-        //public static string UploadPhoto(string fullPath, Image img)
-        //{
-        //    try
-        //    {
-        //        if (!Directory.Exists(fullPath))
-        //        {
-        //            Directory.CreateDirectory(fullPath);
-        //        }
+        public static string ConvertCaseString(string phrase, Case cases)
+        {
+            string[] splittedPhrase = phrase.Split(' ', '-', '.');
+            var sb = new StringBuilder();
 
-        //        if (img != null)
-        //        {
-        //            //string fileExt = GetFilenameExtension(img.RawFormat);
-        //            //file_name = (guid + fileExt).Trim();
-        //            //file_dir = filePath + file_name;
-        //            //ImageResizer.ResizeStream(TTXConstants.Params.photoSize, img, file_dir);
+            if (cases == Case.CamelCase)
+            {                
+                //splittedPhrase[0] = string.Empty;
+            }
+            else if (cases == Case.PascalCase)
+                sb.Append(splittedPhrase[0].ToLower());
+            
 
-        //            return ImageHelper.ResizeImage(img, fullPath);
-        //        }
-        //    }
-        //    catch (Exception ex) // TODO: Add more specific exeption types instead of Exception only
-        //    {
-        //        return string.Empty;
-        //    }
-        //    return string.Empty;
-        //}
+            foreach (String s in splittedPhrase)
+            {
+                char[] splittedPhraseChars = s.ToCharArray();
+                if (splittedPhraseChars.Length > 0)
+                {
+                    splittedPhraseChars[0] = ((new String(splittedPhraseChars[0], 1)).ToUpper().ToCharArray())[0];
+                }
+                sb.Append(new String(splittedPhraseChars));
+            }
+            return sb.ToString();
+        }
+
+        public enum Case
+        {
+            PascalCase,
+            CamelCase
+        }
     }
 }
