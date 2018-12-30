@@ -3999,6 +3999,7 @@
       "sha512": "f8PKGcxiezL1RVqmnmrazj24Mj4KCTSXqwdotl7Lc+82h8iLV7ItxEIShTJakG7M9iw0ZuCocM0J/IhYesdQrg==",
       "type": "package",
       "path": "microsoft.aspnetcore.razor.design/2.1.1",
+      "hasTools": true,
       "files": [
         ".signature.p7s",
         "build/netstandard2.0/Microsoft.AspNetCore.Razor.Design.CodeGeneration.targets",
@@ -4238,6 +4239,7 @@
       "sha512": "HS3iRWZKcUw/8eZ/08GXKY2Bn7xNzQPzf8gRPHGSowX7u7XXu9i9YEaBeBNKUXWfI7qjvT2zXtLUvbN0hds8vg==",
       "type": "package",
       "path": "microsoft.codeanalysis.analyzers/1.1.0",
+      "hasTools": true,
       "files": [
         "ThirdPartyNotices.rtf",
         "analyzers/dotnet/cs/Microsoft.CodeAnalysis.Analyzers.dll",
@@ -5050,6 +5052,7 @@
       "sha512": "OOtdTC/APqjHnnLVKwjyIqNdPcsLX2pqz48rhlO6y38g2YM+jXt0iSYUg/VVjkkknq0vYzBQoX2G3e636DVOKQ==",
       "type": "package",
       "path": "msbuild.sonarqube.runner.tool/4.3.1",
+      "hasTools": true,
       "files": [
         "msbuild.sonarqube.runner.tool.4.3.1.nupkg.sha512",
         "msbuild.sonarqube.runner.tool.nuspec",
@@ -5095,7 +5098,7 @@
       ]
     },
     "NETStandard.Library/2.0.3": {
-      "sha512": "st47PosZSHrjECdjeIzZQbzivYBJFv6P2nv4cj2ypdI204DO+vZ7l5raGSio4eXMJ53RfOIg+/s4DHVZ54Nu2A==",
+      "sha512": "st47PosZSHrjECdjeIzZQbzivYBJFv6P2nv4cj2ypdI204DO+vZ7l5raGMiX4eXMJ53RfOIg+/s4DHVZ54Nu2A==",
       "type": "package",
       "path": "netstandard.library/2.0.3",
       "files": [
@@ -8128,7 +8131,7 @@
       ]
     },
     "System.Runtime.Loader/4.3.0": {
-      "sha512": "DHMaRn8D8YCK2GG2pw+UzNxn/OHVfaWx7OTLBD/hPegHZZgcZh3H6seWegrC4BYwsfuGrywIuT+MQs+rPqRLTQ==",
+      "sha512": "F5bMUpBvBYsB8ARksdtNuqZ1u8UvQLXXvxrgfH0ZjBscY2NVi5twtf+CH3+B6jE80RYt4D9iLCMgPBg64Qrjow==",
       "type": "package",
       "path": "system.runtime.loader/4.3.0",
       "files": [
@@ -9673,23 +9676,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\tinku\\.nuget\\packages\\": {},
+    "C:\\Users\\smile\\.nuget\\packages\\": {},
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
     "version": "0.0.1",
     "restore": {
-      "projectUniqueName": "C:\\Git\\GitHub\\Siocore\\Sio.heart\\src\\Sio.Heart\\Sio.Heart.csproj",
-      "projectName": "Sio.Heart",
-      "projectPath": "C:\\Git\\GitHub\\Siocore\\Sio.heart\\src\\Sio.Heart\\Sio.Heart.csproj",
-      "packagesPath": "C:\\Users\\tinku\\.nuget\\packages\\",
-      "outputPath": "C:\\Git\\GitHub\\Siocore\\Sio.heart\\src\\Sio.Heart\\obj\\",
+      "projectUniqueName": "E:\\_Workspace\\Github\\mixcore\\mix.heart\\src\\Mix.Heart\\Mix.Heart.csproj",
+      "projectName": "Mix.Heart",
+      "projectPath": "E:\\_Workspace\\Github\\mixcore\\mix.heart\\src\\Mix.Heart\\Mix.Heart.csproj",
+      "packagesPath": "C:\\Users\\smile\\.nuget\\packages\\",
+      "outputPath": "E:\\_Workspace\\Github\\mixcore\\mix.heart\\src\\Mix.Heart\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
       ],
       "configFilePaths": [
-        "C:\\Users\\tinku\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\smile\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -9697,6 +9700,7 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "C:\\Users\\smile\\.dotnet\\NuGetFallbackFolder": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {

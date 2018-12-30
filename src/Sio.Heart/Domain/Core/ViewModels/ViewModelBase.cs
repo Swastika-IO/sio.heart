@@ -158,6 +158,10 @@ namespace Sio.Domain.Data.ViewModels
         [JsonProperty("specificulture")]
         public string Specificulture { get; set; }
 
+        [JsonProperty("status")]
+        public int Status { get; set; }
+
+
         /// <summary>
         /// Creates the mapper.
         /// </summary>

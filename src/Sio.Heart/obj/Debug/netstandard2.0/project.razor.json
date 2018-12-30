@@ -1,0 +1,14 @@
+{
+  "ProjectFilePath": "e:\\_Workspace\\Github\\siocore\\sio.heart\\src\\Sio.Heart\\Sio.Heart.csproj",
+  "TargetFramework": "netstandard2.0",
+  "TagHelpers": [],
+  "Configuration": {
+    "ConfigurationName": "UnsupportedRazor",
+    "LanguageVersion": "1.0",
+    "Extensions": [
+      {
+        "ExtensionName": "UnsupportedRazorExtension"
+      }
+    ]
+  }
+}

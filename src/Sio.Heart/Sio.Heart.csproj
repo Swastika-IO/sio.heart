@@ -8,10 +8,10 @@
     <Authors>Siocore Team, Smileway Team</Authors>
     <Product>Siocore Heart</Product>
     <Copyright>Siocore, Smileway, Befirst.Solution</Copyright>
-    <PackageLicenseUrl>https://github.com/Siocore/Sio.heart/blob/master/LICENSE</PackageLicenseUrl>
-    <PackageProjectUrl>http://Siocore.org/</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/siocore/sio.heart/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>http://siocore.org/</PackageProjectUrl>
     <PackageIconUrl>https://avatars1.githubusercontent.com/u/41290098</PackageIconUrl>
-    <RepositoryUrl>https://github.com/Siocore/Sio.heart</RepositoryUrl>
+    <RepositoryUrl>https://github.com/siocore/sio.heart</RepositoryUrl>
     <PackageTags>dotnet core, asp.net core, framework base</PackageTags>
     <AssemblyVersion>0.0.1.0</AssemblyVersion>
     <FileVersion>0.0.1.0</FileVersion>
