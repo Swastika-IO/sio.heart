@@ -44,7 +44,7 @@ namespace Sio.Common.Helper
         }
 
         public static RepositoryResponse<TResult> HandleException<TResult>(Exception ex, bool isRoot, IDbContextTransaction transaction)
-            where TResult : class
+            
         {
             if (isRoot)
             {
@@ -56,15 +56,13 @@ namespace Sio.Common.Helper
             errors.Add(ex.InnerException != null ? ex.InnerException.Message : ex.Message);
             return new RepositoryResponse<TResult>()
             {
-                IsSucceed = false,
-                Data = null,
+                IsSucceed = false,                
                 Exception = (ex.InnerException ?? ex),
                 Errors = errors
             };
         }
 
         public static RepositoryResponse<TResult> HandleObjectException<TResult>(Exception ex, bool isRoot, IDbContextTransaction transaction)
-            where TResult : IConvertible
         {
             if (isRoot)
             {
